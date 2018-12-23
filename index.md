@@ -1,37 +1,55 @@
-## Welcome to GitHub Pages
+# 도서 리뷰 & 정보 웹사이트 프로젝트 
 
-You can use the [editor on GitHub](https://github.com/Eun-Chan/Book-Review-website/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+## 프로젝트 정리
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+깃허브 저장소 이름 :  Eun-Chan/Book-Review-website
 
-### Markdown
+> Clone URL : https://github.com/Eun-Chan/Book-Review-website.git
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+미리 구성할 목록(모르는 내용은 url통해  학습)
 
-- Bulleted
-- List
+#### 1. DBCP (커넥션 풀)
 
-1. Numbered
-2. List
+> https://www.holaxprogramming.com/2013/01/10/devops-how-to-manage-dbcp/
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+#### 2. DAO 싱글톤 패턴(디자인 패턴 중 하나)
 
-### Jekyll Themes
+> http://zion437.tistory.com/157
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Eun-Chan/Book-Review-website/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+#### 3. 서버 호스팅 (aws ec2)
+
+
+
+#### 4. Front Controller Pattern (url Pattern - 확장자패턴 사용)
+   클라이언트의 요청을 한 곳으로 집중 , 개발 및 유지보수의 효율성 극대화
+   하나의 서블릿(Controller)에 요청을 주고 , 서블릿에서 각 요청에 대해 분기
+   http://rongscodinghistory.tistory.com/80
+
+
+
+url - pattern 을 위해 사용되는 Code
+
+    // 컨텍스트 패스 + 요청한 command 이름
+    String uri = request.getRequestURI();
+    // 컨텍스트 패스
+    String conPath = request.getContextPath();
+    // 컨텍스트를 이용해 command
+    String command = uri.substring(conPath.length());
+
+
+
+#### 5. Command Pattern
+
+
+
+초기 프로젝트 파일 구성
+
+Project folder name : BookReviewWebsite
+
+Context root : brw
