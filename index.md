@@ -35,13 +35,13 @@
 
 url - pattern 을 위해 사용되는 Code
 
-    // 컨텍스트 패스 + 요청한 command 이름
+```jsp    // 컨텍스트 패스 + 요청한 command 이름
     String uri = request.getRequestURI();
     // 컨텍스트 패스
     String conPath = request.getContextPath();
     // 컨텍스트를 이용해 command
     String command = uri.substring(conPath.length());
-
+```
 
 
 #### 5. Command Pattern
