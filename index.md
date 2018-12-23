@@ -24,14 +24,14 @@
 
 #### 3. 서버 호스팅 (aws ec2)
 
-
+</br>
 
 #### 4. Front Controller Pattern (url Pattern - 확장자패턴 사용)
    클라이언트의 요청을 한 곳으로 집중 , 개발 및 유지보수의 효율성 극대화
    하나의 서블릿(Controller)에 요청을 주고 , 서블릿에서 각 요청에 대해 분기
    http://rongscodinghistory.tistory.com/80
 
-
+</br>
 
 url - pattern 을 위해 사용되는 Code
 
