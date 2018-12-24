@@ -11,5 +11,6 @@
 	<a href="2.do">2</a>
 	<a href="3.do">3</a>
 	<a href="4.do">4</a>
+	마스터 테스트
 </body>
 </html>
