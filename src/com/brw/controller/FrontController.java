@@ -1,11 +1,16 @@
-package com.brw;
+package com.brw.controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.brw.command.Command;
+import com.brw.command.CreateUserCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -38,7 +43,9 @@ public class FrontController extends HttpServlet {
 		doGet(req,res);
 	}
 	
-	private void actionDo(HttpServletRequest req, HttpServletResponse res) {
+	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		
+		req.setCharacterEncoding("utf-8");
 		
 		System.out.println("actionDo()");
 		
@@ -49,15 +56,18 @@ public class FrontController extends HttpServlet {
 		System.out.println(conPath);
 		System.out.println(command);
 		
+		// command pattern 을 위한 객체 생성
+		Command com = null;
+		String viewPage = null;
 		
-		if(command.equals("/1.do"))
-			System.out.println("1.do Click!");
-		else if(command.equals("/2.do"))
-			System.out.println("2.do Click!");
-		else if(command.equals("/3.do"))
-			System.out.println("3.do Click!");
-		else if(command.equals("/4.do"))
-			System.out.println("4.do Click!");
+		// frontController로 모든 명렁을 받은 후 여기에서 분기
+		if(command.equals("/enrollTest.do")) {
+			com = new CreateUserCommand();
+			com.execute(req, res);
+			viewPage = "index.jsp";
+		}
 		
+		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+		dispatcher.forward(req, res);	
 	}
 }
