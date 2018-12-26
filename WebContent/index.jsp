@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 </head>
 <body>
 	<a href="1.do">1</a>
@@ -13,6 +14,7 @@
 	<a href="4.do">4</a>
 	
 	여기는 임시 메인 입니다.
+	
 	
 </body>
 </html>
