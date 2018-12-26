@@ -10,7 +10,7 @@
 
 미리 구성할 목록(모르는 내용은 url통해  학습)
 
-#### 1. DBCP (커넥션 풀)
+#### 1. DBCP (커넥션 풀) - ojdbc6(ec2 tomcat에 추가)
 
 > https://www.holaxprogramming.com/2013/01/10/devops-how-to-manage-dbcp/
 
