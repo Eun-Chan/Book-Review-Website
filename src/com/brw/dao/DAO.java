@@ -61,6 +61,9 @@ public class DAO {
 			e.printStackTrace();
 			System.out.println("user create rollback()");
 			connection.rollback();
+		} finally {
+			pstmt.close();
+			connection.close();
 		}
 		
 		// return result;
