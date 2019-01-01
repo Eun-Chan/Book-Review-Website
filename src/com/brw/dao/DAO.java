@@ -64,6 +64,7 @@ public class DAO {
 		} finally {
 			pstmt.close();
 			connection.close();
+			//close 추가
 		}
 		
 		// return result;
