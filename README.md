@@ -41,8 +41,9 @@ url - pattern 을 위해 사용되는 Code
 ```
 
 #### 5. Command Pattern
-
-
+</br>
+#### 6. 로그인 (gmail & 카카오 로그인 인증 api) & 회원가입 (이메일 인증)
+</br>
 
 초기 프로젝트 파일 구성
 
@@ -50,10 +51,3 @@ Project folder name : BookReviewWebsite
 
 Context root : brw
 
-
-
-
-
-# test
-
-^^
