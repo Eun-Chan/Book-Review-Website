@@ -66,6 +66,9 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "index.jsp";
 		}
+		else if(command.equals("/review/reviewList.do")) {
+			viewPage = "/WEB-INF/views/review/reviewList.jsp";
+		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);	
