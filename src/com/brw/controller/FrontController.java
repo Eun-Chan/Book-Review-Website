@@ -45,8 +45,7 @@ public class FrontController extends HttpServlet {
 	
 	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
-		req.setCharacterEncoding("utf-8");
-		
+		req.setCharacterEncoding("utf-8");   
 		System.out.println("actionDo()");
 		
 		String uri = req.getRequestURI();

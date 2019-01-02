@@ -14,6 +14,7 @@ public class DAO {
 	
 	private static DAO instance;
 	DataSource dataSource;
+	static String test;
 	
 	private DAO() {
 		try {
@@ -68,5 +69,17 @@ public class DAO {
 		}
 		
 		// return result;
+	}
+	
+	public boolean changePwdCheck(Connection con, String userId) {
+		boolean result = false;
+		String query = "B"
+				+ "p"
+				+ "";
+		
+		PreparedStatement pstmt = null;
+		
+
+		return true;
 	}
 }
