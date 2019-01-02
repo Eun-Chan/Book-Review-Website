@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
 import com.brw.command.ReviewPaginationCommand;
@@ -72,6 +73,10 @@ public class FrontController extends HttpServlet {
 			com = new ReviewPaginationCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewList.jsp";
+		}
+		else if(command.equals("/bookInfo.do")) {
+			//com = new BookInfomationCommand();
+			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
