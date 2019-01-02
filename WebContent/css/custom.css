@@ -1,0 +1,27 @@
+/* header부분 백그라운드 컬러 */
+.navbar-default {
+	background-color: black;
+}
+
+.navbar-brand>img {
+	height: 10px;
+	width: 10px;
+}
+
+#test{
+	display : inline;
+	text-align : center;
+	
+}
+
+#loginModal-header{
+	text-align : center;
+}
+
+#topHeader .navbar-nav > li > a{
+	color : white;
+}
+
+.navbar-default {
+	background-color : violet;
+}
