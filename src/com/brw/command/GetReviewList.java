@@ -16,8 +16,6 @@ public class GetReviewList implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		
-		
-		
 	}
 	
 	public List<ReviewDTO> getReviewList(HttpServletRequest request, HttpServletResponse response){
