@@ -131,4 +131,49 @@ public class DAO {
 		
 		return list;
 	}
+<<<<<<< .merge_file_a01164
+=======
+
+	public ReviewDTO getReviewSelectOne(String reviewBookId) {
+		Connection conn = null;
+		ReviewDTO review = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from tempreviewtable where reviewBookId = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, reviewBookId);
+
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				review = new ReviewDTO();
+				review.setReviewNo(res.getInt("review_no"));
+				review.setReviewTitle(res.getString("review_title"));
+				review.setReviewWriter(res.getString("review_writer"));
+				review.setReviewBookId(res.getString("review_bookid"));
+				review.setReviewContent(res.getString("review_content"));
+				review.setReviewDate(res.getDate("review_date"));
+				review.setReviewReadCnt(res.getInt("review_readcnt"));
+				review.setReviewRecommend(res.getInt("review_recommend"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return review;
+	}
+	
+	
+>>>>>>> .merge_file_a13164
 }
