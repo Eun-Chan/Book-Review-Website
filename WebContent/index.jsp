@@ -10,5 +10,16 @@
 	<jsp:include page="header.jsp"></jsp:include>
 	여기는 index.jsp
 	<a href="reviewList.do">헤헤</a>
+
+	<a href="1.do">1</a>
+	<a href="2.do">2</a>
+	<a href="3.do">3</a>
+	<a href="4.do">4</a>
+	<a href="review/reviewList.do">리뷰게시판</a>
+	
+	여기는 임시 메인 입니다.
+	<span>장선웅-브렌치테스트</span>
+	<span>박광준-브렌치테스트</span>
+	
 </body>
 </html>
