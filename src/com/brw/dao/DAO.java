@@ -131,8 +131,7 @@ public class DAO {
 		
 		return list;
 	}
-<<<<<<< .merge_file_a01164
-=======
+
 
 	public ReviewDTO getReviewSelectOne(String reviewBookId) {
 		Connection conn = null;
@@ -175,5 +174,5 @@ public class DAO {
 	}
 	
 	
->>>>>>> .merge_file_a13164
+
 }
