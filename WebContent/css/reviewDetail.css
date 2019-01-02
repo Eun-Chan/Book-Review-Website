@@ -1,16 +1,21 @@
 /* 리뷰 디테일 게시판 css */
 #reviewDetail{
 	position:relative;
-	width:65%;
-	border: 1px solid black;
-	left:260px;
+	width:800px;
+	clear: both;
+	height: auto;
+	margin: auto;
+	padding: 0;
 }
 #reviewDetail-Header{
-	width: 99.1%;
-	border-bottom: 1px solid black;
+	width:800px;
+/* 	border-bottom: 1px solid black; */
 	padding: 8px 0px 5px 10px;
 	min-height: 40px;
 	background: #f1f1f1;
+}
+#reviewDetail-Header span{
+	font-size: 0.8em;
 }
 #reviewDetail-Header #comment{
 	float: right;
@@ -19,39 +24,45 @@
 	float: left;
 }
 #reviewDetail-Title{
-	width:99.1%;
-	border: 1px solid black;
+	width:800px;
+	border-bottom: 1px solid #f1f1f1;
 	padding : 35px 0 25px;
 	min-height: 50px;
 	text-align: center;
 }
 #reviewDetail-Writer{
-	width:99.1%;
+	width:800px;
 	text-align: right;
+	margin-top: 8px;
 }
-
+#reviewDetail-Writer span{
+	font-size: 0.8em;
+}
+#reviewDetail-Writer hr{
+	margin-top: 0;
+}
 #reviewDetail-Content{
-	width:100%;
+	width:800px;
 	min-height: 400px;
-	border: 1px solid black;
+/* 	border: 1px solid black; */
 	margin: 25px 0px 30px 0px;
+	padding-top:20px;
+	padding-left: 10px;
 }
 /*좋아요 버튼*/
 #like-Wapper{
-	width:100%;
+	width:800px;
 	display: inline-block;
 	vertical-align: middle;
 }
 #like{
-	float: left;
 	text-align: center;
 	width:50px;
 	height:50px;
 	border: 1px solid black;
 	position: relative;
-	left: 48%;
 	line-height: 10px;
-	margin: 0 1.5px;
+	margin: auto;
 	color: pink;
 	cursor: pointer;
 }
@@ -65,13 +76,13 @@
 
 /* 댓글 css */
 #comment-Content{
-	width:100%;
+	width:800px;
 	min-height: 300px;
-	border: 1px solid black;
+	border: 1px solid #e1e1e1;
 }
 #comment-Area{
-	width:100%;
-	border:1px solid black;
+	width:800px;
+	border:1px solid #e1e1e1;
 	background:#f1f1f1;
 	padding: 12px 0px 12px 12px;
 }
@@ -82,4 +93,7 @@
 }
 #comment-button{
 	display: inline-block;
+}
+#comment-textArea{
+	width:700px;
 }

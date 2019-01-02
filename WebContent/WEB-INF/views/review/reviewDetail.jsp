@@ -16,10 +16,10 @@
 			<span id="comment">댓글 : (댓글 갯수)</span>
 		</div>
 		<div id ="reviewDetail-Title">
-			<span>제목 : 제목이다아아아아아아아아</span>
+			<span>[리뷰]제목이다아아아아아아아아</span>
 		</div>
 		<div id="reviewDetail-Writer">
-			작성자는 나다임마.
+			<span>작성자 : 뭐뭐시기</span>
 			<hr />
 		</div>
 		<div id ="reviewDetail-Content">
@@ -47,9 +47,11 @@
 		<div id ="comment-Area">
 			<table>
 				<tr>
-				<td>
-				<textarea name="comment" id="" cols="70" rows="3">댓글은 로그인 후 이용 하실수 있습니다.</textarea>
-				</td>	
+					<td>
+						<div id="comment-textArea">
+							<textarea name="comment" id=""rows="3" cols="95">댓글은 로그인 후 이용 하실수 있습니다.</textarea>
+						</div>
+					</td>	
 				<td>
 					<input type="button" value="등록" />
 				</td>
