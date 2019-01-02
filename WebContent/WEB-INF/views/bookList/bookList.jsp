@@ -10,11 +10,6 @@
 $(function(){
 	var title = $("#title");
 	var sname = $("#author");
-	
-	$("select#searchType").change(function(){
-		sid.hide();
-		sname.hide();
-		sgender.hide();
 		
 		$("#search-"+$(this).val()).css("display","inline-block");
 	});
@@ -49,14 +44,15 @@ $("#btn-search").click(function() {
 });
 function bookListDisplay(success,data) {
 	var table = $("<table></table>");
+	console.log(data);
 	for(var i in data.item) {
 		var book  = data.item[i];
-		var html = "<tr><td>"+"<img src ='"+book[i].cover+"'></td>";
-		html += "<td>"+book[i].title+"</td>";
-		html += "<td>"+book[i].description+"</td>";
-		html += "<td>"+book[i].author+"</td>";
-		html += "<td>"+book[i].pubDate+"</td>";
-		html += "<td>"+book[i].priceStandard+"</td></tr>";	
+		var html = "<tr><td>"+"<img src ='"+book.cover+"'></td>";
+		html += "<td>"+book.title+"</td>";
+		html += "<td>"+book.description+"</td>";
+		html += "<td>"+book.author+"</td>";
+		html += "<td>"+book.pubDate+"</td>";
+		html += "<td>"+book.priceStandard+"</td></tr>";	
 		table.append(html);
 	}
 	$("#bookListContainer").html(table);
