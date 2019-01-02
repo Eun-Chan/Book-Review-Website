@@ -74,7 +74,6 @@ public class DAO {
 		
 		// return result;
 	}
-<<<<<<< HEAD
 	
 	public boolean changePwdCheck(Connection con, String userId) {
 		boolean result = false;
@@ -87,7 +86,6 @@ public class DAO {
 
 		return true;
 	}
-=======
 
 	public List<ReviewDTO> getReviewList() {
 		List<ReviewDTO> list = null;
@@ -133,7 +131,4 @@ public class DAO {
 		
 		return list;
 	}
-	
-	
->>>>>>> fa0fcdbbb6f7aeb969eed9533d1d39e6decae0f6
 }

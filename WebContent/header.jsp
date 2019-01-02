@@ -28,7 +28,7 @@
     <div class="collapse navbar-collapse" id="topHeader">
       <ul class="nav navbar-nav">
         <li><a href="#">홈<span class="sr-only">(current)</span></a></li>
-        <li><a href="index.jsp">도서 리뷰</a></li>
+        <li><a href="review/reviewList.do">도서 리뷰</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">

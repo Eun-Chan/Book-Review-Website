@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	앙  기무띠
-</body>
-</html>
-=======
+
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
@@ -59,5 +49,3 @@ $.ajax({
 });
 </script>
 
-
->>>>>>> fa0fcdbbb6f7aeb969eed9533d1d39e6decae0f6
