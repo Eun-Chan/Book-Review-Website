@@ -101,7 +101,12 @@
 		});
 	});
 	
-	
+	/* 회원가입 - 중복확인 버튼 완료 */
+	$("#userPassword").keyup(function(e){
+		console.log(e.key);
+		
+		var pwdLength = $(this).val().trim();
+	});
 	
 	
 </script>

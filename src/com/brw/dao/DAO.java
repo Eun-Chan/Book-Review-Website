@@ -306,5 +306,44 @@ public class DAO {
 		
 		return result;
 	}
-	
+
+	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
+		Connection conn = null;
+		ReviewBoardDTO review = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from tempreviewtable where review_no = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				review = new ReviewBoardDTO();
+				review.setRbNo(res.getInt("review_no"));
+				review.setRbTitle(res.getString("review_title"));
+				review.setRbWriter(res.getString("review_writer"));
+				review.setRbBookTitle(res.getString("review_bookid"));
+				review.setRbContent(res.getString("review_content"));
+				review.setRbDate(res.getDate("review_date"));
+				review.setRbReadCnt(res.getInt("review_readcnt"));
+				review.setRbRecommend(res.getInt("review_recommend"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return review;
+	}
 }
