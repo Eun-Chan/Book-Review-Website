@@ -1,11 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO" %>
+
+<%
+	// FrontController에서 보낸 list 받기
+	List<ReviewBoardDTO> list = (List<ReviewBoardDTO>)request.getAttribute("list");
+	String pageBar = (String)request.getAttribute("pageBar");
+	
+	String searchType = request.getParameter("searchType");
+	String searchKeyword = request.getParameter("searchKeyword");
+%>
 
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <script>
+// 인덱스로 이동하는 함수
 function goHome(){
 	location.href="<%=request.getContextPath() %>";
 }
@@ -14,38 +24,70 @@ function goHome(){
 	<h2 class="text-primary">리뷰게시판</h2>
 	<button class="btn btn-primary" onclick="goHome();">메인으로</button>
 	<br /><br />
+	<!-- 진행 상황(기능만) -->
 	<div class="progress">
-		<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 70%">70%</div>
+		<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 80%">80%</div>
 	</div>
 	<br />
-	<table class="table table-hover table-info" id="test-table">
-		<thead>
-			<tr>
-				<th>no</th>
-				<th>제목</th>
-				<th>작성자</th>
-				<th>작성일</th>
-				<th>조회수</th>
-				<th>추천수</th>
-			</tr>
-		</thead>
-		<tbody></tbody>
-	</table>
-</div>
+	
+	<!-- 리뷰 리스트를 보여줄 테이블 영역 -->
+	<div id="table-container">
+		<table class="table table-hover table-info" id="test-table">
+			<thead>
+				<tr>
+					<th>no</th>
+					<th>도서명</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>작성일</th>
+					<th>조회수</th>
+					<th>추천수</th>
+				</tr>
+			</thead>
+			<tbody>
+			<% for(ReviewBoardDTO rb : list) { %>
+				<tr>
+					<td><%=rb.getRbNo() %></td>
+					<td><%=rb.getRbBookTitle()%></td>
+					<td><%=rb.getRbTitle() %></td>
+					<td><%=rb.getRbWriter() %></td>
+					<td><%=rb.getRbDate() %></td>
+					<td><%=rb.getRbReadCnt() %></td>
+					<td><%=rb.getRbRecommend() %></td>
+				</tr>
+			<% } %>
+			</tbody>
+		</table>
+	</div> <!-- end of #table-container -->
+	
+	<!-- 페이지바 영역 --> 
+	<div id="pagebar-container text-center">
+		<%=pageBar %>
+	</div>
+	
+	<!-- 검색 영역 -->
+	<div id="search-form-container">
+		<!-- 검색 타입 셀렉트 -->
+		<select id="searchType">
+			<option value="book" <%="book".equals(searchType)?"selected":"" %>>도서명</option>
+			<option value="rbTitle" <%="rbTitle".equals(searchType)?"selected":"" %>>제목</option>
+		</select>
+		<div id="search-book">
+			<form action="<%=request.getContextPath()%>/review/reviewSearch.do">
+				<input type="hidden" name="searchType" value="rb_booktitle"/>
+				<input type="text" name="searchKeyword" value="<%="book_booktitle".equals(searchType)?searchKeyword:""%>"/>
+				<button type="submit">검색</button>
+			</form>
+		</div>
+		<div id="search-rbTitle">
+			<form action="<%=request.getContextPath()%>/review/reviewSearch.do">
+				<input type="hidden" name="searchType" value="rb_Title"/>
+				<input type="text" name="searchKeyword" value="<%="rb_Title".equals(searchType)?searchKeyword:""%>"/>
+				<button type="submit">검색</button>
+			</form>
+		</div>
+	</div>
+	
+</div> <!-- end of #review-list-container -->
 
-<script>
-$.ajax({
-	url: "getReviewList.ajax",
-	success: function(data){
-		console.log(data);
-		var tr = "";
-		for(var i in data){
-			var r = data[i];
-			tr += "<tr><td>" + r.reviewNo + "</td><td>" + r.reviewTitle + "</td><td>" + r.reviewWriter
-					+ "</td><td>" + r.reviewDate + "</td><td>" + r.reviewReadCnt + "</td><td>" + r.reviewRecommend + "</td></tr>";
-		}
-		$("#test-table").find("tbody").append(tr);
-	}
-});
-</script>
 
