@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
+import com.brw.command.GetReviewSelectOne;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 
@@ -82,7 +83,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
 		else if(command.equals("/review/reviewDetail.do")) {
-			com = new ReviewPaginationCommand();
+			com = new GetReviewSelectOne();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 

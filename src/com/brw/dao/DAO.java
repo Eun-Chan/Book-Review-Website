@@ -268,4 +268,44 @@ public class DAO {
 		
 		return result;
 	}
+
+	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
+		Connection conn = null;
+		ReviewBoardDTO review = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from reviewboard where rb_no = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				review = new ReviewBoardDTO();
+				review.setRbNo(res.getInt("rb_no"));
+				review.setRbTitle(res.getString("rb_title"));
+				review.setRbWriter(res.getString("rb_writer"));
+				review.setRbBookTitle(res.getString("rb_booktitle"));
+				review.setRbContent(res.getString("rb_content"));
+				review.setRbDate(res.getDate("rb_date"));
+				review.setRbReadCnt(res.getInt("rb_readcnt"));
+				review.setRbRecommend(res.getInt("rb_recommend"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return review;
+	}
 }
