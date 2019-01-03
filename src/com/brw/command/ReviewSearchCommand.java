@@ -8,13 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardDTO;
 
-public class ReviewPaginationCommand implements Command {
+public class ReviewSearchCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		DAO dao = DAO.getInstance();
 		
 		// 파라미터 및 변수 처리
+		String searchType = request.getParameter("searchType");
+		String searchKeyword = request.getParameter("searchKeyword");
+		
 		int cPage = 0;
 		try {
 		cPage = Integer.parseInt(request.getParameter("cPage"));
@@ -26,13 +29,14 @@ public class ReviewPaginationCommand implements Command {
 		int numPerPage = 10;
 		
 		// 페이징용 리뷰리스트 가져오기
-		List<ReviewBoardDTO> list = dao.reivewPagination(cPage, numPerPage);
-		
+		List<ReviewBoardDTO> list = dao.reivewSearch(searchType, searchKeyword, cPage, numPerPage);
+		System.out.println(list);
 		// 페이지바 작업
-		int totalContents = dao.countReviewAll();
+		int totalContents = dao.countReviewSearch(searchType, searchKeyword);
 		
 		int totalPages = (int)Math.ceil(((double)totalContents/numPerPage));
-		int pageBarSize = 5;
+		
+		int pageBarSize = 10;
 		
 		int startPage = ((cPage - 1) / pageBarSize) * pageBarSize + 1;
 		int endPage = startPage + pageBarSize - 1;
@@ -80,7 +84,6 @@ public class ReviewPaginationCommand implements Command {
 		
 		request.setAttribute("list", list);
 		request.setAttribute("pageBar", pageBar);
-		
 	}
 
 }
