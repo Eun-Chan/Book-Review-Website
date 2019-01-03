@@ -312,7 +312,7 @@ public class DAO {
 		ReviewBoardDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from tempreviewtable where review_no = ?";
+		String query = "select * from reviewboard where rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -321,14 +321,14 @@ public class DAO {
 			res = pstmt.executeQuery();
 			if(res.next()) {
 				review = new ReviewBoardDTO();
-				review.setRbNo(res.getInt("review_no"));
-				review.setRbTitle(res.getString("review_title"));
-				review.setRbWriter(res.getString("review_writer"));
-				review.setRbBookTitle(res.getString("review_bookid"));
-				review.setRbContent(res.getString("review_content"));
-				review.setRbDate(res.getDate("review_date"));
-				review.setRbReadCnt(res.getInt("review_readcnt"));
-				review.setRbRecommend(res.getInt("review_recommend"));
+				review.setRbNo(res.getInt("rb_no"));
+				review.setRbTitle(res.getString("rb_title"));
+				review.setRbWriter(res.getString("rb_writer"));
+				review.setRbBookTitle(res.getString("rb_booktitle"));
+				review.setRbContent(res.getString("rb_content"));
+				review.setRbDate(res.getDate("rb_date"));
+				review.setRbReadCnt(res.getInt("rb_readcnt"));
+				review.setRbRecommend(res.getInt("rb_recommend"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -40,6 +40,15 @@ $(function(){
 	});
 });
 </script>
+<style>
+div#search-rb_booktitle{
+	display: inline-block;
+}
+div#search-rb_title{
+	display: none;
+}
+</style>
+
 <div id="review-list-container" class="container-fluid">
 	<h2 class="text-primary">리뷰게시판</h2>
 	<button class="btn btn-primary" onclick="goHome();">메인으로</button>

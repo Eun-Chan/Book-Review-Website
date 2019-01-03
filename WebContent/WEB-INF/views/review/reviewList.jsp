@@ -20,6 +20,15 @@ function goHome(){
 	location.href="<%=request.getContextPath() %>";
 }
 </script>
+<style>
+div#search-rb_booktitle{
+	display: inline-block;
+}
+div#search-rb_title{
+	display: none;
+}
+</style>
+
 <div id="review-list-container" class="container-fluid">
 	<h2 class="text-primary">리뷰게시판</h2>
 	<button class="btn btn-primary" onclick="goHome();">메인으로</button>
@@ -72,16 +81,16 @@ function goHome(){
 			<option value="book" <%="book".equals(searchType)?"selected":"" %>>도서명</option>
 			<option value="rbTitle" <%="rbTitle".equals(searchType)?"selected":"" %>>제목</option>
 		</select>
-		<div id="search-book">
+		<div id="search-rb_booktitle">
 			<form action="<%=request.getContextPath()%>/review/reviewSearch.do">
 				<input type="hidden" name="searchType" value="rb_booktitle"/>
 				<input type="text" name="searchKeyword" value="<%="book_booktitle".equals(searchType)?searchKeyword:""%>"/>
 				<button type="submit">검색</button>
 			</form>
 		</div>
-		<div id="search-rbTitle">
+		<div id="search-rb_title">
 			<form action="<%=request.getContextPath()%>/review/reviewSearch.do">
-				<input type="hidden" name="searchType" value="rb_Title"/>
+				<input type="hidden" name="searchType" value="rb_title"/>
 				<input type="text" name="searchKeyword" value="<%="rb_Title".equals(searchType)?searchKeyword:""%>"/>
 				<button type="submit">검색</button>
 			</form>
