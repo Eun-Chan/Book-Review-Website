@@ -58,7 +58,7 @@ div#search-rb_title{
 				<tr>
 					<td><%=rb.getRbNo() %></td>
 					<td><%=rb.getRbBookTitle()%></td>
-					<td><%=rb.getRbTitle() %></td>
+					<td><a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a></td>
 					<td><%=rb.getRbWriter() %></td>
 					<td><%=rb.getRbDate() %></td>
 					<td><%=rb.getRbReadCnt() %></td>
