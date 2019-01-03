@@ -19,7 +19,7 @@ public class GetReviewSelectOne implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int reviewNo = 2;
+		int reviewNo = 50;
 		DAO dao = DAO.getInstance();
 		
 		ReviewBoardDTO review = dao.getReviewSelectOne(reviewNo);
