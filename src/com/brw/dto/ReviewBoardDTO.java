@@ -17,7 +17,8 @@ public class ReviewBoardDTO implements Serializable{
 	private int rbNo;
 	private String rbTitle;
 	private String rbWriter;
-	private String rbIsbn;
+	private String rbBookTitle;
+	private long rbIsbn;
 	private String rbContent;
 	private Date rbDate;
 	private double rbStarscore;
@@ -25,15 +26,17 @@ public class ReviewBoardDTO implements Serializable{
 	private int rbRecommend;
 	private String rbOriginalFilename;
 	private String rbRenamedFilename;
+	private int rbReport;
 	
 	public ReviewBoardDTO() {}
 
-	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbIsbn, String rbContent, Date rbDate,
-			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename) {
+	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, long rbIsbn, String rbContent, Date rbDate,
+			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
 		this.rbWriter = rbWriter;
 		this.rbIsbn = rbIsbn;
+		this.rbBookTitle = rbBookTitle;
 		this.rbContent = rbContent;
 		this.rbDate = rbDate;
 		this.rbStarscore = rbStarscore;
@@ -41,6 +44,7 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbRecommend = rbRecommend;
 		this.rbOriginalFilename = rbOriginalFilename;
 		this.rbRenamedFilename = rbRenamedFilename;
+		this.rbReport = rbReport;
 	}
 
 	public int getRbNo() {
@@ -67,11 +71,19 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbWriter = rbWriter;
 	}
 
-	public String getRbIsbn() {
+	public long getRbIsbn() {
 		return rbIsbn;
 	}
 
-	public void setRbIsbn(String rbIsbn) {
+	public String getRbBookTitle() {
+		return rbBookTitle;
+	}
+
+	public void setRbBookTitle(String rbBookTitle) {
+		this.rbBookTitle = rbBookTitle;
+	}
+
+	public void setRbIsbn(long rbIsbn) {
 		this.rbIsbn = rbIsbn;
 	}
 
@@ -131,12 +143,20 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbRenamedFilename = rbRenamedFilename;
 	}
 
+	public int getRbReport() {
+		return rbReport;
+	}
+
+	public void setRbReport(int rbReport) {
+		this.rbReport = rbReport;
+	}
+
 	@Override
 	public String toString() {
-		return "ReviewBoardDTO [rbNo=" + rbNo + ", rbTitle=" + rbTitle + ", rbWriter=" + rbWriter + ", rbIsbn=" + rbIsbn
+		return "ReviewBoardDTO [rbNo=" + rbNo + ", rbTitle=" + rbTitle + ", rbWriter=" + rbWriter + ", rbBookTitle=" + rbBookTitle + ", rbIsbn=" + rbIsbn
 				+ ", rbContent=" + rbContent + ", rbDate=" + rbDate + ", rbStarscore=" + rbStarscore + ", rbReadCnt="
 				+ rbReadCnt + ", rbRecommend=" + rbRecommend + ", rbOriginalFilename=" + rbOriginalFilename
-				+ ", rbRenamedFilename=" + rbRenamedFilename + "]";
+				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + "]";
 	}
 	
 	
