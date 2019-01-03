@@ -14,6 +14,7 @@ import com.brw.command.CreateUserCommand;
 import com.brw.command.GetReviewSelectOne;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
+import com.brw.command.insertComment;
 
 /**
  * Servlet implementation class FrontController
@@ -87,6 +88,10 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 
+		}
+		else if(command.equals("/insertComment.do")) {
+			com = new insertComment();
+			com.execute(req, res);
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

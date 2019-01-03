@@ -8,9 +8,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath()%>/js/bootstrap.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <title>Insert title here</title>
 </head>
@@ -53,22 +53,55 @@
 			</ul>
 		</div>
 		<div id ="comment-Content">
-			<span>해당 글에대한 댓글 목록 보여주는 곳</span>
+			<div id="comment-list">
+				<ul>
+					<li>
+						<div id="comment-html">
+							<div id="comment-header">
+								<span>댓글 작성자</span>
+								<span>댓글 작성날짜</span>
+							</div>
+							<div id ="comment-body">
+								<span>댓글 내용!!</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div id ="comment-Area">
 			<table>
 				<tr>
 					<td>
 						<div id="comment-textArea">
-							<textarea name="comment" id=""rows="3" cols="95">댓글은 로그인 후 이용 하실수 있습니다.</textarea>
+							<textarea name="comment" id="comment-area"rows="3" cols="95"></textarea>
 						</div>
 					</td>	
 				<td>
-					<input type="button" value="등록" />
+					<input type="button" value="등록" id="comment-button"/>
 				</td>
 				</tr>
 			</table>
 		</div>
 	</div>
+	<script>
+		
+		$("#comment-button").on('click',function(){
+			if($("#comment-area").val().trim().length ==0){
+				alert("댓글을 입력해 주세요.");
+				return;
+			}
+			else{
+				var textAreaVal = $("#comment-area").val();
+				$.ajax({
+					url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=kmw0422",
+					success:function(data){
+						console.log(data);
+					}
+				});
+			}
+			
+		});
+	</script>
 </body>
 </html>

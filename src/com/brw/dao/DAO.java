@@ -11,8 +11,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
-import com.brw.dto.UserDTO;
+import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
 
 public class DAO {
 	
@@ -307,5 +308,26 @@ public class DAO {
 			
 		}
 		return review;
+	}
+
+	public int insertComment(ReviewBoardComment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,?,?,default)";
+		int result = 0;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, comment.getRbCommentWriter());
+			pstmt.setString(2, comment.getRbCommentContent());
+			pstmt.setInt(3, comment.getRbRef());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
