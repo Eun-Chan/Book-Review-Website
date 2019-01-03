@@ -11,7 +11,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.brw.dto.ReviewDTO;
+import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.UserDTO;
 
 public class DAO {
@@ -87,32 +87,42 @@ public class DAO {
 		return true;
 	}
 
-	public List<ReviewDTO> getReviewList() {
-		List<ReviewDTO> list = null;
+	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
+		List<ReviewBoardDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from tempreviewtable order by review_no desc";
+		String query = "select * from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) where rnum between ? and ?";
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
 			rset = pstmt.executeQuery();
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewDTO r = new ReviewDTO();
-				r.setReviewNo(rset.getInt("review_no"));
-				r.setReviewTitle(rset.getString("review_title"));
-				r.setReviewWriter(rset.getString("review_writer"));
-				r.setReviewBookId(rset.getString("review_bookid"));
-				r.setReviewContent(rset.getString("review_content"));
-				r.setReviewDate(rset.getDate("review_date"));
-				r.setReviewReadCnt(rset.getInt("review_readcnt"));
-				r.setReviewRecommend(rset.getInt("review_recommend"));
+				ReviewBoardDTO rb = new ReviewBoardDTO();
 				
-				list.add(r);
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbContent(rset.getString("rb_content"));
+				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+				rb.setRbReport(rset.getInt("rb_report"));
+				
+				list.add(rb);
 			}
 			
 		} catch (SQLException e) {
@@ -132,47 +142,130 @@ public class DAO {
 		return list;
 	}
 
-
-	public ReviewDTO getReviewSelectOne(String reviewBookId) {
+	public int countReviewAll() {
+		int result = 0;
+		
 		Connection conn = null;
-		ReviewDTO review = null;
 		PreparedStatement pstmt = null;
-		ResultSet res = null;
-		String query = "select * from tempreviewtable where reviewBookId = ?";
+		ResultSet rset = null;
+		String query = "select count(*) from reviewboard order by rb_no desc";
+		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, reviewBookId);
-
-			res = pstmt.executeQuery();
-			if(res.next()) {
-				review = new ReviewDTO();
-				review.setReviewNo(res.getInt("review_no"));
-				review.setReviewTitle(res.getString("review_title"));
-				review.setReviewWriter(res.getString("review_writer"));
-				review.setReviewBookId(res.getString("review_bookid"));
-				review.setReviewContent(res.getString("review_content"));
-				review.setReviewDate(res.getDate("review_date"));
-				review.setReviewReadCnt(res.getInt("review_readcnt"));
-				review.setReviewRecommend(res.getInt("review_recommend"));
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
-				res.close();
+				rset.close();
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
-		return review;
+		
+		return result;
 	}
-	
-	
 
+	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
+		List<ReviewBoardDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) where rnum between ? and ?";
+		query = query.replace("searchType", searchType);
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			pstmt.setInt(2, startRnum);
+			pstmt.setInt(3, endRnum);
+			
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				ReviewBoardDTO rb = new ReviewBoardDTO();
+				
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbContent(rset.getString("rb_content"));
+				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+				rb.setRbReport(rset.getInt("rb_report"));
+				
+				list.add(rb);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return list;
+	}
+
+	public int countReviewSearch(String searchType, String searchKeyword) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from reviewboard where searchType like '%'||?||'%' order by rb_no desc";
+		query = query.replace("searchType", searchType);
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }
