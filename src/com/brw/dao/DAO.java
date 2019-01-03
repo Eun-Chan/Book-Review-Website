@@ -12,7 +12,6 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.brw.dto.ReviewBoardDTO;
-import com.brw.dto.ReviewDTO;
 import com.brw.dto.UserDTO;
 
 public class DAO {
@@ -86,51 +85,6 @@ public class DAO {
 		
 
 		return true;
-	}
-
-	public List<ReviewDTO> getReviewList() {
-		List<ReviewDTO> list = null;
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String query = "select * from tempreviewtable order by review_no desc";
-		
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			rset = pstmt.executeQuery();
-			
-			list = new ArrayList<>();
-			while(rset.next()) {
-				ReviewDTO r = new ReviewDTO();
-				r.setReviewNo(rset.getInt("review_no"));
-				r.setReviewTitle(rset.getString("review_title"));
-				r.setReviewWriter(rset.getString("review_writer"));
-				r.setReviewBookId(rset.getString("review_bookid"));
-				r.setReviewContent(rset.getString("review_content"));
-				r.setReviewDate(rset.getDate("review_date"));
-				r.setReviewReadCnt(rset.getInt("review_readcnt"));
-				r.setReviewRecommend(rset.getInt("review_recommend"));
-				
-				list.add(r);
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
-		return list;
 	}
 
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
