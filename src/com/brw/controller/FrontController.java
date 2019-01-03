@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
+import com.brw.command.IdCheckCommand;
 import com.brw.command.ReviewPaginationCommand;
 import com.google.gson.Gson;
 
@@ -77,8 +78,14 @@ public class FrontController extends HttpServlet {
 			//com = new BookInfomationCommand();
 			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
+		else if(command.equals("/idCheck.do")) {
+			com = new IdCheckCommand();
+			com.execute(req, res);
+		}
 		
-		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);	
+		if(viewPage != null) {
+			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+			dispatcher.forward(req, res);
+		}
 	}
 }

@@ -12,17 +12,18 @@
 </head>
 <body>
 <nav class="navbar navbar-default">
+	<!-- 너비가 768px 이하가 될 시 data-target을 통해 해당 네비바를 toggle형태로 압축 -->
 	<div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.jsp"><img src="images/logo.png"></a>
-    </div>
+    	<!-- Brand and toggle get grouped for better mobile display -->
+    	<div class="navbar-header">
+      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
+        	<span class="sr-only">Toggle navigation</span>
+        	<span class="icon-bar"></span>
+        	<span class="icon-bar"></span>
+        	<span class="icon-bar"></span>
+      	</button>
+      	<a class="navbar-brand" href="index.jsp"><img src="images/logo.png"></a>
+    	</div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="topHeader">
@@ -57,7 +58,7 @@
     </div>
 </nav>
 	
-<!-- The Modal -->
+<!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -71,30 +72,31 @@
       <!-- Modal body -->
       <div class="modal-body">
 		<form action="/action_page.php">
-  <div class="form-group">
-    <label for="email">아이디</label>
-    <input type="email" class="form-control" id="email">
-  </div>
-  <div class="form-group">
-    <label for="pwd">비밀번호</label>
-    <input type="password" class="form-control" id="pwd">
-  </div>
-  <div class="form-group form-check">
-    <label class="form-check-label">
-      <input class="form-check-input" type="checkbox"> 아이디 저장
-    </label>
-  </div>
-  <button type="submit" class="btn btn-primary">로그인</button>
-  <button type="button" class="btn btn-primary" onclick="location.href='signUp.jsp'">회원가입</button>
-</form>        
-      </div>
+  			<div class="form-group">
+    			<label for="email">아이디</label>
+    			<input type="email" class="form-control" id="email">
+  			</div>
+  			<div class="form-group">
+    			<label for="pwd">비밀번호</label>
+    			<input type="password" class="form-control" id="pwd">
+  			</div>
+  			<div class="form-group form-check">
+    			<label class="form-check-label">
+      				<input class="form-check-input" type="checkbox"> 아이디 저장
+    			</label>
+  			</div>
+  			<button type="submit" class="btn btn-primary">로그인</button>
+  			<button type="button" class="btn btn-primary" onclick="location.href='signUp.jsp'">회원가입</button>
+		</form>        
+      </div> <!-- modal-body 끝 -->
+      
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">나가기</button>
       </div>
-    </div>
-  </div>
-</div>
+    </div> <!-- modal-content 끝 -->
+  </div> <!-- modal-dialog 끝 -->
+</div> <!-- modal fade 끝 -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	

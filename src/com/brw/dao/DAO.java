@@ -82,7 +82,6 @@ public class DAO {
 				+ "";
 		
 		PreparedStatement pstmt = null;
-		
 
 		return true;
 	}
@@ -130,5 +129,44 @@ public class DAO {
 		
 		
 		return list;
+	}
+
+	/**
+	 * @param userId
+	 */
+	public int idCheck(String userId) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) as cnt from tempusertable where userId = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }
