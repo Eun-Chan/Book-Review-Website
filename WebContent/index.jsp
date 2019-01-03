@@ -8,7 +8,7 @@
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-	여기는 index.jsp
+	여기는 index.jsp 
 	<a href="reviewList.do">헤헤</a>
 
 	<a href="1.do">1</a>

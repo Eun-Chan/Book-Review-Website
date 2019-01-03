@@ -46,7 +46,7 @@
 				<label for="inputName" class="col-sm-2 control-label"></label>
 				<div class="col-sm-6">
       				<button type="submit" class="btn btn-primary">회원가입</button>
-      				<button type="button" class="btn btn-primary">취소하기</button>
+      				<button type="button" class="btn btn-primary" onclick="location.href='index.jsp'">취소하기</button>
     			</div>
 			</div>
 		</form>
