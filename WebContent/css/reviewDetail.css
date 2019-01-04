@@ -1,0 +1,211 @@
+/* 리뷰 디테일 게시판 css */
+div{
+	display:inline;
+	float:left;
+	margin:0 auto;
+	height:auto;
+}
+li{
+	list-style: none;
+}
+#side-menu #left-menu a{
+	text-decoration: none;
+}
+
+#reviewDetail{
+	display:block;
+	float:none;
+	text-align:left;
+	width:800px;
+	clear: both;
+	margin: 0 auto;
+	padding: 0;
+}
+#reviewDetail-Header{
+	width:800px;
+/* 	border-bottom: 1px solid black; */
+	padding: 8px 0px 5px 10px;
+	min-height: 40px;
+	background: #f1f1f1;
+}
+#reviewDetail-Header span{
+	font-size: 0.8em;
+}
+#reviewDetail-Header #comment{
+	float: right;
+}
+#reviewDetail-Header #date{
+	float: left;
+}
+#reviewDetail-Title{
+	width:800px;
+	border-bottom: 1px solid #f1f1f1;
+	padding : 35px 0 25px;
+	min-height: 50px;
+	text-align: center;
+}
+#reviewDetail-Writer{
+	width:800px;
+	text-align: right;
+	margin-top: 8px;
+}
+#reviewDetail-Writer span{
+	font-size: 0.8em;
+}
+#reviewDetail-Writer hr{
+	margin-top: 0;
+}
+#reviewDetail-Content{
+	width:800px;
+	min-height: 400px;
+/* 	border: 1px solid black; */
+	margin: 25px 0px 30px 0px;
+	padding-top:20px;
+	padding-left: 10px;
+}
+/*좋아요 버튼*/
+#like-Wapper{
+	width:800px;
+	display: inline-block;
+	vertical-align: middle;
+	margin:0 auto;
+	float:none;
+	padding-left:48%;
+}
+#like{
+	text-align: center;
+	width:50px;
+	height:50px;
+	border: 1px solid black;
+	position: relative;
+	line-height: 10px;
+	color: pink;
+	cursor: pointer;
+}
+#like span{
+	margin: 0;
+	border: 0;
+	padding: 0;
+	outline: 0;
+	font-size: 100%;
+}
+
+/*사이드 메뉴*/
+#side-menu{
+	width:800px;
+	margin-top:5px;
+	margin-bottom : 10px;
+	padding:10px 0 5px 0;
+	clear:both;
+	background:#f7f7f7;
+	display:inline;
+}
+#left-menu{
+	float:left;
+	margin-left:4px;
+	display:block;
+	list-style:none;
+	padding : 0;
+}
+#right-menu{
+	float:right;
+	margin-right:4px;	
+	display:block;
+	list-style:none;
+}
+#right-menu li{
+	float:right;
+}
+#left-menu li{
+	float:left;
+	padding-left:5px;
+}
+.btn-gradient.cyan {
+    background: rgba(27,188,194,1);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
+    background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    background: -moz-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    background: -o-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    background: linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
+}
+.btn-gradient {
+    text-decoration: none;
+    color: white;
+    padding: 5px 15px;
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.21);
+    border-bottom: 4px solid rgba(0,0,0,0.21);
+    border-radius: 4px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+.btn-gradient.red{ 
+    background: rgba(250,90,90,1);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(250,90,90,1)), to(rgba(232,81,81,1)));
+    background: -webkit-linear-gradient(rgba(250,90,90,1) 0%, rgba(232,81,81,1) 100%);
+    background: -moz-linear-gradient(rgba(250,90,90,1) 0%, rgba(232,81,81,1) 100%);
+    background: -o-linear-gradient(rgba(250,90,90,1) 0%, rgba(232,81,81,1) 100%);
+    background: linear-gradient(rgba(250,90,90,1) 0%, rgba(232,81,81,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fa5a5a', endColorstr='#e85151', GradientType=0 );
+}
+.btn-gradient.purple { 
+    background: rgba(203,153,197,1);
+    background: -moz-linear-gradient(top, rgba(203,153,197,1) 0%, rgba(181,134,176,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(203,153,197,1)), color-stop(100%, rgba(181,134,176,1)));
+    background: -webkit-linear-gradient(top, rgba(203,153,197,1) 0%, rgba(181,134,176,1) 100%);
+    background: -o-linear-gradient(top, rgba(203,153,197,1) 0%, rgba(181,134,176,1) 100%);
+    background: -ms-linear-gradient(top, rgba(203,153,197,1) 0%, rgba(181,134,176,1) 100%);
+    background: linear-gradient(to bottom, rgba(203,153,197,1) 0%, rgba(181,134,176,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cb99c5', endColorstr='#b586b0', GradientType=0 );
+}
+.btn-gradient.green {
+    background: rgba(130,200,160,1);
+    background: -moz-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(130,200,160,1)), color-stop(100%, rgba(130,199,158,1)));
+    background: -webkit-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -o-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -ms-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: linear-gradient(to bottom, rgba(130,200,160,1) 0%, rgba(124, 185, 149, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#82c8a0', endColorstr='#82c79e', GradientType=0 );
+}
+
+
+
+/* 댓글 css */
+#comment-Content{
+	width:800px;
+	min-height: 300px;
+	/* border: 1px solid #e1e1e1; */
+}
+#comment-Area{
+	width:800px;
+	border:1px solid #e1e1e1;
+	background:#f1f1f1;
+	padding: 12px 0px 12px 12px;
+}
+#comment-Area input{
+	width:68px;
+	height:67px;
+	text-align: center;
+}
+#comment-button{
+	display: inline-block;
+}
+#comment-textArea{
+	width:700px;
+}
+#comment-html{
+	width:720px;
+	border-top: 1px solid #dcdcdc;
+}
+#comment-header{
+	display: inline-block;
+	max-width: 600px;
+}
+#comment-body{
+	display: inline-block;
+	max-width:600px;
+	clear: both;
+	margin-top: 20px;
+}

@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO" %>
@@ -18,10 +17,10 @@
 <style>
 /* 검색창 보이기&보이지 않기 */
 div#search-rb_booktitle{
-	display: inline-block;
+	display: <%="rb_booktitle".equals(searchType)?"inline-block":"none"%>;
 }
 div#search-rb_title{
-	display: none;
+	display: <%="rb_title".equals(searchType)?"inline-block":"none"%>;
 }
 
 /* 테이블 영역 */
@@ -39,14 +38,24 @@ div.form-group {
 div.search-bar {
 	width: 400px;
 }
-
-
 </style>
 <script>
 // 인덱스로 이동하는 함수
 function goHome(){
 	location.href="<%=request.getContextPath() %>";
 }
+// 검색 후 알맞은 검색폼 보여주기
+$(function(){
+	var sRbbooktitle = $("#search-rb_booktitle");
+	var sRbtitle = $("#search-rb_title");
+	
+	$("select#searchType").change(function(){
+		sRbbooktitle.hide();
+		sRbtitle.hide();
+		
+		$("#search-"+$(this).val()).css("display","inline-block");
+	});
+});
 $(function(){
 	$("button#btn-write").on("click",function(){
 		location.href="<%=request.getContextPath()%>/review/reviewWrite.do";
@@ -69,7 +78,7 @@ $(function(){
 		<table class="table table-hover table-info" id="review-list-table">
 			<thead>
 				<tr>
-	 				<th>no</th>
+					<th>no</th>
 					<th class="col-sm-2">도서명</th>
 					<th class="col-sm-6">제목</th>
 					<th>작성자</th>
@@ -135,8 +144,6 @@ $(function(){
 		<button id="btn-write" class="btn btn-success">리뷰 작성</button>
 	</div>
 	
-	
-	
 </div> <!-- end of #review-list-container -->
-<!-- 테스트 -->
+
 
