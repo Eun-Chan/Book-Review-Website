@@ -1,7 +1,6 @@
 package com.brw.dto;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 public class ReviewBoardComment implements Serializable{
 
@@ -13,7 +12,7 @@ public class ReviewBoardComment implements Serializable{
 	private String rbCommentWriter; //댓글 작성자
 	private String rbCommentContent; //댓글 메인 컨텐츠
 	private int rbRef; //댓글이 참조할 게시판 번호
-	private Date rbCommentDate; //댓글 작성날짜
+	private String rbCommentDate; //댓글 작성날짜
 	
 	
 	public int getRbCommentNo() {
@@ -50,14 +49,20 @@ public class ReviewBoardComment implements Serializable{
 	public void setRbRef(int rbRef) {
 		this.rbRef = rbRef;
 	}
-	public Date getRbCommentDate() {
+	public String getRbCommentDate() {
 		return rbCommentDate;
 	}
-	public void setRbCommentDate(Date rbCommentDate) {
+	public void setRbCommentDate(String rbCommentDate) {
 		this.rbCommentDate = rbCommentDate;
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	@Override
+	public String toString() {
+		return "ReviewBoardComment [rbCommentNo=" + rbCommentNo + ", rbCommentWriter=" + rbCommentWriter
+				+ ", rbCommentContent=" + rbCommentContent + ", rbRef=" + rbRef + ", rbCommentDate=" + rbCommentDate
+				+ "]";
 	}
 	
 }

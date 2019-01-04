@@ -108,6 +108,7 @@ public class FrontController extends HttpServlet {
 			com = new insertComment();
 			com.execute(req, res);
 		}
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

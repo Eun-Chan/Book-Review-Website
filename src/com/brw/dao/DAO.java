@@ -1,9 +1,11 @@
 package com.brw.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -313,7 +315,7 @@ public class DAO {
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,?,?,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default)";
 		int result = 0;
 		try {
 			conn = dataSource.getConnection();
@@ -334,9 +336,11 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select * from reviewboard_comment where rb_ref = ?";
+		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date\r\n" + 
+				"from reviewboard_comment where rb_ref=? order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 		
 		try {
 			conn = dataSource.getConnection();
@@ -350,7 +354,7 @@ public class DAO {
 				comment.setRbCommentWriter(res.getString("rb_comment_writer"));
 				comment.setRbCommentContent(res.getString("rb_comment_content"));
 				comment.setRbRef(res.getInt("rb_ref"));
-				comment.setRbCommentDate(res.getDate("rb_comment_date"));
+				comment.setRbCommentDate(res.getString("rb_comment_date"));
 				
 				reviewComment.add(comment);
 			}
@@ -418,4 +422,56 @@ public class DAO {
 		
 		return rbList;
 	}
+
+	public int getReivewBoardCommentAllCount(int rbNo) {
+		int count = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*)count  from reviewboard_comment where rb_ref=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				count = res.getInt("count");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return count;
+	}
+
+	public ReviewBoardComment getReviewBoardCommentLast(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		ReviewBoardComment lastComment = null;
+		String query ="SELECT * FROM (SELECT * FROM reviewboard_comment where rb_ref=? ORDER BY rb_comment_no DESC) WHERE ROWNUM = 1";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			lastComment = new ReviewBoardComment();
+			if(res.next()) {
+				lastComment.setRbCommentNo(res.getInt("rb_comment_no"));
+				lastComment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				lastComment.setRbCommentContent(res.getString("rb_comment_content"));
+				lastComment.setRbRef(res.getInt("rb_ref"));
+				lastComment.setRbCommentDate(res.getString("rb_comment_date"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lastComment;
+	}
+
 }

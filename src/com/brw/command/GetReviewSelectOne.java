@@ -28,7 +28,13 @@ public class GetReviewSelectOne implements Command{
 		
 		//해당 게시물 댓글 가져오기
 		List<ReviewBoardComment> reviewComment = dao.getReviewBoardCommentList(rbNo);
+		//해당 게시물 댓글갯수 가져오기
+		int count = dao.getReivewBoardCommentAllCount(rbNo);
+		//제일 마지막 댓글 가져오기
+		ReviewBoardComment lastReviewComment = dao.getReviewBoardCommentLast(rbNo);
 		
+		request.setAttribute("lastReviewComment", lastReviewComment);
+		request.setAttribute("count",count);
 		request.setAttribute("review", review);
 		request.setAttribute("reviewComment", reviewComment);
 	}
