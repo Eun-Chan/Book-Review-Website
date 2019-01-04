@@ -27,7 +27,7 @@ public class GetReviewSelectOne implements Command{
 		ReviewBoardDTO review = dao.getReviewSelectOne(rbNo);
 		
 		//해당 게시물 댓글 가져오기
-		List<ReviewBoardComment> reviewComment = dao.getReviewBoardCommentList(reviewNo);
+		List<ReviewBoardComment> reviewComment = dao.getReviewBoardCommentList(rbNo);
 		
 		request.setAttribute("review", review);
 		request.setAttribute("reviewComment", reviewComment);

@@ -36,7 +36,7 @@ public class ReviewSearchCommand implements Command {
 		
 		int totalPages = (int)Math.ceil(((double)totalContents/numPerPage));
 		
-		int pageBarSize = 10;
+		int pageBarSize = 5;
 		
 		int startPage = ((cPage - 1) / pageBarSize) * pageBarSize + 1;
 		int endPage = startPage + pageBarSize - 1;
