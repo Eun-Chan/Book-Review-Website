@@ -78,7 +78,7 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
-		else if(command.equals("/bookInfo.do")) {
+		else if(command.equals("/bookInfo/bookInfo.do")) {
 			//com = new BookInfomationCommand();
 			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
@@ -88,7 +88,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 
 		}
-		else if(command.equals("/bookList.do")) {
+		else if(command.equals("/bookList/bookList.do")) {
 	         viewPage = "/WEB-INF/views/bookList/bookList.jsp";
 	      }
 
