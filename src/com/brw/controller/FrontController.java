@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
+import com.brw.command.IndexCommand;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 
@@ -85,10 +86,16 @@ public class FrontController extends HttpServlet {
 			com = new ReviewPaginationCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
-
+		}
+		else if(command.equals("/index.do")) {
+			System.out.println("인덱스로 커멘드 호출");
+			com = new IndexCommand();
+			com.execute(req, res);
 		}
 		
-		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);	
+		if(viewPage != null) {
+			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+			dispatcher.forward(req, res);
+		}
 	}
 }

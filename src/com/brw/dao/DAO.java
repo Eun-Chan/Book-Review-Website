@@ -254,7 +254,6 @@ public class DAO {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -267,5 +266,60 @@ public class DAO {
 		}
 		
 		return result;
+	}
+	
+	/*광준:최근리뷰 5개 가져오기*/
+	public List<ReviewBoardDTO> selectReviewRecentList()
+	{
+		System.out.println("dao 접속성공");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		List<ReviewBoardDTO> rbList = new ArrayList<>();
+		String query = "SELECT * FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
+		
+		try {
+			System.out.println("쿼리실행시작");
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			System.out.println("쿼리실행완료");
+			while(rset.next())
+			{
+				ReviewBoardDTO rb = new ReviewBoardDTO();
+				
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbContent(rset.getString("rb_content"));
+				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+				rb.setRbReport(rset.getInt("rb_report"));
+				System.out.println("데이터"+rset.getString("rb_title"));
+				rbList.add(rb);
+				
+			}
+			System.out.println("리스트 길이"+rbList.size());
+		} catch (SQLException e) {
+			System.out.println("쿼리실패");
+			e.printStackTrace();
+		} finally {
+			try {
+				System.out.println("자원반납시작");
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("자원반납 실패");
+				e.printStackTrace();
+			}
+		}
+		
+		return rbList;
 	}
 }
