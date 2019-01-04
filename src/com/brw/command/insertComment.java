@@ -25,12 +25,12 @@ public class insertComment implements Command{
 		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
 		String rbCommentContent = request.getParameter("rbCommentContent");
 		String rbCommentWriter = request.getParameter("rbCommentWriter");
+		System.out.println(rbNo+","+rbCommentContent+","+rbCommentWriter);
 		
 		ReviewBoardComment comment = new ReviewBoardComment(rbCommentWriter, rbCommentContent, rbNo);
 		
 		DAO dao = DAO.getInstance();
 		int result = dao.insertComment(comment);
-		
 		if(result>0) {
 			Gson gson = new Gson();
 			try {

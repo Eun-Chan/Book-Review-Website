@@ -84,7 +84,9 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
 		else if(command.equals("/review/reviewDetail.do")) {
+			//해당 게시물 가져오는 쿼리
 			com = new GetReviewSelectOne();
+			//해당 게시글에 댓글 가져오는 쿼리가 들어와야함.
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 
@@ -93,8 +95,9 @@ public class FrontController extends HttpServlet {
 			com = new insertComment();
 			com.execute(req, res);
 		}
-		
-		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);	
+		if(viewPage!=null){			
+			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+			dispatcher.forward(req, res);	
+		}
 	}
 }

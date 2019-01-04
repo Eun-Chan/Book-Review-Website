@@ -1,8 +1,10 @@
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="com.brw.dto.*" %>
 <%
  	ReviewBoardDTO review = (ReviewBoardDTO)request.getAttribute("review");
+	List<ReviewBoardComment> reviewComment = (List<ReviewBoardComment>)request.getAttribute("reviewComment");
 %>
 <!DOCTYPE html>
 <html>
@@ -53,21 +55,25 @@
 			</ul>
 		</div>
 		<div id ="comment-Content">
+		<%if(reviewComment!=null) {%>
+			<%for(ReviewBoardComment rbc : reviewComment){ %>
 			<div id="comment-list">
 				<ul>
 					<li>
 						<div id="comment-html">
 							<div id="comment-header">
-								<span>댓글 작성자</span>
-								<span>댓글 작성날짜</span>
+								<span><%=rbc.getRbCommentWriter() %></span>
+								<span><%=rbc.getRbCommentDate() %></span>
 							</div>
 							<div id ="comment-body">
-								<span>댓글 내용!!</span>
+								<span><%=rbc.getRbCommentContent() %></span>
 							</div>
 						</div>
 					</li>
 				</ul>
 			</div>
+			<%} %>
+		<%} %>
 		</div>
 		<div id ="comment-Area">
 			<table>
@@ -85,7 +91,7 @@
 		</div>
 	</div>
 	<script>
-		
+		var result = 0;
 		$("#comment-button").on('click',function(){
 			if($("#comment-area").val().trim().length ==0){
 				alert("댓글을 입력해 주세요.");
@@ -97,8 +103,9 @@
 					url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=kmw0422",
 					success:function(data){
 						console.log(data);
+						result = data;
 					}
-				});
+				});				
 			}
 			
 		});

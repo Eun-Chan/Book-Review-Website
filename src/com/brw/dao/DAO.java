@@ -330,4 +330,36 @@ public class DAO {
 		
 		return result;
 	}
+
+	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "select * from reviewboard_comment where rb_ref = ?";
+		ResultSet res = null;
+		List<ReviewBoardComment> reviewComment = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+			res= pstmt.executeQuery();
+			reviewComment = new ArrayList<>();
+			while(res.next()) {
+				ReviewBoardComment comment = new ReviewBoardComment();
+				comment.setRbCommentNo(res.getInt("rb_comment_no"));
+				comment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				comment.setRbCommentContent(res.getString("rb_comment_content"));
+				comment.setRbRef(res.getInt("rb_ref"));
+				comment.setRbCommentDate(res.getDate("rb_comment_date"));
+				
+				reviewComment.add(comment);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return reviewComment;
+	}
 }
