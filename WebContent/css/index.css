@@ -1,0 +1,52 @@
+/* 인기도서 Start*/
+/* 이미지 */
+img#bookImage0, img#bookImage1, img#bookImage2, img#bookImage3
+{	
+	margin-top: 10%;
+}
+/* 하나의 행 */
+div.row
+{
+	margin-top: 5%;
+	margin-bottom: 5%;
+}
+/* 도서명 */
+h3.text-muted
+{
+	margin-bottom: 5%;
+}
+/* 인기도서 End*/
+hr.my-hr2
+{
+	border: 0;
+    height: 2px;
+    background: #ccc;
+}
+/* 최근 리뷰 */
+span.bookName
+{
+	font-size: 20px;
+}
+h3.subTitle
+{
+	margin-top: 2%;
+	margin-bottom: 2%;
+	margin-left: 10%;
+}
+hr.title-line
+{
+	width: 80%;
+}
+div.recent_comment
+{
+	margin-left: 10%;
+	margin-bottom: 2%;
+}
+span.writer-Time
+{
+	color: gray;
+}
+span.content
+{
+	font-size: 15px;
+}

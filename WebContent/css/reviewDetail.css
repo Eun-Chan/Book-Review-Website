@@ -5,6 +5,9 @@ div{
 	margin:0 auto;
 	height:auto;
 }
+li{
+	list-style: none;
+}
 #side-menu #left-menu a{
 	text-decoration: none;
 }
@@ -173,7 +176,7 @@ div{
 #comment-Content{
 	width:800px;
 	min-height: 300px;
-	border: 1px solid #e1e1e1;
+	/* border: 1px solid #e1e1e1; */
 }
 #comment-Area{
 	width:800px;
@@ -183,7 +186,7 @@ div{
 }
 #comment-Area input{
 	width:68px;
-	height:78px;
+	height:67px;
 	text-align: center;
 }
 #comment-button{
@@ -191,4 +194,18 @@ div{
 }
 #comment-textArea{
 	width:700px;
+}
+#comment-html{
+	width:720px;
+	border-top: 1px solid #dcdcdc;
+}
+#comment-header{
+	display: inline-block;
+	max-width: 600px;
+}
+#comment-body{
+	display: inline-block;
+	max-width:600px;
+	clear: both;
+	margin-top: 20px;
 }
