@@ -1,25 +1,35 @@
 package com.brw.command;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.dao.DAO;
-import com.brw.dto.ReviewDTO;
+import com.brw.dto.ReviewBoardComment;
+import com.brw.dto.ReviewBoardDTO;
 
 public class GetReviewSelectOne implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
-	}
-	public ReviewDTO reviewSelectOne(HttpServletRequest request, HttpServletResponse response) {
-		String reviewBookId = request.getParameter("reviewBookId");
+//		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
 		DAO dao = DAO.getInstance();
 		
-		ReviewDTO reivew = dao.getReviewSelectOne(reviewBookId);
+		ReviewBoardDTO review = dao.getReviewSelectOne(rbNo);
 		
-		return reivew;
+		//해당 게시물 댓글 가져오기
+		List<ReviewBoardComment> reviewComment = dao.getReviewBoardCommentList(rbNo);
+		
+		request.setAttribute("review", review);
+		request.setAttribute("reviewComment", reviewComment);
 	}
-
 }

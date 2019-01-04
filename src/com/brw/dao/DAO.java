@@ -11,8 +11,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
-import com.brw.dto.UserDTO;
+import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
 
 public class DAO {
 	
@@ -267,5 +268,98 @@ public class DAO {
 		}
 		
 		return result;
+	}
+
+	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
+		Connection conn = null;
+		ReviewBoardDTO review = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from reviewboard where rb_no = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				review = new ReviewBoardDTO();
+				review.setRbNo(res.getInt("rb_no"));
+				review.setRbTitle(res.getString("rb_title"));
+				review.setRbWriter(res.getString("rb_writer"));
+				review.setRbBookTitle(res.getString("rb_booktitle"));
+				review.setRbContent(res.getString("rb_content"));
+				review.setRbDate(res.getDate("rb_date"));
+				review.setRbReadCnt(res.getInt("rb_readcnt"));
+				review.setRbRecommend(res.getInt("rb_recommend"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return review;
+	}
+
+	public int insertComment(ReviewBoardComment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,?,?,default)";
+		int result = 0;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, comment.getRbCommentWriter());
+			pstmt.setString(2, comment.getRbCommentContent());
+			pstmt.setInt(3, comment.getRbRef());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "select * from reviewboard_comment where rb_ref = ?";
+		ResultSet res = null;
+		List<ReviewBoardComment> reviewComment = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+			res= pstmt.executeQuery();
+			reviewComment = new ArrayList<>();
+			while(res.next()) {
+				ReviewBoardComment comment = new ReviewBoardComment();
+				comment.setRbCommentNo(res.getInt("rb_comment_no"));
+				comment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				comment.setRbCommentContent(res.getString("rb_comment_content"));
+				comment.setRbRef(res.getInt("rb_ref"));
+				comment.setRbCommentDate(res.getDate("rb_comment_date"));
+				
+				reviewComment.add(comment);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return reviewComment;
 	}
 }
