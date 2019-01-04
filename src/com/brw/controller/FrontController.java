@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
 import com.brw.command.GetReviewSelectOne;
+
+import com.brw.command.IndexCommand;
+
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 import com.brw.command.insertComment;
@@ -89,8 +92,13 @@ public class FrontController extends HttpServlet {
 			//해당 게시글에 댓글 가져오는 쿼리가 들어와야함.
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
-
 		}
+		else if(command.equals("/index.do")) {
+			System.out.println("인덱스로 커멘드 호출");
+			com = new IndexCommand();
+			com.execute(req, res);
+		}
+
 		else if(command.equals("/bookList/bookList.do")) {
 	         viewPage = "/WEB-INF/views/bookList/bookList.jsp";
 	      }
@@ -103,6 +111,7 @@ public class FrontController extends HttpServlet {
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
 		}
+
 
 	}
 }
