@@ -16,10 +16,7 @@
 </head>
 <body onload="startPage()">
 	<jsp:include page="header.jsp"></jsp:include>
-<<<<<<< HEAD
-	여기는 index.jsp 
-=======
->>>>>>> 630b857ba4aaad8adf07fc25f3f3571410256b93
+	여기는 index.jsp
 	<a href="reviewList.do">헤헤</a>
 	<a href="review/reviewList.do">리뷰게시판</a>
 	<a href="book/bookInfo.do">해리포터상세보기테스트</a>
