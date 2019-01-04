@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-   
+<%@ include file="/header.jsp" %> 
+<%@ include file="/categoryMenu.jsp" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +11,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookList.css" />
 </head>
 <body>
+
 	<!-- 검색시작 -->
 	<div id="finder">
 		<!-- 검색 select태그 -->
