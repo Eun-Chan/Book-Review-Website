@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,7 +48,7 @@ $("#btn-search").click(function(){
 function test111(pageNo){
 	cPage = pageNo;
 	$.ajax({
-		url : "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbkmw71511428001&Query="+searchVal
+		url : "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbkmw71511428001&SearchTarget=Book&Query="+searchVal
 				+"&QueryType="+searchType+"&start="+cPage+"&MaxResults=10&SearchTarget=Book&output=js&callback=bookListDisplay",
 		jsonp: "bookListDisplay",
 		dataType: "jsonp"
@@ -57,22 +58,22 @@ function test111(pageNo){
 function bookListDisplay(success,data) {
 	$("div#pageBar span, div#pageBar a").remove();
 	
-	console.log(cPage);
 	var table = $("<table></table>");
 	var numPerPage = 10;
 	var totalResults = data.totalResults;//검색 결과 총 수
 	var totalPage = parseInt(Math.ceil(totalResults/numPerPage));//전체 페이지 수	
 	var pageBarSize = 5;
 	var startPage = Math.floor(((cPage - 1)/pageBarSize)) * pageBarSize +1;
-	console.log(startPage);
 	var endPage = startPage + pageBarSize -1;
 	var pageNo = startPage;//출력될 페이지 번호
 	
 	//도서정보 리스트 출력부
+	console.log(data);
+	console.log("isbn13!!!",data.item[0].isbn13);
 	for(var i in data.item) {
 		var book  = data.item[i];
 		var html = "<tr><td>"+"<img src ='"+book.cover+"'></td>";
-		html += "<td>"+book.title+"</td>";
+		html += "<td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'>"+book.title+"</td>";
 		html += "<td>"+book.description+"</td>";
 		html += "<td>"+book.author+"</td>";
 		html += "<td>"+book.pubDate+"</td>";
