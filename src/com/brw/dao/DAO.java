@@ -131,4 +131,44 @@ public class DAO {
 		
 		return list;
 	}
+
+	public List<ReviewDTO> getbookreview(String booktitle) {
+		List<ReviewDTO> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from reviewboard where rb_booktitle = ? order by rb_no desc";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, booktitle);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				ReviewDTO r = new ReviewDTO();
+				r.setReviewNo(rset.getInt("rb_no"));
+				r.setReviewTitle(rset.getString("rb_title"));
+				r.setReviewWriter(rset.getString("rb_writer"));
+				r.setReviewBookId(rset.getString("rb_isbn"));
+				r.setReviewRecommend(rset.getInt("rb_recommend"));
+				r.setReviewContent(rset.getString("rb_content"));
+				r.setReviewDate(rset.getDate("rb_date"));
+				r.setReviewReadCnt(rset.getInt("rb_readcnt"));
+				
+				list.add(r);
+			}
+			System.out.println("list="+list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
 }

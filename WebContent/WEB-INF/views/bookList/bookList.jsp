@@ -6,15 +6,13 @@
 <meta charset="UTF-8">
 <title>bookList</title>
 <script src = "<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
-<script>
-$(function(){
-	var title = $("#title");
-	var sname = $("#author");
-		
-		$("#search-"+$(this).val()).css("display","inline-block");
-	});
-});
-</script>
+<!-- table border 추가 -->
+<style>
+table,th, td, tr{
+	border:1px solid gray;
+	border-collapse: collapse;
+}
+</style>
 </head>
 <body>
 	<!-- 검색시작 -->
@@ -33,6 +31,7 @@ $(function(){
 	</div>
 	<div id="bookListContainer"></div>
 <script>
+/* 버튼클릭시 ajax */
 $("#btn-search").click(function() {
 	var searchVal = $("#search").val();
 	var searchType = $("#searchType").val();
@@ -42,8 +41,9 @@ $("#btn-search").click(function() {
 		dataType: "jsonp"
 	});
 });
+
 function bookListDisplay(success,data) {
-	var table = $("<table></table>");
+	var table = $("<table><th>"+""+"</th><th>"+"제목"+"</th><th>"+"설명"+"</th><th>"+"저자"+"</th><th>"+"출판일"+"</th><th>"+"가격"+"</th></table>");
 	console.log(data);
 	for(var i in data.item) {
 		var book  = data.item[i];

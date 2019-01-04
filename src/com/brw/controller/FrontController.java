@@ -1,6 +1,7 @@
 package com.brw.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
+import com.brw.command.GetReviewList;
 import com.brw.command.ReviewPaginationCommand;
+import com.brw.command.bookReviewCommend;
+import com.brw.dto.ReviewDTO;
 import com.google.gson.Gson;
 
 /**
@@ -79,6 +83,11 @@ public class FrontController extends HttpServlet {
 		}
 		else if(command.equals("/bookList.do")) {
 			viewPage = "/WEB-INF/views/bookList/bookList.jsp";
+		}
+		else if(command.equals("/getbookreview.do")) {
+			com = new bookReviewCommend();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

@@ -31,4 +31,6 @@ public class GetReviewList implements Command {
 		return list;
 	}
 
+	
+
 }
