@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.BookInfomationCommand;
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
 import com.brw.command.GetReviewSelectOne;
@@ -78,9 +79,10 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
-		else if(command.equals("/bookInfo/bookInfo.do")) {
-			//com = new BookInfomationCommand();
-			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
+		else if(command.equals("/book/bookInfo.do")) {
+			com = new BookInfomationCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/book/bookInfo.jsp";
 		}
 		else if(command.equals("/review/reviewDetail.do")) {
 			com = new GetReviewSelectOne();
@@ -88,8 +90,8 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 
 		}
-		else if(command.equals("/bookList/bookList.do")) {
-	         viewPage = "/WEB-INF/views/bookList/bookList.jsp";
+		else if(command.equals("/book/bookList.do")) {
+	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 	      }
 
 		
