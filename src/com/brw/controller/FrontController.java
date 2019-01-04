@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
+import com.brw.command.EmailAuth;
 import com.brw.command.IdCheckCommand;
 import com.brw.command.GetReviewSelectOne;
 import com.brw.command.ReviewPaginationCommand;
@@ -87,11 +88,15 @@ public class FrontController extends HttpServlet {
 			com = new IdCheckCommand();
 			com.execute(req, res);
 		}
+		
 		else if(command.equals("/review/reviewDetail.do")) {
 			com = new GetReviewSelectOne();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
-
+		}
+		else if(command.equals("/emailAuth.do")) {
+			com = new EmailAuth();
+			com.execute(req,res);
 		}
 		
 		if(viewPage != null) {

@@ -20,7 +20,7 @@
 				<label for="userId" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-4">
 					<input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요"/>
-					<span><p class="" id="id-help"></p></span>
+					<span><p id="id-help"></p></span>
 				</div>
 				<div class="col-sm-1">
 					<button type="button" class="btn btn-default" id="idCheck">중복 확인</button>
@@ -30,13 +30,14 @@
 				<label for="userPassword" class="col-sm-2 control-label">비밀번호</label>
 				<div class="col-sm-4">
 					<input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="비밀번호를 입력하세요"/>
-					<p class="help-block">특수문자 포함 8자 이상</p>
+					<span><p id="password-help"></p></span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="userPasswordOk" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-4">
 					<input type="password" class="form-control" id="userPasswordOk" name="userPasswordOk" placeholder="비밀번호를 다시입력하세요"/>
+					<span><p id="passwordOk-help"></p></span>
 				</div>
 			</div>
 			<br />
@@ -44,15 +45,17 @@
 				<label for="userName" class="col-sm-2 control-label">이름</label>
 				<div class="col-sm-4">
 					<input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요"/>
+					<span><p id="name-help"></p></span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="userEmail" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-4">
 					<input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="이메일"/>
+					<span><p id="email-help"></p></span>
 				</div>
 				<div class="col-sm-1">
-					<button type="button" class="btn btn-default">이메일 인증</button>
+					<button type="button" class="btn btn-default" id="emailAuth" disabled="disabled">이메일 인증</button>
 				</div>
 			</div>
 			<div class="form-group">
@@ -70,16 +73,27 @@
 <script src="js/bootstrap.min.js"></script>
 
 <script>
-	/* 회원가입 - 중복확인 버튼 */
+	/* 아이디 중복확인 통과 확인 변수 */
+	var ID_OK = 0;
+	/* 아이디 유효성 통과 확인 변수 */
+	var USERPASSWORD_OK = 0;
+	/* 이메일 유효성 통과 확인 변수 */
+	var USEREMAIL_OK = 0;
+	
+	/* 회원가입 - 중복확인 버튼 시작 */
 	$("#idCheck").on("click", function(){
+		
+		var regID = /^[a-z][a-z0-9]{7,14}$/;
 		var userId = $("#userId").val().trim();
-		/* 사용자가 7자리 이하를 입력할 경우 , ajax 요청 x */
-		if(userId.length < 8){
-			$("#id-help").text("8~15자의 영문 소문자, 숫자와 특수기호(_),(-)만 가능합니다.");
+		/* 아이디 유효성 검사 */
+		if(!regID.test(userId)){
+			$("#id-help").text("아이디는 영소문자/숫자만 가능하고, 단 소문자로 시작해야합니다.(8~15자리)");
 			$("#id-help").removeClass("text-success");
 			$('#id-help').addClass('text-danger');
-			return;	
-		}	
+			ID_OK = 0;
+			return;
+		}
+		
 		$.ajax({
 			url: "<%=request.getContextPath()%>/idCheck.do",
 			data: {userId:userId},
@@ -91,23 +105,119 @@
 					$("#id-help").text("멋진 아이디네요!");
 					$("#id-help").removeClass("text-danger");
 					$("#id-help").addClass("text-success");
+					ID_OK = 1;
 				}
 				else if(data == "false"){
 					$("#id-help").text("이미 사용중인 아이디거나 탈퇴된 아이디입니다.");
 					$("#id-help").removeClass("text-success");
 					$("#id-help").addClass("text-danger");
+					ID_OK = 0;
 				}
 			}
 		});
 	});
-	
 	/* 회원가입 - 중복확인 버튼 완료 */
+	
+	
+	/* 비밀번호 유효성 검사 시작 */
 	$("#userPassword").keyup(function(e){
 		console.log(e.key);
 		
-		var pwdLength = $(this).val().trim();
+		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-]).*$/g;
+		var userPassword = $(this).val().trim();
+		if(!regPassword.test(userPassword)){
+			$("#password-help").text("비밀번호는 숫자/문자/특수문자 포함형태로 8~15자리 입니다.");
+			$("#password-help").removeClass("text-success");
+			$("#password-help").addClass("text-danger");
+			USERPASSWORD_OK = 0;
+		}
+		else{
+			$("#password-help").text("멋진 비밀번호 입니다!");
+			$("#password-help").removeClass("text-danger");
+			$("#password-help").addClass("text-success");
+			USERPASSWORD_OK = 1;
+		}
+		console.log(USERPASSWORD_OK);
 	});
 	
+	/* 비밀번호 유효성 검사 완료 */
+	
+	/* 비밀번호 확인 검사 시작 */
+	$("#userPasswordOk").keyup(function(e){
+		
+		/* 비밀번호 위에 꺼 */
+		var pwd1 = $("#userPassword").val().trim();
+		var pwd2 = $("#userPasswordOk").val().trim();
+		
+		if(USERPASSWORD_OK == 0){
+			$("#passwordOk-help").text("유효하지 않은 비밀번호 입니다.");
+			$("#passwordOk-help").removeClass("text-success");
+			$("#passwordOk-help").addClass("text-danger");
+		}
+		else if(USERPASSWORD_OK == 1 && (pwd1 != pwd2)){
+			$("#passwordOk-help").text("비밀번호가 일치하지 않습니다.");
+			$("#passwordOk-help").removeClass("text-success");
+			$("#passwordOk-help").addClass("text-danger");
+		}
+		else{
+			$("#passwordOk-help").text("비밀번호 일치!");
+			$("#passwordOk-help").removeClass("text-danger");
+			$("#passwordOk-help").addClass("text-success");
+		}
+	});
+	/* 비밀번호 확인 검사 완료 */
+	
+	/* 이름 유효성 검사 시작 */
+	$("#userName").keyup(function(e){
+		
+		var regName = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,}$/;
+		var userName = $("#userName").val().trim();
+		
+		if(!regName.test(userName)){
+			$("#name-help").text("이름은 무적권 한글만 가능하고, 2자리 이상이어야 합니다.");
+			$("#name-help").removeClass("text-success");
+			$("#name-help").addClass("text-danger");
+		}
+		else{
+			$("#name-help").text("");
+		}
+	});
+	
+	/* 이메일 인증 버튼 시작 */
+	$("#userEmail").keyup(function(e){
+		var regEmail = /^[0-9a-zA-Z]([\-.\w]*[0-9a-zA-Z\-_+])*@([0-9a-zA-Z][\-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9}$/i;
+		var userEmail = $("#userEmail").val().trim();
+		/* 이메일 인증 버튼을 알맞은 이메일 형식을 작성했을 경우만 클릭되게 만들기 */
+		var emailAuth = $("#emailAuth");
+		
+		if(!regEmail.test(userEmail)){
+			$("#email-help").text("올바르지 않은 이메일 형식 입니다.");
+			$("#email-help").removeClass("text-success");
+			$("#email-help").addClass("text-danger");
+			USEREMAIL_OK = 0;
+			/* 이메일 버튼 비활성화 */
+			emailAuth.prop("disabled" , true);
+		}
+		else{
+			$("#email-help").text("알맞은 이메일 형식 입니다.");
+			$("#email-help").removeClass("text-danger");
+			$("#email-help").addClass("text-success");
+			USEREMAIL_OK = 1;
+			/* 이메일 버튼 활성화 */
+			emailAuth.prop("disabled" , false);
+		}
+	});
+	
+	$("#emailAuth").on("click" , function(){
+		$.ajax({
+			url : "<%=request.getContextPath()%>/emailAuth.do",
+			success : function(data){
+				console.log(data);
+				
+				
+			}
+		});
+	});
 	
 </script>
 
