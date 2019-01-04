@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  
-    
+<%
+	String isbn13 = (String)request.getAttribute("isbn13");
+%>     
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,9 +28,11 @@
 		<div id="bookInfo-desc">소개: </div>
 	</div>
 <script>
+var ISBN13 = <%=isbn13%>;
+console.log(ISBN13);
 
 $.ajax({
-	url: "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey=ttbkmw71511428001&itemIdType=ISBN13&ItemId=9788983925312&cover=big&output=js&callback=bookDisplay",
+	url: "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey=ttbkmw71511428001&itemIdType=ISBN13&ItemId="+ISBN13+"&cover=big&output=js&callback=bookDisplay",
 	jsonp: "bookDisplay",
 	dataType: "jsonp"
 });

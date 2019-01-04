@@ -9,13 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.BookInfomationCommand;
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
 import com.brw.command.EmailAuth;
 import com.brw.command.IdCheckCommand;
 import com.brw.command.GetReviewSelectOne;
+
+import com.brw.command.IndexCommand;
+
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
+import com.brw.command.insertComment;
 
 /**
  * Servlet implementation class FrontController
@@ -80,9 +85,10 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
-		else if(command.equals("/bookInfo.do")) {
-			//com = new BookInfomationCommand();
-			viewPage = "/WEB-INF/views/bookInfo/bookInfo.jsp";
+		else if(command.equals("/book/bookInfo.do")) {
+			com = new BookInfomationCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/book/bookInfo.jsp";
 		}
 		else if(command.equals("/idCheck.do")) {
 			com = new IdCheckCommand();
@@ -90,7 +96,9 @@ public class FrontController extends HttpServlet {
 		}
 		
 		else if(command.equals("/review/reviewDetail.do")) {
+			//해당 게시물 가져오는 쿼리
 			com = new GetReviewSelectOne();
+			//해당 게시글에 댓글 가져오는 쿼리가 들어와야함.
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
@@ -98,10 +106,24 @@ public class FrontController extends HttpServlet {
 			com = new EmailAuth();
 			com.execute(req,res);
 		}
-		
-		if(viewPage != null) {
-			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-			dispatcher.forward(req, res);
+
+		else if(command.equals("/book/bookList.do")) {
+	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
+		else if(command.equals("/index.do")) {
+			System.out.println("인덱스로 커멘드 호출");
+			com = new IndexCommand();
+			com.execute(req, res);
+		}
+		else if(command.equals("/insertComment.do")) {
+			com = new insertComment();
+			com.execute(req, res);
+		}
+		
+		if(viewPage!=null){			
+			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+			dispatcher.forward(req, res);	
+		}
+		
 	}
 }
