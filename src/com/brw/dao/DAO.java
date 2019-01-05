@@ -474,13 +474,6 @@ public class DAO {
 	 * @param email
 	 * @return
 	 */
-	/**
-	 * 작성자 : 김은찬
-	 * 회원가입 때 이메일 인증 버튼 클릭시
-	 * 이미 가입된 이메일인지 확인하는 메소드
-	 * @param email
-	 * @return
-	 */
 	public int emailCheck(String email) {
 		int result = 0;
 		
