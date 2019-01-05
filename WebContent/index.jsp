@@ -285,5 +285,5 @@ function scoreRound(score)
 	return Math.ceil(score *2 ) / 2;
 }
 </script>
-</body>
-</html>
+
+<%@ include file="/footer.jsp" %> 
