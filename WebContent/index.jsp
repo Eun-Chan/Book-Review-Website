@@ -255,19 +255,19 @@ $.ajax({
    		}
 
     	/* 데이터 view 처리*/
-		$("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,12)+"...":(bookList[ranNum[0]].title));
+		$("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,12)+"…":(bookList[ranNum[0]].title));
 		$("p#book-Author0").html(bookList[ranNum[0]].author);
 		$("#bookImage0").attr("src", bookList[ranNum[0]].cover);
 		
-		$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,12)+"...":(bookList[ranNum[1]].title));
+		$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,12)+"…":(bookList[ranNum[1]].title));
 		$("p#book-Author1").html(bookList[ranNum[1]].author);
 		$("#bookImage1").attr("src", bookList[ranNum[1]].cover);
 		
-		$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,12)+"...":(bookList[ranNum[2]].title));
+		$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,12)+"…":(bookList[ranNum[2]].title));
 		$("p#book-Author2").html(bookList[ranNum[2]].author);
 		$("#bookImage2").attr("src", bookList[ranNum[2]].cover);
 		
-		$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,12)+"...":(bookList[ranNum[3]].title));
+		$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,12)+"…":(bookList[ranNum[3]].title));
 		$("p#book-Author3").html(bookList[ranNum[3]].author);
 		$("#bookImage3").attr("src", bookList[ranNum[3]].cover);	
     },
@@ -284,4 +284,4 @@ function scoreRound(score)
 }
 </script>
 
-<%@ include file="/footer.jsp" %> 
+<%@ include file="/footer.jsp" %>
