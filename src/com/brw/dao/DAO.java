@@ -115,7 +115,7 @@ public class DAO {
 				rb.setRbWriter(rset.getString("rb_writer"));
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
 				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbDate(rset.getString("rb_date"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
@@ -206,7 +206,7 @@ public class DAO {
 				rb.setRbWriter(rset.getString("rb_writer"));
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
 				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbDate(rset.getString("rb_date"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
@@ -289,7 +289,7 @@ public class DAO {
 				review.setRbWriter(res.getString("rb_writer"));
 				review.setRbBookTitle(res.getString("rb_booktitle"));
 				review.setRbContent(res.getString("rb_content"));
-				review.setRbDate(res.getDate("rb_date"));
+				review.setRbDate(res.getString("rb_date"));
 				review.setRbReadCnt(res.getInt("rb_readcnt"));
 				review.setRbRecommend(res.getInt("rb_recommend"));
 			}
@@ -367,55 +367,41 @@ public class DAO {
 	/*광준:최근리뷰 5개 가져오기*/
 	public List<ReviewBoardDTO> selectReviewRecentList()
 	{
-		System.out.println("dao 접속성공");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		List<ReviewBoardDTO> rbList = new ArrayList<>();
-		String query = "SELECT * FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
+		String query = "SELECT rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
 		
 		try {
-			System.out.println("쿼리실행시작");
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			rset = pstmt.executeQuery();
-			System.out.println("쿼리실행완료");
 			while(rset.next())
 			{
 				ReviewBoardDTO rb = new ReviewBoardDTO();
 				
-				rb.setRbNo(rset.getInt("rb_no"));
 				rb.setRbTitle(rset.getString("rb_title"));
 				rb.setRbWriter(rset.getString("rb_writer"));
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbDate(rset.getString("rb_date"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
-				rb.setRbReport(rset.getInt("rb_report"));
-				System.out.println("데이터"+rset.getString("rb_title"));
-				rbList.add(rb);
 				
+				rbList.add(rb);
 			}
-			System.out.println("리스트 길이"+rbList.size());
 		} catch (SQLException e) {
-			System.out.println("쿼리실패");
+			System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
 			e.printStackTrace();
 		} finally {
 			try {
-				System.out.println("자원반납시작");
 				rset.close();
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
-				System.out.println("자원반납 실패");
+				System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 		return rbList;
 	}
 }
