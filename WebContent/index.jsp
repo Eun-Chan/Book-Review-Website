@@ -17,10 +17,10 @@
 	여기는 index.jsp
 	
 	<!-- Body -->
-	<a href="reviewList.do">헤헤</a>
-	<a href="review/reviewList.do">리뷰게시판</a>
-	<a href="book/bookInfo.do">해리포터상세보기테스트</a>
-	<a href="book/bookList.do">도서검색테스트</a>
+	<a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
+	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
+	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
+	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
 	
 	<!-- 인기도서 출력 Start -->
 	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
@@ -158,9 +158,6 @@
     	<hr />	
     </div>
     
-    <!-- footer -->
-    <jsp:include page="footer.jsp"></jsp:include>
-	
 <script>
 function startPage(){
 /* 최근리뷰 view */
