@@ -92,9 +92,7 @@ function bookListDisplay(success,data) {
 		html += "<td>"+book.author+"</td>";
 		html += "<td>"+book.pubDate+"</td>";
 		/* html += "<td>"+book.priceStandard+"</td></tr>";	 */
-		html += "<td><button type='button' class='btn btn-primary' id='plz' onclick='setBookInfo("
-				+ book.title + "," + book.isbn13 + ");'>선택</button></tr>";
-		
+		html += "<td><button type='button' class='btn btn-primary' onclick='setBookInfo(\"" + book.title + "\"," + book.isbn13 + ");'>선택</button></tr>";
 	}
 	html += "</tbody>";
 	table.append(html);
@@ -135,11 +133,13 @@ function bookListDisplay(success,data) {
 }
 // 도서 검색 ajax 끝
 
-// 도서 선택 버튼 리스너
+$(function(){
+	
+});
+// 도서 선택 버튼 함수
 function setBookInfo(bookTitle, isbn){
 	// 부모창의 form 선택
-	console.log("??");
-	var parForm = opener.document.write-form;
+	var parForm = opener.document.write_form;
 	parForm.rbBookTitle.value = bookTitle;
 	parForm.rbIsbn.value = isbn;
 	
