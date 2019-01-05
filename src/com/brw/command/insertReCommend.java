@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardComment;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 
-public class insertComment implements Command{
+public class insertReCommend implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		//인코딩 처리
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e1) {
@@ -23,29 +23,26 @@ public class insertComment implements Command{
 			e1.printStackTrace();
 		}
 		response.setContentType("application/json; charset=utf-8");
-		//파라미터 처리하기
-		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
-		String rbCommentContent = request.getParameter("rbCommentContent");
+		//파라미터 처리
+		int rbCommentNo = Integer.parseInt(request.getParameter("rbCommentNo"));
+		String rbCommentContent= request.getParameter("rbCommentContent");
 		String rbCommentWriter = request.getParameter("rbCommentWriter");
-		System.out.println(rbNo+","+rbCommentContent+","+rbCommentWriter);
-		
-		ReviewBoardComment comment = new ReviewBoardComment(rbCommentWriter, rbCommentContent, rbNo);
-		
+		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
+	
 		DAO dao = DAO.getInstance();
-		int result = dao.insertComment(comment);
+		int result = dao.insertReComment(rbCommentNo,rbCommentContent,rbCommentWriter,rbNo);
 		if(result>0) {
-			ReviewBoardComment lastComment = dao.getReviewBoardCommentLast(rbNo);
-			Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD hh:mm:ss").create();
+			Gson gson = new Gson();
+			ReviewBoardComment lastReComment = dao.getReviewBoardReCommentLast(rbCommentNo,rbNo);
 			try {
-				gson.toJson(lastComment,response.getWriter());
-			} catch (JsonIOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
+				gson.toJson(lastReComment,response.getWriter());
+			} catch (JsonIOException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		
 	}
 
 }
