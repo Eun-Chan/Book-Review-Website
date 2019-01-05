@@ -9,27 +9,29 @@
 <title>header 입니다</title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
+
 </head>
 <body>
 <nav class="navbar navbar-default">
 	<!-- 너비가 768px 이하가 될 시 data-target을 통해 해당 네비바를 toggle형태로 압축 -->
 	<div class="container-fluid">
-    	<!-- Brand and toggle get grouped for better mobile display -->
-    	<div class="navbar-header">
-      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
-        	<span class="sr-only">Toggle navigation</span>
-        	<span class="icon-bar"></span>
-        	<span class="icon-bar"></span>
-        	<span class="icon-bar"></span>
-      	</button>
-      	<a class="navbar-brand" href="index.jsp"><img src="images/logo.png"></a>
-    	</div>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.jsp"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
+    </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="topHeader">
       <ul class="nav navbar-nav">
-        <li><a href="#">홈<span class="sr-only">(current)</span></a></li>
-        <li><a href="review/reviewList.do">도서 리뷰</a></li>
+        <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
+        <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -98,7 +100,6 @@
   </div> <!-- modal-dialog 끝 -->
 </div> <!-- modal fade 끝 -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
-</body>
-</html>
+<!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->
