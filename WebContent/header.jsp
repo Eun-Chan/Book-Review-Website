@@ -7,8 +7,10 @@
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
 <title>header 입니다</title>
-<link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
+
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -21,14 +23,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.jsp"><img src="images/logo.png"></a>
+      <a class="navbar-brand" href="index.jsp"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="topHeader">
       <ul class="nav navbar-nav">
-        <li><a href="#">홈<span class="sr-only">(current)</span></a></li>
-        <li><a href="review/reviewList.do">도서 리뷰</a></li>
+        <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
+        <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -96,7 +98,6 @@
   </div>
 </div>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
-</body>
-</html>
+<!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->
