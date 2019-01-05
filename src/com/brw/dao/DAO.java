@@ -1,9 +1,11 @@
 package com.brw.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -309,6 +311,7 @@ public class DAO {
 	}
 
 
+	//선웅 : 게시판 디테일 
 	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
 		Connection conn = null;
 		ReviewBoardDTO review = null;
@@ -349,10 +352,11 @@ public class DAO {
 		return review;
 	}
 
+	//선웅 : 댓글 입력
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,?,?,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default)";
 		int result = 0;
 		try {
 			conn = dataSource.getConnection();
@@ -365,17 +369,27 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
 	}
-
+	
+	//선웅 : 댓글 리스트 가져오기
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select * from reviewboard_comment where rb_ref = ?";
+		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date\r\n" + 
+				"from reviewboard_comment where rb_ref=? and rb_comment_level =1 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
 		
 		try {
 			conn = dataSource.getConnection();
@@ -389,7 +403,7 @@ public class DAO {
 				comment.setRbCommentWriter(res.getString("rb_comment_writer"));
 				comment.setRbCommentContent(res.getString("rb_comment_content"));
 				comment.setRbRef(res.getInt("rb_ref"));
-				comment.setRbCommentDate(res.getDate("rb_comment_date"));
+				comment.setRbCommentDate(res.getString("rb_comment_date"));
 				
 				reviewComment.add(comment);
 			}
@@ -397,6 +411,14 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return reviewComment;
@@ -457,7 +479,13 @@ public class DAO {
 		
 		return rbList;
 	}
-
+	/**
+	 * 작성자 : 김은찬
+	 * 회원가입 때 이메일 인증 버튼 클릭시
+	 * 이미 가입된 이메일인지 확인하는 메소드
+	 * @param email
+	 * @return
+	 */
 	/**
 	 * 작성자 : 김은찬
 	 * 회원가입 때 이메일 인증 버튼 클릭시
@@ -492,6 +520,107 @@ public class DAO {
 		} finally {
 			try {
 				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	//선웅 : 댓글 갯수 가져오기 
+	public int getReivewBoardCommentAllCount(int rbNo) {
+		int count = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*)count  from reviewboard_comment where rb_ref=? and rb_comment_level=1";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				count = res.getInt("count");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
+
+	//선웅 : 마지막 댓글 가져오기
+	public ReviewBoardComment getReviewBoardCommentLast(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		ReviewBoardComment lastComment = null;
+		String query ="SELECT * FROM (SELECT * FROM reviewboard_comment where rb_ref=? ORDER BY rb_comment_no DESC) WHERE ROWNUM = 1";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			lastComment = new ReviewBoardComment();
+			if(res.next()) {
+				lastComment.setRbCommentNo(res.getInt("rb_comment_no"));
+				lastComment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				lastComment.setRbCommentContent(res.getString("rb_comment_content"));
+				lastComment.setRbRef(res.getInt("rb_ref"));
+				lastComment.setRbCommentDate(res.getString("rb_comment_date"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return lastComment;
+	}
+
+	//선웅 : 리댓글 인서트 dao
+	public int insertReComment(int rbCommentNo, String rbCommentContent, String rbCommentWriter, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		int result = 0;
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,2,?,?,?,default)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, rbCommentWriter);
+			pstmt.setString(2, rbCommentContent);
+			pstmt.setInt(3, rbNo);
+			pstmt.setInt(4, rbCommentNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
@@ -542,5 +671,92 @@ public class DAO {
 		}
 
 		return result;
+	}
+
+	//선웅 : 대댓글 리스트 가져오기
+	public List<ReviewBoardComment> getReviewBoardReCommentList(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "select * from reviewboard_comment where rb_ref = ? and rb_comment_level =2 order by rb_comment_no";
+		ResultSet res = null;
+		List<ReviewBoardComment> reviewReComment = null;
+		
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, rbNo);
+			
+			res = pstmt.executeQuery();
+			reviewReComment = new ArrayList<>();
+			
+			while(res.next()) {
+				ReviewBoardComment reComment = new ReviewBoardComment();
+				reComment.setRbCommentNo(res.getInt("rb_comment_no"));
+				reComment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				reComment.setRbCommentContent(res.getString("rb_comment_content"));
+				reComment.setRbRef(res.getInt("rb_ref"));
+				reComment.setRbCommentRef(res.getInt("rb_comment_ref"));
+				reComment.setRbCommentDate(res.getString("rb_comment_date"));
+				
+				reviewReComment.add(reComment);
+			}
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return reviewReComment;
+	}
+
+	//선웅 : 마지막으로 입력한 대댓글 가져오기
+	public ReviewBoardComment getReviewBoardReCommentLast(int rbCommentNo, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		ReviewBoardComment lastReComment= null;
+		String query= "SELECT * FROM (SELECT * FROM reviewboard_comment where rb_ref=? and rb_comment_level = 2 and rb_comment_ref=? ORDER BY rb_comment_no DESC) WHERE ROWNUM = 1";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			pstmt.setInt(2, rbCommentNo);
+			
+			res = pstmt.executeQuery();
+			lastReComment = new ReviewBoardComment();
+			if(res.next()) {
+				lastReComment.setRbCommentNo(res.getInt("rb_comment_no"));
+				lastReComment.setRbCommentWriter(res.getString("rb_comment_writer"));
+				lastReComment.setRbCommentContent(res.getString("rb_comment_content"));
+				lastReComment.setRbRef(res.getInt("rb_ref"));
+				lastReComment.setRbCommentRef(res.getInt("rb_comment_ref"));
+				lastReComment.setRbCommentDate(res.getString("rb_comment_date"));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return lastReComment;
 	}
 }

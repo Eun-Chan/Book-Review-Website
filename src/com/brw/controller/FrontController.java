@@ -22,6 +22,7 @@ import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 import com.brw.command.ReviewWriteEndCommand;
 import com.brw.command.insertComment;
+import com.brw.command.insertReCommend;
 
 /**
  * Servlet implementation class FrontController
@@ -123,7 +124,11 @@ public class FrontController extends HttpServlet {
 			com = new insertComment();
 			com.execute(req, res);
 		}
-		
+		else if(command.equals("/insertReComment.do")) {
+			com = new insertReCommend();
+			com.execute(req, res);
+		}
+
 		else if(command.equals("/review/reviewWrite.do")) {
 	         viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
 	    }
@@ -142,7 +147,9 @@ public class FrontController extends HttpServlet {
 			com = new LoginCommand();
 			com.execute(req, res);
 		}
-		
+		else if(command.equals("/review/bookSearch.do")) {
+			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
