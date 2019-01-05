@@ -372,6 +372,7 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -415,6 +416,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -553,6 +555,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -591,6 +594,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -622,6 +626,7 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -710,6 +715,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -750,6 +756,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
