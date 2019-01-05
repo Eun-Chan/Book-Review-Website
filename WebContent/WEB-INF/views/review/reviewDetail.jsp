@@ -62,6 +62,7 @@
 		<%if(reviewComment!=null) {%>
 			<%for(ReviewBoardComment rbc : reviewComment){ %>
 			<div id="comment-list">
+			<%System.out.println(rbc.getRbCommentWriter()); %>
 				<ul>
 					<li>
 						<div id="comment-html">
@@ -129,6 +130,8 @@
 				var textAreaVal = $("#comment-area").val();
 				$.ajax({
 					url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=ikso2000",
+					async:false,
+					timeout: 1000,
 					success:function(data){
 						$("#comment-area").val("");
 						var div =$("<div id='comment-list'></div>");
@@ -137,8 +140,9 @@
 							html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
 							html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div><button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
 							div.append(html);
-							$("#comment-Content").append(div);
 						}
+						$("#comment-Content").append(div);
+						isAjaxing = false;
 					}
 				});
 			}
@@ -164,21 +168,25 @@
 			}
 			else
 			{
+				console.log("들어왓나?");
 				var reCommendArea = $("#recomment-area").val();
 				$.ajax({
 					url:"<%=request.getContextPath()%>/insertReComment.do?rbCommentNo="+$(this).val()+"&rbCommentContent="+reCommendArea+"&rbCommentWriter=ikso2000&rbNo=<%=review.getRbNo()%>",
+					async:false,
+					timeout: 1000,
 					success:function(data){
 						console.log("에이잭스실행완료");
-						var div =$("<div id='recomment-list'></div>");
-						var html ="";
+						var divs =$("<div id='recomment-list'></div>");
+						var htmls ="";
 						if(data!=null){
-							html+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
-							html+= "<div id='recomment-body'><span>"+data.rbCommentContent+"</span></div></div></li></ul>";
-							div.append(html);
+							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
+							htmls+= "<div id='recomment-body'><span>"+data.rbCommentContent+"</span></div></div></li></ul>";
 						}
-						$("#recomment-area").parents("#comment-list").append(div);
+						divs.append(htmls);
+						$("#recomment-area").parents("#comment-list").append(divs);
 						$(".recomment-Area").remove();
 						console.log(data);
+						isAjaxing = false;
 					}
 				});	
 			}

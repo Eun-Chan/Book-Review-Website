@@ -90,6 +90,7 @@ public class DAO {
 		return true;
 	}
 
+	
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
 		
@@ -333,6 +334,7 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -376,6 +378,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -464,6 +467,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -501,6 +505,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -532,6 +537,7 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -577,6 +583,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -618,6 +625,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
