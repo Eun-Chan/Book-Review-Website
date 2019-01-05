@@ -17,7 +17,9 @@ import com.brw.command.IndexCommand;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 import com.brw.command.ReviewWriteEndCommand;
+import com.brw.command.bookReviewCommand;
 import com.brw.command.insertComment;
+import com.brw.command.insertReCommend;
 
 /**
  * Servlet implementation class FrontController
@@ -94,12 +96,16 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
-
+		//bookInfo하단 댓글보여주기
+		else if(command.equals("/book/bookreviewInfo.do")) {
+			System.out.println("front성공");
+			com = new bookReviewCommand();
+			com.execute(req, res);
+		}
 		else if(command.equals("/book/bookList.do")) {
 	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
-		else if(command.equals("/index.do")) {
-			System.out.println("인덱스로 커멘드 호출");
+		else if(command.equals("/index.do")) { /*광준 : index 페이지*/
 			com = new IndexCommand();
 			com.execute(req, res);
 		}
@@ -107,6 +113,12 @@ public class FrontController extends HttpServlet {
 			com = new insertComment();
 			com.execute(req, res);
 		}
+
+		else if(command.equals("/insertReComment.do")) {
+			com = new insertReCommend();
+			com.execute(req, res);
+		}
+
 		else if(command.equals("/review/reviewWrite.do")) {
 			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
 		}
@@ -118,9 +130,6 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/review/bookSearch.do")) {
 			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 		}
-		
-		
-		
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
