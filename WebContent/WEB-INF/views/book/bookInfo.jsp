@@ -3,6 +3,7 @@
 <%
 	String isbn13 = (String)request.getAttribute("isbn13");
 %>     
+<%@ include file="/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,10 +16,10 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookInfo.css" />
 </head>
 <body>
-	<br />
+	<!-- <br />
 	<label for="bookInfo-titleSrc">책제목입력 : </label>
 	<input type="text" id="bookInfo-titleSrc" />
-	<button id="btn">확인</button>
+	<button id="btn">확인</button> -->
 	<br />
 	<br />
 	<div id="bookInfo-container">
@@ -87,3 +88,4 @@ var isEmpty = function(value){
 </script>
 </body>
 </html>
+<%@ include file="/footer.jsp" %>
