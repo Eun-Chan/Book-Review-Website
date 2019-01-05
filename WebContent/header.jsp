@@ -7,8 +7,8 @@
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
 <title>header 입니다</title>
-<link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -86,7 +86,7 @@
     			</label>
   			</div>
   			<button type="submit" class="btn btn-primary">로그인</button>
-  			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/WEB-INF/views/sign/signUp.jsp'">회원가입</button>
+  			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.jsp'">회원가입</button>
 		</form>        
       </div> <!-- modal-body 끝 -->
       

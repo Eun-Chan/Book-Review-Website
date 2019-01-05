@@ -179,8 +179,6 @@ public class DAO {
 				e.printStackTrace();
 			}
 		}
-		
-		
 		return list;
 	}
 
