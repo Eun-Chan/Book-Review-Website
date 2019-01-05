@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.BookInfomationCommand;
 import com.brw.command.Command;
 import com.brw.command.CreateUserCommand;
-import com.brw.command.EmailAuth;
+import com.brw.command.EmailAuthCommand;
 import com.brw.command.IdCheckCommand;
 import com.brw.command.GetReviewSelectOne;
 
@@ -70,7 +70,7 @@ public class FrontController extends HttpServlet {
 		String viewPage = null;
 		
 		// frontController로 모든 명렁을 받은 후 여기에서 분기
-		if(command.equals("/enrollTest.do")) {
+		if(command.equals("/createUser.do")) {
 			com = new CreateUserCommand();
 			com.execute(req, res);
 			viewPage = "index.jsp";
@@ -103,7 +103,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
 		else if(command.equals("/emailAuth.do")) {
-			com = new EmailAuth();
+			com = new EmailAuthCommand();
 			com.execute(req,res);
 		}
 

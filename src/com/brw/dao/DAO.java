@@ -40,7 +40,7 @@ public class DAO {
 	
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
-		String query = "insert into tempUserTable values(?,?,?,?)";
+		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -88,6 +88,9 @@ public class DAO {
 	}
 
 	/**
+	 * 작성자 : 김은찬
+	 * 회원가입때 아이디 중복 버튼 클릭시
+	 * 중복 검사 확인용 메소드
 	 * @param userId
 	 */
 	public int idCheck(String userId) {
@@ -455,5 +458,49 @@ public class DAO {
 		}
 		
 		return rbList;
+	}
+
+	/**
+	 * 작성자 : 김은찬
+	 * 회원가입 때 이메일 인증 버튼 클릭시
+	 * 이미 가입된 이메일인지 확인하는 메소드
+	 * @param email
+	 * @return
+	 */
+	public int emailCheck(String email) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select count(*) as cnt from tempusertable where useremail = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, email);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }

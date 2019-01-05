@@ -19,6 +19,8 @@ public class CreateUserCommand implements Command{
 		String userName = request.getParameter("userName");
 		String userEmail = request.getParameter("userEmail");
 		
+		userEmail = userEmail.toLowerCase();
+		
 		UserDTO user = new UserDTO(userId, userPassword, userName, userEmail);
 		
 		System.out.println(userId);

@@ -15,7 +15,7 @@
 		<div class="page-header">
 			<h1>회원가입</h1>
 		</div>
-		<form action="" class="form-horizontal">
+		<form action="<%=request.getContextPath()%>/createUser.do" class="form-horizontal" onsubmit="return createUserSubmit();">
 			<div class="form-group">
 				<label for="userId" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-4">
@@ -58,6 +58,16 @@
 					<button type="button" class="btn btn-default" id="emailAuth" disabled="disabled">이메일 인증</button>
 				</div>
 			</div>
+			<div class="form-group" id="userEmailAuthDiv" style="display:none">
+				<label for="userEmail" class="col-sm-2 control-label">인증번호</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="userEmailAuth" name="userEmailAuth" placeholder="인증번호"/>
+					<span><p id="emailAuth-help"></p></span>
+				</div>
+				<div class="col-sm-1">
+					<button type="button" class="btn btn-default" id="userEmailAuth-btn">인증번호 확인</button>
+				</div>
+			</div>
 			<div class="form-group">
 				<label for="inputName" class="col-sm-2 control-label"></label>
 				<div class="col-sm-6">
@@ -79,6 +89,10 @@
 	var USERPASSWORD_OK = 0;
 	/* 이메일 유효성 통과 확인 변수 */
 	var USEREMAIL_OK = 0;
+	/* 이메일 인증번호 통과 확인 변수 */
+	var AUTH_OK = 0;
+	/* 인증번호 저장 변수 */
+	var authNum;
 	
 	/* 회원가입 - 중복확인 버튼 시작 */
 	$("#idCheck").on("click", function(){
@@ -208,17 +222,70 @@
 		}
 	});
 	
+	/* 이메일 인증 버튼 눌렀을 때 클릭 이벤트  */
 	$("#emailAuth").on("click" , function(){
+		var userEmail = $("#userEmail").val().trim();
+		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/emailAuth.do",
+			data : {userEmail : userEmail},
+			
 			success : function(data){
-				console.log(data);
-				
-				
+				if(data == "false"){
+					alert("이미 회원가입된 이메일 입니다.");
+					$("#email-help").text("이미 회원가입된 이메일입니다!");
+					$("#email-help").removeClass("text-success");
+					$("#email-help").addClass("text-danger");
+				}
+				else{
+					/* 숨겨져있던 인증번호 확인 div 보이게 하기 */
+					var userEmailAuthDiv = $("#userEmailAuthDiv");
+					userEmailAuthDiv.css("display","block");
+					
+					/* 인증번호 변수에 저장하기 */
+					authNum = data;
+				}
 			}
 		});
 	});
+	/* 이메일 인증 버튼 완료 */
 	
+	/* 인증번호 확인 버튼 눌렀을 때 클릭 이벤트 */
+	$("#userEmailAuth-btn").on("click", function(){
+		/* 유저가 입력한 인증번호 저장 */
+		var auth = $("#userEmailAuth").val().trim();
+		console.log("유저가 입력한 인증번호 = " , auth);
+		console.log("실제 인증번호 = " , authNum);
+		authOk(auth , authNum);
+	});
+	/* 인증번호 확인 버튼 완료 */
+	
+	/* 인증번호 맞는지 확인하는 함수 */
+	function authOk(auth1, auth2){
+		if(auth1 == auth2){
+			AUTH_OK = 1;
+			$("#emailAuth-help").text("인증번호 인증 완료!");
+			$("#emailAuth-help").removeClass("text-danger");
+			$("#emailAuth-help").addClass("text-success");
+		}
+		else{
+			AUTH_OK = 0;
+			$("#emailAuth-help").text("인증번호 인증 실패!");
+			$("#emailAuth-help").removeClass("text-success");
+			$("#emailAuth-help").addClass("text-danger");
+		}
+	}
+	/* 인증번호 맞는지 확인하는 함수 완료 */
+	
+	/* form onsubmit 처리 함수 시작 */
+	function createUserSubmit(){
+		console.log(ID_OK , USERPASSWORD_OK , USEREMAIL_OK , AUTH_OK);
+		if(ID_OK == 1 && USERPASSWORD_OK == 1 && USEREMAIL_OK == 1 && AUTH_OK == 1){
+			return true;
+		}
+		alert("모든 입력사항을 제대로 입력 하십시오.");
+		return false;
+	}
 </script>
 
 </body>
