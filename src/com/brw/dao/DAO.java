@@ -501,4 +501,46 @@ public class DAO {
 		}
 		return result;
 	}
+	/**
+	 * 로그인 메소드 ㅇㅈ? ㅇ ㅇ
+	 * @param userId
+	 * @param userPassword
+	 * @return
+	 */
+	public int loginCheck(String userId, String userPassword) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select case (select count(*) from tempusertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from tempusertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, userPassword);
+			pstmt.setString(3, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt("login_check");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
 }

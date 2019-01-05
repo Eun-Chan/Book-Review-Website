@@ -73,21 +73,22 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-		<form action="/action_page.php">
+		<form>
   			<div class="form-group">
-    			<label for="email">아이디</label>
-    			<input type="email" class="form-control" id="email">
+    			<label for="text">아이디</label>
+    			<input type="text" class="form-control" id="userId">
   			</div>
   			<div class="form-group">
-    			<label for="pwd">비밀번호</label>
-    			<input type="password" class="form-control" id="pwd">
+    			<label for="userPassword">비밀번호</label>
+    			<input type="password" class="form-control" id="userPassword">
   			</div>
   			<div class="form-group form-check">
     			<label class="form-check-label">
-      				<input class="form-check-input" type="checkbox"> 아이디 저장
+      				<input class="form-check-input" type="checkbox" > 아이디 저장
     			</label>
+    			<span><p id="login-help"></p></span>
   			</div>
-  			<button type="submit" class="btn btn-primary">로그인</button>
+  			<button type="button" class="btn btn-primary" onclick="loginCheck();">로그인</button>
   			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.jsp'">회원가입</button>
 		</form>        
       </div> <!-- modal-body 끝 -->
@@ -101,5 +102,33 @@
 </div> <!-- modal fade 끝 -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
+	
+	<script>
+	function loginCheck(){
+		var userId = $("#userId").val().trim();
+		var userPassword = $("#userPassword").val().trim();
+		
+		if(userId == 0 || userPassword == 0){
+			$("#login-help").text("아이디 혹은 비밀번호를 입력해 주시길 바랍니다.");
+			$("#login-help").addClass("text-danger");
+			return;
+		}
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/login.do",
+			data : {userId : userId , userPassword : userPassword},
+			success : function(data){
+				if(data == "true"){
+					location.href = "index.jsp";
+				}
+					
+				else if(data == "false"){
+					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
+					$("#login-help").addClass("text-danger");
+				}
+			}
+		});
+	}
+</script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

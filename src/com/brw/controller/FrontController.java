@@ -17,9 +17,10 @@ import com.brw.command.IdCheckCommand;
 import com.brw.command.GetReviewSelectOne;
 
 import com.brw.command.IndexCommand;
-
+import com.brw.command.LoginCommand;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
+import com.brw.command.ReviewWriteEndCommand;
 import com.brw.command.insertComment;
 
 /**
@@ -102,6 +103,9 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
+		/*
+         * 이메일 인증 & 이메일 중복 확인 command
+         */
 		else if(command.equals("/emailAuth.do")) {
 			com = new EmailAuthCommand();
 			com.execute(req,res);
@@ -117,6 +121,25 @@ public class FrontController extends HttpServlet {
 		}
 		else if(command.equals("/insertComment.do")) {
 			com = new insertComment();
+			com.execute(req, res);
+		}
+		
+		else if(command.equals("/review/reviewWrite.do")) {
+	         viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
+	    }
+	    else if(command.equals("/review/reviewWriteEnd.do")) {
+	       com = new ReviewWriteEndCommand();
+	       com.execute(req, res);
+	       viewPage = "";
+	    }
+	    else if(command.equals("/review/bookSearch.do")) {
+	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+	    }
+		/*
+		 * 로그인 command
+		 */
+		else if(command.equals("/login.do")) {
+			com = new LoginCommand();
 			com.execute(req, res);
 		}
 		
