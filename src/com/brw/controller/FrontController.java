@@ -18,6 +18,7 @@ import com.brw.command.IndexCommand;
 
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
+import com.brw.command.bookReviewCommand;
 import com.brw.command.insertComment;
 
 /**
@@ -95,7 +96,12 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
-
+		//bookInfo하단 댓글보여주기
+		else if(command.equals("/book/bookreviewInfo.do")) {
+			System.out.println("front성공");
+			com = new bookReviewCommand();
+			com.execute(req, res);
+		}
 		else if(command.equals("/book/bookList.do")) {
 	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
