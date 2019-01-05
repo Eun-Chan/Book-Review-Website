@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<!-- 반응형 웹을 위한 메타태그 -->
-<meta name="viewport" content="width=device-width", initial-scral="1">
-<title>categoryMenu 입니다</title>
-<link rel="stylesheet" href="css/bootstrap.css">
+
+
+
 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <style>
 div#category-container{
@@ -19,13 +14,15 @@ div#category-container{
 	margin-top: 10px;
 	margin-left:5px;
 	cursor: pointer;
+	display: inline-block;
+	float: left;
+	position: absolute;
 }
 div#category-container a{
 	color: white;
 }
 </style>
-</head>
-<body>
+
 	<div id="category-container">
 		<ul>
 			<li><a onclick='moveCategoryView(1230)'>가정/요리/뷰티</a></li>
@@ -60,10 +57,3 @@ div#category-container a{
 			<li><a onclick="moveCategoryView(351)">컴퓨터/모바일</a></li>
 		</ul>
 	</div>
-<script>
-function moveCategoryView(CID){
-	console.log(CID);
-}
-</script>	
-</body>
-</html>
