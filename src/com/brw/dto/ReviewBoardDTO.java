@@ -20,7 +20,7 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbBookTitle;
 	private long rbIsbn;
 	private String rbContent;
-	private Date rbDate;
+	private String rbDate;
 	private double rbStarscore;
 	private int rbReadCnt;
 	private int rbRecommend;
@@ -30,7 +30,7 @@ public class ReviewBoardDTO implements Serializable{
 	
 	public ReviewBoardDTO() {}
 
-	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, long rbIsbn, String rbContent, Date rbDate,
+	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, long rbIsbn, String rbContent, String rbDate,
 			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
@@ -95,11 +95,11 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbContent = rbContent;
 	}
 
-	public Date getRbDate() {
+	public String getRbDate() {
 		return rbDate;
 	}
 
-	public void setRbDate(Date rbDate) {
+	public void setRbDate(String rbDate) {
 		this.rbDate = rbDate;
 	}
 

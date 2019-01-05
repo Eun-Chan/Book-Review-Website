@@ -15,7 +15,53 @@ h3.text-muted
 {
 	margin-bottom: 5%;
 }
+/* 도서 하나의 컨테이너 */
+div.thumbnail
+{
+	min-height: 300px;
+}
+span.bestseller-title
+{
+	font-size: 16px;
+	font-weight: bold;
+}
+div.span-center
+{
+	text-align: center;
+}
+img.img-thumbnail
+{
+	min-height: 180px;
+}
+p.book-Author
+{
+	font-size: 14px;
+	color: gray;
+	text-align: center;
+}
+.starR1{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR2{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR1.on{background-position:0 0;}
+.starR2.on{background-position:-15px 0;}
 /* 인기도서 End*/
+
+
 hr.my-hr2
 {
 	border: 0;
@@ -46,7 +92,25 @@ span.writer-Time
 {
 	color: gray;
 }
-span.content
+span.rbTitle
 {
 	font-size: 15px;
+}
+
+/* Footer */
+footer{
+   background-color: #0054a3;
+    /* position: fixed; */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+    text-align: center;
+    color: #CCC;
+}
+
+footer p {
+    padding: 10.5px;
+    margin: 0px;
+    line-height: 100%;
 }
