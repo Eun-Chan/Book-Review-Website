@@ -11,9 +11,6 @@ public class ReviewWriteEndCommand implements Command {
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		DAO dao = DAO.getInstance();
 		
-		// 파라미터 처리
-		String rbTitle = 
-		
 		
 	}
 
