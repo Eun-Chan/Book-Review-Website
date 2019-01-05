@@ -202,7 +202,7 @@ li{
 }
 #comment-header{
 	display: inline-block;
-	max-width: 600px;
+	max-width: 300px;
 }
 #comment-body{
 	display: inline-block;
@@ -219,6 +219,31 @@ li{
     background: white;
 }
 
+/*대댓글 리스트 보여주는 곳*/
+#recomment-html{
+	width:600px;
+/* 	border-top: 1px solid #dcdcdc;*/
+	margin-bottom: 20px;
+	position: relative;
+    left: 45px;
+    background: #e9e9e9;
+    padding:5px 0px 0px 5px;
+}
+#recomment-header{
+	display: inline-block;
+	max-width: 300px;
+}
+#recomment-body{
+	display: inline-block;
+	max-width:500px;
+	clear: both;
+	margin-top: 20px;
+}
+#recomment-html span{
+	font-size: 0.8em;
+}
+
+
 /* 대댓글 작성 공간 */
 .recomment-Area{
 	width: 680px;
@@ -233,7 +258,7 @@ li{
 .recomment-textArea{
 	width: 580px;
 }
-#recomment-button{
+.recomment-button{
 	width: 63px;
     height: 66px;
 }

@@ -13,8 +13,15 @@ public class ReviewBoardComment implements Serializable{
 	private String rbCommentContent; //댓글 메인 컨텐츠
 	private int rbRef; //댓글이 참조할 게시판 번호
 	private String rbCommentDate; //댓글 작성날짜
+	private int rbCommentRef; //대댓글이 참조할 댓글 번호
 	
 	
+	public int getRbCommentRef() {
+		return rbCommentRef;
+	}
+	public void setRbCommentRef(int rbCommentRef) {
+		this.rbCommentRef = rbCommentRef;
+	}
 	public int getRbCommentNo() {
 		return rbCommentNo;
 	}
