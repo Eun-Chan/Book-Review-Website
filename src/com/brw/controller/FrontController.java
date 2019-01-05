@@ -99,8 +99,7 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/book/bookList.do")) {
 	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
-		else if(command.equals("/index.do")) {
-			System.out.println("인덱스로 커멘드 호출");
+		else if(command.equals("/index.do")) { /*광준 : index 페이지*/
 			com = new IndexCommand();
 			com.execute(req, res);
 		}
