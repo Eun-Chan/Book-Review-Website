@@ -61,7 +61,7 @@ function bookListDisplay(success,data) {
 	var table = $("<table></table>");
 	var numPerPage = 10;
 	var totalResults = data.totalResults;//검색 결과 총 수
-	var totalPage = parseInt(Math.ceil(totalResults/numPerPage));//전체 페이지 수	
+	var totalPage = parseInt(Math.ceil(totalResults/numPerPage));/* 전체 페이지 수	 */
 	var pageBarSize = 5;
 	var startPage = Math.floor(((cPage - 1)/pageBarSize)) * pageBarSize +1;
 	var endPage = startPage + pageBarSize -1;

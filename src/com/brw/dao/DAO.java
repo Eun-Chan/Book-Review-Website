@@ -418,4 +418,48 @@ public class DAO {
 		
 		return rbList;
 	}
+
+	public List<ReviewBoardDTO> getbookreview(String iSBN13) {
+		List<ReviewBoardDTO> list = new ArrayList();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from reviewboard where rb_isbn = ? order by rb_no desc";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, iSBN13);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				ReviewBoardDTO rb = new ReviewBoardDTO();
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbContent(rset.getString("rb_content"));
+				rb.setRbDate(rset.getDate("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+				rb.setRbReport(rset.getInt("rb_report"));
+				
+				list.add(rb);
+			}
+			System.out.println("DaoList@="+list);
+			rset = pstmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return	list;
+	}
 }
