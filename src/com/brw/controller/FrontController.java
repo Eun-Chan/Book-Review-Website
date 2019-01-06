@@ -18,7 +18,6 @@ import com.brw.command.IndexCommand;
 
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
-import com.brw.command.ReviewWriteEndCommand;
 import com.brw.command.insertComment;
 import com.brw.command.insertReCommend;
 
@@ -119,11 +118,7 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/review/reviewWrite.do")) {
 			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
 		}
-		else if(command.equals("/review/reviewWriteEnd.do")) {
-			com = new ReviewWriteEndCommand();
-			com.execute(req, res);
-			viewPage = "";
-		}
+	
 		else if(command.equals("/review/bookSearch.do")) {
 			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 		}

@@ -9,6 +9,8 @@
 	List<ReviewBoardComment> reviewReComment = (List<ReviewBoardComment>)request.getAttribute("reviewReComment");
 	int count = (int)request.getAttribute("count");
 	ReviewBoardComment lastReviewComment = (ReviewBoardComment)request.getAttribute("lastReviewComment");
+	int nextNumber = (int)request.getAttribute("nextNumber");
+	int prevNumber = (int)request.getAttribute("prevNumber");
 %>
 <!DOCTYPE html>
 <html>
@@ -50,9 +52,9 @@
 		</div>
 		<div id="side-menu">
 			<ul id="left-menu">
-				<li><a href="#" class="btn-gradient green">이전글</a></li>
-				<li><a href="<%=request.getContextPath()%>/review/reviewList.do" class="btn-gradient green">목록 </a></li>
-				<li><a href="#" class="btn-gradient green">다음글</a></li>
+				<li><a href="#" class="btn-gradient green" id="prevpage">이전글</a></li>
+				<li><a href="<%=request.getContextPath() %>/review/reviewList.do" class="btn-gradient green">목록 </a></li>
+				<li><a href="#" class="btn-gradient green" id="nextpage">다음글</a></li>
 			</ul>
 			<ul id="right-menu">
 				<li><a href="#" class="btn-gradient red">신고하기</a></li>
@@ -191,6 +193,20 @@
 				});	
 			}
 		});
+		$("#nextpage").click(function(){
+			if(<%=nextNumber%>==0){
+				alert("다음글이 존재하지 않습니다.");
+				return;
+			}
+			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=nextNumber%>";
+		});
+		$("#prevpage").click(function(){
+			if(<%=prevNumber%>==0){
+				alert("이전글이 존재하지 않습니다.");
+				return;
+			}
+			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=prevNumber%>";
+		})
 	</script>
 </body>
 </html>
