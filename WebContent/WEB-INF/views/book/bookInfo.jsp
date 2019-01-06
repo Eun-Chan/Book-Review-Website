@@ -9,11 +9,11 @@
 <head>
 <meta charset="UTF-8">
 <title>BookInformationTest</title>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookInfo.css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/custom.css">
 </head>
 <body>
 	<!-- <br />

@@ -24,7 +24,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.jsp"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
+      <a class="navbar-brand" href="#"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

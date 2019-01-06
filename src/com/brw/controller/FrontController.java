@@ -22,7 +22,7 @@ import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 
 import com.brw.command.ReviewWriteEndCommand;
-
+import com.brw.command.bookReviewCommand;
 import com.brw.command.insertComment;
 import com.brw.command.insertReCommend;
 
