@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.index.IndexCommand;
@@ -198,6 +199,12 @@ public class FrontController extends HttpServlet {
 		 */
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+	    }
+		/*
+		 * 17. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 */
+	    else if(command.equals("/book/basket.do")) {
+	    	com = new BasketInsertCommand();
 	    }
 		
 		if(viewPage!=null){			
