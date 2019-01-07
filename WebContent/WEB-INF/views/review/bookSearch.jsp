@@ -92,7 +92,10 @@ function bookListDisplay(success,data) {
 		html += "<td>"+book.author+"</td>";
 		html += "<td>"+book.pubDate+"</td>";
 		/* html += "<td>"+book.priceStandard+"</td></tr>";	 */
-		html += "<td><button type='button' class='btn btn-primary' onclick='setBookInfo(\"" + book.title + "\"," + book.isbn13 + ");'>선택</button></tr>";
+		html += "<td><button type='button' class='btn btn-primary' onclick='setBookInfo(\"" 
+				+ book.title + "\",\"" + book.author + "\"," + book.isbn13 + ",\"" 
+				+ book.priceStandard  + "\",\"" + book.publisher + "\""  
+				+ ");'>선택</button></tr>";
 	}
 	html += "</tbody>";
 	table.append(html);
@@ -137,11 +140,15 @@ $(function(){
 	
 });
 // 도서 선택 버튼 함수
-function setBookInfo(bookTitle, isbn){
+function setBookInfo(bookTitle, author, isbn, priceStandard, publisher){
 	// 부모창의 form 선택
 	var parForm = opener.document.write_form;
 	parForm.rbBookTitle.value = bookTitle;
+	parForm.bookAuthor.value = author;
 	parForm.rbIsbn.value = isbn;
+	parForm.bookPriceStandard.value = priceStandard;
+	parForm.bookPublisher.value = publisher;
+	
 	
 	self.close();
 }
