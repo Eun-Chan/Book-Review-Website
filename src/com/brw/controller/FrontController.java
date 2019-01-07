@@ -16,6 +16,7 @@ import com.brw.command.index.IndexCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
+import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
@@ -23,6 +24,7 @@ import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
+import com.brw.command.user.LogoutCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -198,6 +200,14 @@ public class FrontController extends HttpServlet {
 		 */
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+	    }
+		
+		/*
+		 * 17. 좋아요 버튼 클릭시 처리 ajax 
+		 */
+	    else if(command.equals("/review/reviewLike.do")){
+	    	com = new ReviewBoardLikeCommend();
+	    	com.execute(req,res);
 	    }
 		
 		if(viewPage!=null){			

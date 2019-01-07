@@ -12,17 +12,8 @@
 	int nextNumber = (int)request.getAttribute("nextNumber");
 	int prevNumber = (int)request.getAttribute("prevNumber");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
-<script src="<%=request.getContextPath()%>/js/bootstrap.js"></script>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
-<script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
-<title>Insert title here</title>
-</head>
-<body>
 	<div id ="reviewDetail">
 		<div id ="reviewDetail-Header">
 			<span id="date">작성일 : <%=review.getRbDate() %></span>
@@ -32,6 +23,25 @@
 			<span>[리뷰]<%=review.getRbTitle() %></span>
 		</div>
 		<div id="reviewDetail-Writer">
+			<span id="booktitle">제목 : <%=review.getRbBookTitle() %> </span>
+	       <div id="start-Container">
+	       <div class="starRev0">
+			  <span class="starR1 on" id="star0"></span>
+			  <span class="starR2 on" id="star1"></span>
+			  <span class="starR1 on" id="star2"></span>
+			  <span class="starR2 on" id="star3"></span>
+			  <span class="starR1 on" id="star4"></span>
+			  <span class="starR2" id="star5"></span>
+			  <span class="starR1" id="star6"></span>
+			  <span class="starR2" id="star7"></span>
+			  <span class="starR1" id="star8"></span>
+			  <span class="starR2" id="star9"></span>
+			  &nbsp;&nbsp;
+			   <span>(<%=review.getRbStarscore()%>점)</span>
+			</div>
+			 
+			</div>
+			
 			<span>작성자 : <%=review.getRbWriter() %></span>
 			<hr />
 		</div>
@@ -44,7 +54,7 @@
 			<div id="like-Wapper" >
 				<div id ="like">
 					<br />
-					<span>0</span>
+					<span id = "likeCounter">0</span>
 					<br />
 					<img src="<%=request.getContextPath() %>/images/heart.png" alt="" style="width: 15px;height: 12px;margin-top: 10px;margin-right:2px"/>
 				</div>
@@ -121,36 +131,53 @@
 			</table>
 		</div>
 	</div>
+
 	<script>
 		var result = 0;
+		var starscore = <%=review.getRbStarscore()%>
+		$(function(){
+			starscore = starscore * 2;
+		   	for(var i=0; i<starscore; i++)
+       		{
+           		$("span#star"+i).addClass('on');
+           		$(".starR1.on").css("display","block");
+           		$(".starR2.on").css("display","block");
+       		}
+		});
 		$("#comment-button").on('click',function(){
 			if($("#comment-area").val().trim().length ==0){
 				alert("댓글을 입력해 주세요.");
 				return;
 			}
 			else{
+				<%if(user!=null){%>
 				var textAreaVal = $("#comment-area").val();
-				$.ajax({
-					url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=ikso2000",
-					async:false,
-					timeout: 1000,
-					success:function(data){
-						$("#comment-area").val("");
-						var div =$("<div id='comment-list'></div>");
-						var html ="";
-						if(data!=null){
-							html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
-							html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div><button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
-							div.append(html);
+					$.ajax({
+						url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=<%=user.getUserId()%>",
+						async:false,
+						timeout: 1000,
+						success:function(data){
+							$("#comment-area").val("");
+							var div =$("<div id='comment-list'></div>");
+							var html ="";
+							if(data!=null){
+								html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
+								html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div><button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
+								div.append(html);
+							}
+							$("#comment-Content").append(div);
+							isAjaxing = false;
 						}
-						$("#comment-Content").append(div);
-						isAjaxing = false;
-					}
-				});
+					});
+				<%}%>
 			}
 		});
 
 		$(document).on('click','.comment-recomment',function(){
+			<%if(user==null){%>
+				alert("로그인 후 이용 가능 합니다.");
+				return;
+			<%}%>
 			var div =$("<div class ='recomment-Area'></div>");
 			var html ="";
 			html +="<table><tr><td><div class='recomment-textArea'><textarea name='recomment' id='recomment-area' rows='3' cols='75'></textarea></div></td>";
@@ -163,6 +190,10 @@
 		});
 		
 		$(document).on('click',".recomment-button",function(){
+			<%if(user==null){%>
+				alert("로그인 후 이용 가능 합니다.");
+				return;
+			<%}%>
 			console.log("앙기모띵")
 			if($("#recomment-area").val().trim().length==0){
 				alert("댓글을 입력해 주세요.");
@@ -172,8 +203,9 @@
 			{
 				console.log("들어왓나?");
 				var reCommendArea = $("#recomment-area").val();
+				<%if(user!=null){%>
 				$.ajax({
-					url:"<%=request.getContextPath()%>/insertReComment.do?rbCommentNo="+$(this).val()+"&rbCommentContent="+reCommendArea+"&rbCommentWriter=ikso2000&rbNo=<%=review.getRbNo()%>",
+					url:"<%=request.getContextPath()%>/insertReComment.do?rbCommentNo="+$(this).val()+"&rbCommentContent="+reCommendArea+"&rbCommentWriter=<%=user.getUserId()%>&rbNo=<%=review.getRbNo()%>",
 					async:false,
 					timeout: 1000,
 					success:function(data){
@@ -190,7 +222,8 @@
 						console.log(data);
 						isAjaxing = false;
 					}
-				});	
+				});
+				<%}%>
 			}
 		});
 		$("#nextpage").click(function(){
@@ -209,15 +242,30 @@
 		});
 		
 		$("#like").click(function(){
+			<%if(user==null){%>
+				alert("로그인후 이용할 수 있습니다.");
+				return;
+			<%}%>
+			
+			<%if(user!=null){%>
 			$.ajax({
-				url:"<%=request.getContextPath()%>/review/reviewLike.do?rbNo=<%=review.getRbNo()%>&userId=ikso2000",
+				url:"<%=request.getContextPath()%>/review/reviewLike.do?rbNo=<%=review.getRbNo()%>&userId=<%=user.getUserId()%>",
 				success:function(data){
-					console.log(data);
+					$("#likeCounter").html(data);
 				}
 			});
+			<%}%>
 		});
 		
+		$("#comment").click(function(){
+			var offset = $("#comment-list").offset();
+			$('html, body').animate({scrollTop : offset.top}, 400);
+		});
+		
+		$("#comment-textArea").click(function(){
+			<%if(user==null){%>
+				alert("로그인 후 이용 가능 합니다.");
+				return;
+			<%}%>
+		});
 	</script>
- 
-</body>
-</html>
