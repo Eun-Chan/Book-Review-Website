@@ -656,4 +656,85 @@ public class DAO {
 		
 		return lastReComment;
 	}
+	
+	// 명훈 : 리뷰 등록 메소드
+	public int reviewWrite(ReviewBoardDTO rb) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore) " + 
+						"values (seq_review_no.nextval,?,?,?,?,?,?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, rb.getRbBookTitle());
+			pstmt.setString(2, rb.getRbTitle());
+			pstmt.setString(3, rb.getRbWriter());
+			pstmt.setString(4, rb.getRbIsbn());
+			pstmt.setString(5, rb.getRbContent());
+			pstmt.setDouble(6, rb.getRbStarscore());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	// 명훈 : 작성한 리뷰글 번호 가져오기 (마지막 리뷰글 가져오기)
+	public int getLastReviewBoardNo() {
+		int lastReviewBoardNo = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select max(rb_no) from reviewboard";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				lastReviewBoardNo = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return lastReviewBoardNo;
+	}
+	
+	
+	
+	
+	
 }
