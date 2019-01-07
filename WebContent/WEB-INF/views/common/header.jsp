@@ -157,7 +157,7 @@
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
 			success : function(data){
 				if(data == "true"){
-					location.href = "index.jsp";
+					location.href = "<%=request.getContextPath()%>";
 				}
 					
 				else if(data == "false"){

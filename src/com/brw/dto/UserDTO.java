@@ -1,6 +1,13 @@
 package com.brw.dto;
 
-public class UserDTO {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String userId;
 	private String userPassword;
 	private String userName;
@@ -47,4 +54,12 @@ public class UserDTO {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDTO [userId=" + userId + ", userPassword=" + userPassword + ", userName=" + userName
+				+ ", userEmail=" + userEmail + "]";
+	}
+	
+	
 }

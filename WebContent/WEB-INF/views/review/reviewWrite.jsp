@@ -1,15 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>리뷰 작성</title>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
-<script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
-<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <script type="text/javascript" src="<%=request.getContextPath() %>/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
 $(function(){
@@ -33,6 +25,31 @@ $(function(){
         oEditors.getById["rbContent"].exec("UPDATE_CONTENTS_FIELD", []);
 		
 		// 유효성 검사는 이곳에서
+     	// 리뷰 제목
+    	if($("input[name=rbTitle]").val().trim().length == 0){
+    		alert("리뷰 제목을 입력하세요.");
+    		return;
+    	}
+    	// 리뷰 내용
+    	if($("textarea[name=rbContent]").val().trim() == "<p><br></p>"){
+    		alert("리뷰 내용을 입력하세요.");
+    		return;
+    	}
+    	// 도서 정보
+    	if($("input[name=rbBookTitle]").val().trim().length == 0){
+    		alert("도서를 선택하세요.");
+    		return;
+    	}
+    	if($("input[name=rbIsbn]").val().trim().length == 0){
+    		alert("도서를 선택하세요.");
+    		return;
+    	}
+    	// 별점
+    	if($("input[name=rbStarscore]").val() == 0){
+    		alert("별점을 입력하세요.");
+    		return;
+    	}
+    	
 		
 		// form 제출
 		$("#write-form").submit();
@@ -82,16 +99,18 @@ $(function(){
 		location.href = "<%=request.getContextPath()%>/review/reviewList.do";
 	});
 	
+	
+	
 });
 
 
 </script>
 <style>
-div.form-group{
+div#write-container{
 	width: 950px;
 	margin: 0 auto;
 }
-div.form-group textarea{
+div#write-container textarea{
 	width: 945px;
 }
 input#rbBookTitle{
@@ -137,15 +156,19 @@ input#rbBookTitle{
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
 		<form action="<%=request.getContextPath() %>/review/reviewWriteEnd.do" name="write_form" id="write-form">
-			<div class="form-group">
+			<div class="form-group" id="write-container">
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />
 				<!-- 작성자 히든태그 -->
-				<input type="hidden" name="rbWriter" value="ikso2000"/>
+				<input type="hidden" name="rbWriter" value="<%=user.getUserId()%>"/>
 				<!-- 도서명 인풋태그 -->
 				리뷰할 도서 : <input type="text" name="rbBookTitle" class="form-control" id="rbBookTitle" readonly/>
 				<!-- ISBN 히든태그 -->
 				<input type="hidden" name="rbIsbn" />
+				<!-- 도서 정보 저장용 히든태그 -->
+				<input type="hidden" name="bookAuthor" />
+				<input type="hidden" name="bookPriceStandard" />
+				<input type="hidden" name="bookPublisher" />
 				<!-- 책검색용 팝업 버튼 -->
 				<button type="button" class="btn btn-primary" id="btnSearch">도서 검색</button>
 				<!-- 별점 -->
@@ -175,5 +198,6 @@ input#rbBookTitle{
 			<button type="button" class="btn btn-danger" id="cancel">취소</button>
 		</form>
 	</div>
-</body>
-</html>
+
+	
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -71,5 +71,6 @@ public class ReviewBoardComment implements Serializable{
 				+ ", rbCommentContent=" + rbCommentContent + ", rbRef=" + rbRef + ", rbCommentDate=" + rbCommentDate
 				+ "]";
 	}
+
 	
 }

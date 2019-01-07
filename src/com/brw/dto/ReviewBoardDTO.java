@@ -27,6 +27,7 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbOriginalFilename;
 	private String rbRenamedFilename;
 	private int rbReport;
+	private String DelFlag;
 	
 	public ReviewBoardDTO() {}
 

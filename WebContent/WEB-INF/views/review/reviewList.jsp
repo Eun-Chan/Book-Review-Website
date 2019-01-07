@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO" %>
-
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
    // FrontController에서 보낸 list 받기
    List<ReviewBoardDTO> list = (List<ReviewBoardDTO>)request.getAttribute("list");
@@ -11,9 +11,6 @@
    String searchKeyword = request.getParameter("searchKeyword");
 %>
 
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
-<script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
-<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <style>
 /* 검색창 보이기&보이지 않기 */
 div#search-rb_booktitle{
@@ -29,8 +26,8 @@ table#review-list-table th, table#review-list-table td {
    font-size: 13px;
 }
 
-/* .form-group display: inline-block으로 수정 */
-div.form-group {
+/* .divInline display: inline-block으로 수정 */
+div.divInline {
    display: inline-block;
 }
 
@@ -42,26 +39,28 @@ div.search-bar {
 
 </style>
 <script>
-// 인덱스로 이동하는 함수
-function goHome(){
-   location.href="<%=request.getContextPath() %>";
-}
 $(function(){
-   $("button#btn-write").on("click",function(){
-      location.href="<%=request.getContextPath()%>/review/reviewWrite.do";
-   });
+	// 로그인을 했으면 리뷰작성 페이지로 이동
+	$("button#btn-write").on("click",function(){
+		<%
+		if(user == null){
+		%>
+		alert("로그인 후 이용하세요.");
+		return;
+		<%
+		}
+		%>
+		location.href="<%=request.getContextPath()%>/review/reviewWrite.do";
+	});
 });
 </script>
 
 <div id="review-list-container" class="container-fluid">
    <h2 class="text-primary">리뷰게시판</h2>
-   <button class="btn btn-primary" onclick="goHome();">메인으로</button>
-   <br /><br />
    구현 완성도
    <div class="progress">
       <div class="progress-bar progress-bar-striped active progress-bar-success" style="width: 90%">90%</div>
    </div>
-   <br />
    
    <!-- 리뷰 리스트를 보여줄 테이블 영역 -->
    <div id="table-container">
@@ -101,7 +100,7 @@ $(function(){
    <!-- 검색 영역 -->
    <div id="search-form-container">
       <!-- 검색 타입 셀렉트 -->
-      <div class="form-group">
+      <div class="form-group divInline">
          <select id="searchType" class="form-control">
             <option value="rb_booktitle" <%="rb_booktitle".equals(searchType)?"selected":"" %>>도서명</option>
             <option value="rb_title" <%="rb_title".equals(searchType)?"selected":"" %>>제목</option>
@@ -110,7 +109,7 @@ $(function(){
       <div id="search-rb_booktitle">
          <form action="<%=request.getContextPath()%>/review/reviewSearch.do">
             <input type="hidden" name="searchType" value="rb_booktitle"/>
-            <div class="form-group search-bar">
+            <div class="form-group search-bar divInline">
                <input type="text" name="searchKeyword" class="form-control" value="<%="rb_booktitle".equals(searchType)?searchKeyword:""%>"/>
             </div>
             <button type="submit" class="btn btn-default">검색</button>
@@ -121,7 +120,7 @@ $(function(){
       <div id="search-rb_title">
          <form action="<%=request.getContextPath()%>/review/reviewSearch.do">
             <input type="hidden" name="searchType" value="rb_title"/>
-            <div class="form-group search-bar">
+            <div class="form-group search-bar divInline">
                <input type="text" name="searchKeyword" class="form-control" value="<%="rb_title".equals(searchType)?searchKeyword:""%>"/>
             </div>
             <button type="submit" class="btn btn-default">검색</button>
@@ -138,3 +137,4 @@ $(function(){
    
 </div> <!-- end of #review-list-container -->
 <!-- 테스트 -->
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

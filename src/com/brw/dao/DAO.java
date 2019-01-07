@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
 
 public class DAO {
@@ -144,7 +145,7 @@ public class DAO {
 	/*
 	 * 4
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰리스트 페이징
 	 */
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
@@ -202,7 +203,7 @@ public class DAO {
 	/*
 	 * 5
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰리스트 페이징용 카운터
 	 */
 	public int countReviewAll() {
 		int result = 0;
@@ -241,7 +242,7 @@ public class DAO {
 	/*
 	 * 6
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰검색 리스트 페이징
 	 */
 	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
@@ -249,7 +250,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -272,7 +273,7 @@ public class DAO {
 				rb.setRbWriter(rset.getString("rb_writer"));
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
 				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("rb_date"));
+				rb.setRbDate(rset.getString("strdate"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
@@ -303,7 +304,7 @@ public class DAO {
 	/*
 	 * 7
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰검색 리스트용 카운터
 	 */
 	public int countReviewSearch(String searchType, String searchKeyword) {
 		int result = 0;
@@ -718,7 +719,7 @@ public class DAO {
 	 * 내용 : bookreview갖고오기
 	 */
 	public List<ReviewBoardDTO> getbookreview(String iSBN13) {
-		List<ReviewBoardDTO> list = new ArrayList();
+		List<ReviewBoardDTO> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -746,7 +747,6 @@ public class DAO {
 				list.add(rb);
 			}
 			System.out.println("DaoList@="+list);
-			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -897,5 +897,372 @@ public class DAO {
 			
 		}
 		return userDTO;
+	}
+	
+	
+	/**
+	 * 21. 선웅 : 해당 게시판 다음글 게시판 번호 가져오기
+	 * 
+	 */
+	
+	public int selectReviewBoardNextNumber(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "SELECT rb_no nextnumber FROM reviewboard WHERE rb_no IN ((SELECT  MIN(rb_no)FROM    reviewboard WHERE   rb_no > ? and del_flag like 'N' ))";
+		int nextNumber = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				nextNumber = res.getInt("nextnumber");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return nextNumber;
+	}
+
+	/**
+	 * 22. 선웅 : 해당 리뷰 게시판 이전글 번호 구하는 쿼리
+	 * @param rbNo
+	 * @return
+	 */
+	
+	public int selectReviewBoardPrevNumber(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		int prevNumber = 0;
+		String query = "SELECT rb_no prevnumber FROM reviewboard WHERE rb_no IN ((SELECT  max(rb_no)FROM    reviewboard WHERE   rb_no < ? and del_flag like 'N' ))";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				prevNumber = res.getInt("prevnumber");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return prevNumber;
+	}
+
+	/**
+	 * 23 . 선웅 : 처음 좋아요 버튼을 눌럿을 때 좋아요 테이블에 인서트 해주는곳
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	
+	public int insertReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into reviewboard_like values(seq_likeNo.nextval,?,?,1)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 24 선웅 : 좋아요 테이블 전체 조회
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	public List<ReviewBoardLikeDTO> selectAllReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from reviewboard_like where like_userid like ? and like_rbNo = ? and like_counter = 1";
+		List<ReviewBoardLikeDTO> likeList = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			res = pstmt.executeQuery();
+
+			likeList = new ArrayList<>();
+			while(res.next()) {
+				ReviewBoardLikeDTO like = new ReviewBoardLikeDTO();
+				like.setLikeNo(res.getInt("likeno"));
+				like.setLikeRbNo(res.getInt("like_rbno"));
+				like.setLikeUserId(res.getString("like_userid"));
+				like.setLikeCounter(res.getInt("like_counter"));
+				
+				likeList.add(like);
+			}
+			
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return likeList;
+	}
+
+	
+	/**
+	 * 25. 선웅 : 좋아요 테이블 카운터가 0으로 업데이트 되면 해당 컬럼 삭제
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	public int deleteReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from reviewboard_like where like_userid like ? and like_rbno = ? and like_counter= 1";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/*
+	 * 26
+	 * 작성자 : 정명훈
+	 * 내용 : 리뷰 db에 등록
+	 */
+	public int reviewWrite(ReviewBoardDTO rb) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore) " + 
+						"values (seq_review_no.nextval,?,?,?,?,?,?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, rb.getRbBookTitle());
+			pstmt.setString(2, rb.getRbTitle());
+			pstmt.setString(3, rb.getRbWriter());
+			pstmt.setString(4, rb.getRbIsbn());
+			pstmt.setString(5, rb.getRbContent());
+			pstmt.setDouble(6, rb.getRbStarscore());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+	return result;
+	}
+			
+	/*
+	 * 27
+	 * 작성자 : 정명훈
+	 * 내용 : 작성한 리뷰글 번호 가져오기 (마지막 리뷰글 가져오기)
+	 */
+	public int getLastReviewBoardNo() {
+		int lastReviewBoardNo = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select max(rb_no) from reviewboard";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				lastReviewBoardNo = rset.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	
+	return lastReviewBoardNo;
+	}
+	
+	/*
+	 * 28
+	 * 작성자 : 정명훈
+	 * 내용 : book테이블에 해당 isbn이 있는지 검사 후 boolean 리턴
+	 */
+	public boolean isIsbnExist(String rbIsbn) {
+		boolean isIsbnExist = false;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from book where aladin_isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, rbIsbn);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				isIsbnExist = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(isIsbnExist);
+		return isIsbnExist;
+	}
+
+	/*
+	 * 29
+	 * 작성자 : 정명훈
+	 * 내용 : book테이블에 도서 정보 추가
+	 */
+	public int insertBook(String rbBookTitle, String bookAuthor, String rbIsbn, int bookPriceStandard, String bookPublisher) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into booktest (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			
+			pstmt.setString(1, rbBookTitle);
+			pstmt.setString(2, bookAuthor);
+			pstmt.setString(3, rbIsbn);
+			pstmt.setInt(4, bookPriceStandard);
+			pstmt.setString(5, bookPublisher);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 }

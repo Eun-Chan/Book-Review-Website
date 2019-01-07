@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.brw.controller;
+package com.brw.command.user;
 
 import java.io.IOException;
 
