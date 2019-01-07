@@ -125,7 +125,14 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/review/reviewWriteEnd.do")) {
 			com = new ReviewWriteEndCommand();
 			com.execute(req, res);
-			viewPage = "";
+			int result = (int)req.getAttribute("result");
+			if(result > 0) {
+				int lastReviewBoardNo = (int)req.getAttribute("lastReviewBoardNo");
+				viewPage = "/review/reviewDetail.do?rbNo=" + lastReviewBoardNo;
+			}
+			else {
+				viewPage = "/WEB-INF/views/review/bookList.jsp";
+			}
 		}
 		else if(command.equals("/review/bookSearch.do")) {
 			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
