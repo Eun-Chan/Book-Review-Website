@@ -1,4 +1,4 @@
-package com.brw.command;
+package com.brw.command.review;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -6,12 +6,17 @@ import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardComment;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class insertReCommend implements Command{
+/*
+ * 작성자 : 장선웅
+ * 내용 : 리뷰 게시판에 대한 댓글에 대한 대댓글
+ */
+public class InsertReCommentCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

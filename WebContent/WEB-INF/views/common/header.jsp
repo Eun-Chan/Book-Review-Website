@@ -1,5 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.brw.dto.*" %>
+<%
+	UserDTO user = (UserDTO)session.getAttribute("user");
+	
+	// 전송된 쿠키확인
+	boolean saveId = false;
+	String userId = "";
+	Cookie[] cookies = request.getCookies();
+	
+	if(cookies != null){
+		for(Cookie c : cookies){
+			String key = c.getName();
+			String value = c.getValue();
+			System.out.printf("@header.jsp %s = %s\n", key , value);
+			if("saveId".equals(key)){
+				saveId = true;
+				userId = value;
+			}
+		}
+	}
+%>    
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +36,7 @@
 </head>
 <body>
 <nav class="navbar navbar-default">
+	<!-- 너비가 768px 이하가 될 시 data-target을 통해 해당 네비바를 toggle형태로 압축 -->
 	<div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -23,7 +46,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.jsp"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
+      <a class="navbar-brand" href="#"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -53,13 +76,25 @@
       </form>
       <!-- header 오른쪽 구석탱이 -->
       <ul class="nav navbar-nav navbar-right">
+     	<% if(user == null) { %>
        	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
+      	<% } 
+      	else {%>
+      	<li class="dropdown">
+      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+      		<ul class="dropdown-menu" role="menu">
+      			<li><a href="#">내 정보보기</a></li>
+      			<li class="divider"></li>
+            	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+      		</ul>
+      	</li>
+      	<%}%>
       </ul>
     </div><!-- /.navbar-collapse -->
     </div>
 </nav>
 	
-<!-- The Modal -->
+<!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -72,32 +107,66 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-		<form action="/action_page.php">
-  <div class="form-group">
-    <label for="email">아이디</label>
-    <input type="email" class="form-control" id="email">
-  </div>
-  <div class="form-group">
-    <label for="pwd">비밀번호</label>
-    <input type="password" class="form-control" id="pwd">
-  </div>
-  <div class="form-group form-check">
-    <label class="form-check-label">
-      <input class="form-check-input" type="checkbox"> 아이디 저장
-    </label>
-  </div>
-  <button type="submit" class="btn btn-primary">로그인</button>
-  <button type="button" class="btn btn-primary" onclick="location.href='enrollTest.jsp'">회원가입</button>
-</form>        
-      </div>
+		<form>
+  			<div class="form-group">
+    			<label for="text">아이디</label>
+    			<input type="text" class="form-control" id="userId" value="<%=userId%>">
+  			</div>
+  			<div class="form-group">
+    			<label for="userPassword">비밀번호</label>
+    			<input type="password" class="form-control" id="userPassword">
+  			</div>
+  			<div class="form-group form-check">
+    			<label class="form-check-label">
+      				<input class="form-check-input" type="checkbox" id="saveId" <%=saveId?"checked":""%>/> 아이디 저장
+    			</label>
+    			<span><p id="login-help"></p></span>
+  			</div>
+  			<button type="button" class="btn btn-primary" onclick="loginCheck();">로그인</button>
+  			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.do'">회원가입</button>
+  			<br /><br />
+  			<a href="#">아이디 찾기</a>&nbsp;&nbsp;<a href="#">비밀번호 찾기</a>
+		</form>        
+      </div> <!-- modal-body 끝 -->
+      
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">나가기</button>
       </div>
-    </div>
-  </div>
-</div>
+    </div> <!-- modal-content 끝 -->
+  </div> <!-- modal-dialog 끝 -->
+</div> <!-- modal fade 끝 -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
+	
+	<script>
+	
+	function loginCheck(){
+		var userId = $("#userId").val().trim();
+		var userPassword = $("#userPassword").val().trim();
+		var saveId = $("#saveId").is(":checked")
+		console.log("$saveId는 바로 ! = " , saveId)
+		if(userId == 0 || userPassword == 0){
+			$("#login-help").text("아이디 혹은 비밀번호를 입력해 주시길 바랍니다.");
+			$("#login-help").addClass("text-danger");
+			return;
+		}
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/login.do",
+			data : {userId : userId , userPassword : userPassword, saveId : saveId},
+			success : function(data){
+				if(data == "true"){
+					location.href = "index.jsp";
+				}
+					
+				else if(data == "false"){
+					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
+					$("#login-help").addClass("text-danger");
+				}
+			}
+		});
+	}
+</script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

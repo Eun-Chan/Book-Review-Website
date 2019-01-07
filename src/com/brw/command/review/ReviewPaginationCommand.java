@@ -1,13 +1,18 @@
-package com.brw.command;
+package com.brw.command.review;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardDTO;
 
+/*
+ * 작성자 : 정명훈
+ * 내용 : 리뷰리스트 페이징
+ */
 public class ReviewPaginationCommand implements Command {
 
 	@Override

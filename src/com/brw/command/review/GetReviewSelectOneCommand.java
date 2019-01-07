@@ -1,4 +1,4 @@
-package com.brw.command;
+package com.brw.command.review;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -6,11 +6,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 
-public class GetReviewSelectOne implements Command{
+/*
+ * 작성자 : 장선웅
+ * 내용 : 해당번호 리뷰 가져오기
+ */
+public class GetReviewSelectOneCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

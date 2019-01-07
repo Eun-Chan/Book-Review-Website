@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/header.jsp" %> 
+<%@ include file="/WEB-INF/views/common/header.jsp" %> 
 <%@ include file="/categoryMenu.jsp" %>
 
 <title>bookList</title>
@@ -219,4 +219,4 @@ div#finder{
 
 </script>
 
-<%@ include file="/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

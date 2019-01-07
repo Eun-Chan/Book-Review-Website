@@ -1,13 +1,18 @@
-package com.brw.command;
+package com.brw.command.user;
 
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.UserDTO;
 
+/*
+ * 작성자 : 김은찬
+ * 내용 : 회원가입
+ */
 public class CreateUserCommand implements Command{
 
 	@Override
@@ -18,6 +23,8 @@ public class CreateUserCommand implements Command{
 		String userPassword = request.getParameter("userPassword");
 		String userName = request.getParameter("userName");
 		String userEmail = request.getParameter("userEmail");
+		
+		userEmail = userEmail.toLowerCase();
 		
 		UserDTO user = new UserDTO(userId, userPassword, userName, userEmail);
 		

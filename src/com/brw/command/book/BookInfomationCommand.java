@@ -1,8 +1,14 @@
-package com.brw.command;
+package com.brw.command.book;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
+
+/*
+ * 작성자 : 김민우
+ * 내용 : Book List 에서 클릭 시 bookInfo(책 상세내용) 이동
+ */
 public class BookInfomationCommand implements Command {
 
 	@Override
