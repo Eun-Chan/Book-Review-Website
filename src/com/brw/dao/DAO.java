@@ -1,7 +1,7 @@
 package com.brw.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +15,8 @@ import javax.sql.DataSource;
 
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
-import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
+import com.brw.dto.ReviewBoardLikeDTO;
+import com.brw.dto.UserDTO;
 
 public class DAO {
 	
@@ -691,9 +692,127 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return prevNumber;
+	}
+
+	//선웅 : 처음 좋아요 버튼을 눌럿을 때 좋아요 테이블에 인서트 해주는곳
+	public int insertReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into reviewboard_like values(seq_likeNo.nextval,?,?,1)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	//선웅 : 좋아요 테이블 전체 조회
+	public List<ReviewBoardLikeDTO> selectAllReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from reviewboard_like where like_userid like ? and like_rbNo = ? and like_counter = 1";
+		List<ReviewBoardLikeDTO> likeList = null;
+		
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			res = pstmt.executeQuery();
+
+			likeList = new ArrayList<>();
+			while(res.next()) {
+				ReviewBoardLikeDTO like = new ReviewBoardLikeDTO();
+				like.setLikeNo(res.getInt("likeno"));
+				like.setLikeRbNo(res.getInt("like_rbno"));
+				like.setLikeUserId(res.getString("like_userid"));
+				like.setLikeCounter(res.getInt("like_counter"));
+				
+				likeList.add(like);
+			}
+			
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return likeList;
+	}
+
+	
+	//선웅 : 좋아요 테이블 카운터가 0으로 업데이트 되면 해당 컬럼 삭제
+	public int deleteReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from reviewboard_like where like_userid like ? and like_rbno = ? and like_counter= 1";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 
 }

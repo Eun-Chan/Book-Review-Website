@@ -206,7 +206,17 @@
 				return;
 			}
 			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=prevNumber%>";
-		})
+		});
+		
+		$("#like").click(function(){
+			$.ajax({
+				url:"<%=request.getContextPath()%>/review/reviewLike.do?rbNo=<%=review.getRbNo()%>&userId=ikso2000",
+				success:function(data){
+					console.log(data);
+				}
+			});
+		});
+		
 	</script>
 </body>
 </html>

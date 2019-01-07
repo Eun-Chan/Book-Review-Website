@@ -15,7 +15,7 @@ import com.brw.command.CreateUserCommand;
 import com.brw.command.GetReviewSelectOne;
 
 import com.brw.command.IndexCommand;
-
+import com.brw.command.ReviewBoardLike;
 import com.brw.command.ReviewPaginationCommand;
 import com.brw.command.ReviewSearchCommand;
 import com.brw.command.insertComment;
@@ -123,6 +123,11 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 		}
 		
+		//선웅 : 리뷰게시판 디테일 좋아요 처리 부분
+		else if(command.equals("/review/reviewLike.do")) {
+			com = new ReviewBoardLike();
+			com.execute(req, res);
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
