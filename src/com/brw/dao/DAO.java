@@ -145,7 +145,7 @@ public class DAO {
 	/*
 	 * 4
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰리스트 페이징
 	 */
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
@@ -203,7 +203,7 @@ public class DAO {
 	/*
 	 * 5
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰리스트 페이징용 카운터
 	 */
 	public int countReviewAll() {
 		int result = 0;
@@ -242,7 +242,7 @@ public class DAO {
 	/*
 	 * 6
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰검색 리스트 페이징
 	 */
 	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
@@ -250,7 +250,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -273,7 +273,7 @@ public class DAO {
 				rb.setRbWriter(rset.getString("rb_writer"));
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
 				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("rb_date"));
+				rb.setRbDate(rset.getString("strdate"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
@@ -304,7 +304,7 @@ public class DAO {
 	/*
 	 * 7
 	 * 작성자 : 정명훈
-	 * 내용 : 넣어주세양
+	 * 내용 : 리뷰검색 리스트용 카운터
 	 */
 	public int countReviewSearch(String searchType, String searchKeyword) {
 		int result = 0;
@@ -1102,11 +1102,10 @@ public class DAO {
 		return result;
 	}
 
-	//명훈 : 리뷰 등록 메소드
-	/**
-	 * 26. 명훈 : 리뷰 등록 메소드
-	 * @param ReviewBoardDTO 객체 rb
-	 * @return
+	/*
+	 * 26
+	 * 작성자 : 정명훈
+	 * 내용 : 리뷰 db에 등록
 	 */
 	public int reviewWrite(ReviewBoardDTO rb) {
 		int result = 0;
@@ -1147,7 +1146,11 @@ public class DAO {
 	return result;
 	}
 			
-	// 명훈 : 작성한 리뷰글 번호 가져오기 (마지막 리뷰글 가져오기)
+	/*
+	 * 27
+	 * 작성자 : 정명훈
+	 * 내용 : 작성한 리뷰글 번호 가져오기 (마지막 리뷰글 가져오기)
+	 */
 	public int getLastReviewBoardNo() {
 		int lastReviewBoardNo = 0;
 		
@@ -1176,5 +1179,90 @@ public class DAO {
 		}
 	
 	return lastReviewBoardNo;
+	}
+	
+	/*
+	 * 28
+	 * 작성자 : 정명훈
+	 * 내용 : book테이블에 해당 isbn이 있는지 검사 후 boolean 리턴
+	 */
+	public boolean isIsbnExist(String rbIsbn) {
+		boolean isIsbnExist = false;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from book where aladin_isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, rbIsbn);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				isIsbnExist = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(isIsbnExist);
+		return isIsbnExist;
+	}
+
+	/*
+	 * 29
+	 * 작성자 : 정명훈
+	 * 내용 : book테이블에 도서 정보 추가
+	 */
+	public int insertBook(String rbBookTitle, String bookAuthor, String rbIsbn, int bookPriceStandard, String bookPublisher) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into booktest (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			
+			pstmt.setString(1, rbBookTitle);
+			pstmt.setString(2, bookAuthor);
+			pstmt.setString(3, rbIsbn);
+			pstmt.setInt(4, bookPriceStandard);
+			pstmt.setString(5, bookPublisher);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 }
