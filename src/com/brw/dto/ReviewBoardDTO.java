@@ -18,7 +18,7 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbTitle;
 	private String rbWriter;
 	private String rbBookTitle;
-	private long rbIsbn;
+	private String rbIsbn;
 	private String rbContent;
 	private String rbDate;
 	private double rbStarscore;
@@ -27,10 +27,11 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbOriginalFilename;
 	private String rbRenamedFilename;
 	private int rbReport;
+	private String DelFlag;
 	
 	public ReviewBoardDTO() {}
 
-	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, long rbIsbn, String rbContent, String rbDate,
+	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent, String rbDate,
 			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
@@ -71,7 +72,7 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbWriter = rbWriter;
 	}
 
-	public long getRbIsbn() {
+	public String getRbIsbn() {
 		return rbIsbn;
 	}
 
@@ -83,7 +84,7 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbBookTitle = rbBookTitle;
 	}
 
-	public void setRbIsbn(long rbIsbn) {
+	public void setRbIsbn(String rbIsbn) {
 		this.rbIsbn = rbIsbn;
 	}
 

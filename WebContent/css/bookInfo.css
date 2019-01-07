@@ -1,0 +1,46 @@
+@charset "UTF-8";
+#bookInfo-container{
+   text-align : center;   
+}
+#command-info {
+   text-align : center;
+}
+#command-info th,tr,td{
+   border : 1px solid black;
+   text-align: center;
+}
+#bookInfodsp {
+   max-width : 600px;
+   display : block;
+   margin : 0 auto;
+}
+/* 책 오른쪽으로 밀기 */
+#bookInfo-container {
+   padding-left : 200px;
+}
+/* bookInfo 리뷰테이블 */
+.table tr td:nth-child(1){
+   width : 300px;
+   cursor : pointer;
+}
+#rbcontent {
+   max-height : 36.8px;
+   width: 400px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   overflow : hidden;
+   display : inline-block;
+   border : 0px solid;
+}
+.table tr td:nth-child(3){
+   width : 200px;
+}
+.table tr td:nth-child(4){
+   width : 250px;
+}
+.table th {
+   background : #f1f1f1;
+}
+#command-info {
+   padding : 0px 50px 0px 200px ;
+}

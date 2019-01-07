@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
 
 public class DAO {
@@ -40,9 +41,14 @@ public class DAO {
 		return instance;
 	}
 	
+	/*
+	 * 1
+	 * 작성자 : 김은찬
+	 * 내용 : 회원가입
+	 */
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
-		String query = "insert into tempUserTable values(?,?,?,?)";
+		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -77,7 +83,11 @@ public class DAO {
 		
 		// return result;
 	}
-	
+	/*
+	 * 2
+	 * 작성자 : ?
+	 * 내용 : ?
+	 */
 	public boolean changePwdCheck(Connection con, String userId) {
 		boolean result = false;
 		String query = "B"
@@ -85,11 +95,58 @@ public class DAO {
 				+ "";
 		
 		PreparedStatement pstmt = null;
-		
 
 		return true;
 	}
 
+	/**
+	 * 3
+	 * 작성자 : 김은찬
+	 * 회원가입때 아이디 중복 버튼 클릭시
+	 * 중복 검사 확인용 메소드
+	 * @param userId
+	 */
+	public int idCheck(String userId) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) as cnt from tempusertable where userId = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * 4
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
 		
@@ -140,11 +197,14 @@ public class DAO {
 				e.printStackTrace();
 			}
 		}
-		
-		
 		return list;
 	}
 
+	/*
+	 * 5
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public int countReviewAll() {
 		int result = 0;
 		
@@ -179,6 +239,11 @@ public class DAO {
 		return result;
 	}
 
+	/*
+	 * 6
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
 		
@@ -235,7 +300,12 @@ public class DAO {
 		
 		return list;
 	}
-
+	
+	/*
+	 * 7
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public int countReviewSearch(String searchType, String searchKeyword) {
 		int result = 0;
 		
@@ -272,7 +342,11 @@ public class DAO {
 	}
 
 
-	//선웅 : 게시판 디테일 
+	/*
+	 * 8
+	 * 작성자 : 장선웅
+	 * 내용 : 게시판 디테일 
+	 */
 	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
 		Connection conn = null;
 		ReviewBoardDTO review = null;
@@ -313,7 +387,11 @@ public class DAO {
 		return review;
 	}
 
-	//선웅 : 댓글 입력
+	/*
+	 * 9
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 입력
+	 */
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -333,6 +411,7 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -342,7 +421,11 @@ public class DAO {
 		return result;
 	}
 	
-	//선웅 : 댓글 리스트 가져오기
+	/*
+	 * 10
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 리스트 가져오기
+	 */
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -376,6 +459,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -385,8 +469,11 @@ public class DAO {
 		return reviewComment;
 	}
 
-	
-	/*광준:최근리뷰 5개 가져오기*/
+	/**
+	 * 11
+	 * 작성자 : 박광준
+	 * 내용 : 최근리뷰 5개 가져오기
+	 */
 	public List<ReviewBoardDTO> selectReviewRecentList()
 	{
 		Connection conn = null;
@@ -426,8 +513,56 @@ public class DAO {
 		}		
 		return rbList;
 	}
+	/**
+	 * 12
+	 * 작성자 : 김은찬
+	 * 회원가입 때 이메일 인증 버튼 클릭시
+	 * 이미 가입된 이메일인지 확인하는 메소드
+	 * @param email
+	 * @return
+	 */
+	public int emailCheck(String email) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select count(*) as cnt from tempusertable where useremail = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, email);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 
-	//선웅 : 댓글 갯수 가져오기 
+	/**
+	 * 13
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 갯수 가져오기
+	 */
 	public int getReivewBoardCommentAllCount(int rbNo) {
 		int count = 0;
 		Connection conn = null;
@@ -450,6 +585,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -458,8 +594,11 @@ public class DAO {
 		
 		return count;
 	}
-
-	//선웅 : 마지막 댓글 가져오기
+	/**
+	 * 14
+	 * 작성자 : 장선웅
+	 * 내용 : 마지막 댓글 가져오기
+	 */
 	public ReviewBoardComment getReviewBoardCommentLast(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -470,6 +609,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			
 			pstmt.setInt(1, rbNo);
 			res = pstmt.executeQuery();
 			lastComment = new ReviewBoardComment();
@@ -487,6 +627,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -496,7 +637,11 @@ public class DAO {
 		return lastComment;
 	}
 
-	//선웅 : 리댓글 인서트 dao
+	/**
+	 * 15
+	 * 작성자 : 장선웅
+	 * 내용 : 리댓글 인서트 
+	 */
 	public int insertReComment(int rbCommentNo, String rbCommentContent, String rbCommentWriter, int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
@@ -518,16 +663,109 @@ public class DAO {
 		} finally {
 			try {
 				pstmt.close();
+				conn.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 		return result;
 	}
+	/**
+	 * 16
+	 * 작성자 : 김은찬
+	 * 내용 : 로그인 메소드 ㅇㅈ? ㅇ ㅇ
+	 */
+	public int loginCheck(String userId, String userPassword) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select case (select count(*) from tempusertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from tempusertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, userPassword);
+			pstmt.setString(3, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt("login_check");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
-	//선웅 : 대댓글 리스트 가져오기
+		return result;
+	}
+	/**
+	 * 17
+	 * 작성자 : 박세준
+	 * 내용 : bookreview갖고오기
+	 */
+	public List<ReviewBoardDTO> getbookreview(String iSBN13) {
+		List<ReviewBoardDTO> list = new ArrayList();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from reviewboard where rb_isbn = ? order by rb_no desc";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, iSBN13);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				ReviewBoardDTO rb = new ReviewBoardDTO();
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbContent(rset.getString("rb_content"));
+				rb.setRbDate(rset.getString("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+				rb.setRbReport(rset.getInt("rb_report"));
+				
+				list.add(rb);
+			}
+			System.out.println("DaoList@="+list);
+			rset = pstmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return	list;
+	}
+	/**
+	 * 18
+	 * 작성자 : 장선웅
+	 * 내용 : 대댓글 리스트 가져오기
+	 */
 	public List<ReviewBoardComment> getReviewBoardReCommentList(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -539,6 +777,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			
 			pstmt.setInt(1, rbNo);
 			
 			res = pstmt.executeQuery();
@@ -563,16 +802,19 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 		return reviewReComment;
 	}
-
-	//선웅 : 마지막으로 입력한 대댓글 가져오기
+	/**
+	 * 19
+	 * 작성자 : 장선웅
+	 * 내용 : 마지막으로 입력한 대댓글 가져오기 
+	 */
 	public ReviewBoardComment getReviewBoardReCommentLast(int rbCommentNo, int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -604,6 +846,7 @@ public class DAO {
 			try {
 				res.close();
 				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -614,4 +857,250 @@ public class DAO {
 		return lastReComment;
 	}
 
+	/**
+	 * 20
+	 * 작성자 : 김은찬
+	 * 내용 : 1명의 회원 정보를 가져오기
+	 */
+	public UserDTO selectOneUser(String userId) {
+		UserDTO userDTO = null;
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select * from tempusertable where userid = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				userDTO = new UserDTO();
+				userDTO.setUserId(rset.getString("userId"));
+				userDTO.setUserName(rset.getString("userName"));
+				userDTO.setUserEmail(rset.getString("userEmail"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return userDTO;
+	}
+	
+	
+	/**
+	 * 21. 선웅 : 해당 게시판 다음글 게시판 번호 가져오기
+	 * 
+	 */
+	
+	public int selectReviewBoardNextNumber(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "SELECT rb_no nextnumber FROM reviewboard WHERE rb_no IN ((SELECT  MIN(rb_no)FROM    reviewboard WHERE   rb_no > ? and del_flag like 'N' ))";
+		int nextNumber = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				nextNumber = res.getInt("nextnumber");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return nextNumber;
+	}
+
+	/**
+	 * 22. 선웅 : 해당 리뷰 게시판 이전글 번호 구하는 쿼리
+	 * @param rbNo
+	 * @return
+	 */
+	
+	public int selectReviewBoardPrevNumber(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		int prevNumber = 0;
+		String query = "SELECT rb_no prevnumber FROM reviewboard WHERE rb_no IN ((SELECT  max(rb_no)FROM    reviewboard WHERE   rb_no < ? and del_flag like 'N' ))";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				prevNumber = res.getInt("prevnumber");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return prevNumber;
+	}
+
+	/**
+	 * 23 . 선웅 : 처음 좋아요 버튼을 눌럿을 때 좋아요 테이블에 인서트 해주는곳
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	
+	public int insertReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into reviewboard_like values(seq_likeNo.nextval,?,?,1)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 24 선웅 : 좋아요 테이블 전체 조회
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	public List<ReviewBoardLikeDTO> selectAllReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select * from reviewboard_like where like_userid like ? and like_rbNo = ? and like_counter = 1";
+		List<ReviewBoardLikeDTO> likeList = null;
+		
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			res = pstmt.executeQuery();
+
+			likeList = new ArrayList<>();
+			while(res.next()) {
+				ReviewBoardLikeDTO like = new ReviewBoardLikeDTO();
+				like.setLikeNo(res.getInt("likeno"));
+				like.setLikeRbNo(res.getInt("like_rbno"));
+				like.setLikeUserId(res.getString("like_userid"));
+				like.setLikeCounter(res.getInt("like_counter"));
+				
+				likeList.add(like);
+			}
+			
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return likeList;
+	}
+
+	
+	/**
+	 * 25. 선웅 : 좋아요 테이블 카운터가 0으로 업데이트 되면 해당 컬럼 삭제
+	 * @param rbNo
+	 * @param userId
+	 * @return
+	 */
+	public int deleteReviewBoardLike(int rbNo, String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from reviewboard_like where like_userid like ? and like_rbno = ? and like_counter= 1";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }

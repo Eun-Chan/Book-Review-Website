@@ -9,18 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.brw.command.BookInfomationCommand;
 import com.brw.command.Command;
-import com.brw.command.CreateUserCommand;
-import com.brw.command.GetReviewSelectOne;
-
-import com.brw.command.IndexCommand;
-
-import com.brw.command.ReviewPaginationCommand;
-import com.brw.command.ReviewSearchCommand;
-import com.brw.command.ReviewWriteEndCommand;
-import com.brw.command.insertComment;
-import com.brw.command.insertReCommend;
+import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.BookReviewCommand;
+import com.brw.command.index.IndexCommand;
+import com.brw.command.review.GetReviewSelectOneCommand;
+import com.brw.command.review.InsertCommentCommand;
+import com.brw.command.review.InsertReCommentCommand;
+import com.brw.command.review.ReviewPaginationCommand;
+import com.brw.command.review.ReviewSearchCommand;
+import com.brw.command.review.ReviewWriteEndCommand;
+import com.brw.command.user.CreateUserCommand;
+import com.brw.command.user.EmailAuthCommand;
+import com.brw.command.user.IdCheckCommand;
+import com.brw.command.user.LoginCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -61,77 +63,147 @@ public class FrontController extends HttpServlet {
 		String uri = req.getRequestURI();
 		String conPath = req.getContextPath();
 		String command = uri.substring(conPath.length());
-		System.out.println(uri);
-		System.out.println(conPath);
-		System.out.println(command);
 		
 		// command pattern 을 위한 객체 생성
 		Command com = null;
 		String viewPage = null;
 		
-		// frontController로 모든 명렁을 받은 후 여기에서 분기
-		if(command.equals("/enrollTest.do")) {
+		/*
+		 * 1. 유저 생성
+		 */
+		if(command.equals("/createUser.do")) {
 			com = new CreateUserCommand();
 			com.execute(req, res);
 			viewPage = "index.jsp";
 		}
-		else if(command.equals("/review/reviewList.do")) {
-			com = new ReviewPaginationCommand();
+		/*
+		 * 2. 로그인 & 아이디 저장 & 유저 정보 세션 저장
+		 */
+		else if(command.equals("/login.do")) {
+			com = new LoginCommand();
 			com.execute(req, res);
-			viewPage = "/WEB-INF/views/review/reviewList.jsp";
 		}
-		else if(command.equals("/review/reviewSearch.do")) {
-			com = new ReviewSearchCommand();
+		/*
+         * 3. 이메일 인증 & 이메일 중복 확인 command
+         */
+		else if(command.equals("/emailAuth.do")) {
+			com = new EmailAuthCommand();
+			com.execute(req,res);
+		}
+		/*
+		 * 4. 회원가입 시 로그인 중복 확인
+		 */
+		else if(command.equals("/idCheck.do")) {
+			com = new IdCheckCommand();
 			com.execute(req, res);
-			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
+		/*
+		 * 5. 회원가입 jsp로 이동
+		 */
+		else if(command.equals("/signUp.do")) {
+			viewPage = "/WEB-INF/views/sign/signUp.jsp";
+		}
+		/*
+		 * 6. 로그아웃
+		 */
+		else if(command.equals("/logout.do")) {
+			com = new LogoutCommand();
+			com.execute(req, res);
+		}
+		/*
+		 * 5. index.jsp 최근 리뷰 & 인기 도서
+		 */
+		else if(command.equals("/index.do")) {
+			com = new IndexCommand();
+			com.execute(req, res);
+		}
+		/*
+		 * 6. 알라딘 API
+		 */
+		else if(command.equals("/book/bookList.do")) {
+	         viewPage = "/WEB-INF/views/book/bookList.jsp";
+		}
+		/*
+		 * 7. 알라딘 API에서 Book List 중에서 Book 클릭 시 상세 내용
+		 */
 		else if(command.equals("/book/bookInfo.do")) {
 			com = new BookInfomationCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/book/bookInfo.jsp";
 		}
+		/*
+		 * 8. (7.) 상세 내용 밑에 댓글 내용 출력
+		 */
+		else if(command.equals("/book/bookreviewInfo.do")) {
+			System.out.println("front성공");
+			com = new BookReviewCommand();
+			com.execute(req, res);
+		}
+		/*
+		 * 9. 리뷰 리스트 (리뷰 게시판)
+		 */
+		else if(command.equals("/review/reviewList.do")) {
+			com = new ReviewPaginationCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/review/reviewList.jsp";
+		}
+		/*
+		 * 10. 리뷰 게시판 안에서 검색 결과
+		 */
+		else if(command.equals("/review/reviewSearch.do")) {
+			com = new ReviewSearchCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
+		}
+		/*
+		 * 11. 리뷰 게시판에서 리뷰 클릭 시 상세내용 
+		 */
 		else if(command.equals("/review/reviewDetail.do")) {
 			//해당 게시물 가져오는 쿼리
-			com = new GetReviewSelectOne();
+			com = new GetReviewSelectOneCommand();
 			//해당 게시글에 댓글 가져오는 쿼리가 들어와야함.
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
-
-		else if(command.equals("/book/bookList.do")) {
-	         viewPage = "/WEB-INF/views/book/bookList.jsp";
-		}
-		else if(command.equals("/index.do")) { /*광준 : index 페이지*/
-			com = new IndexCommand();
-			com.execute(req, res);
-		}
+		/*
+		 * 12. 리뷰 상세 보기에서의 댓글
+		 */
 		else if(command.equals("/insertComment.do")) {
-			com = new insertComment();
+			com = new InsertCommentCommand();
 			com.execute(req, res);
 		}
-
+		/*
+		 * 13. 리뷰 상세 보기에서의 댓글의 댓글
+		 */
 		else if(command.equals("/insertReComment.do")) {
-			com = new insertReCommend();
+			com = new InsertReCommentCommand();
 			com.execute(req, res);
 		}
-
+		/*
+		 * 14. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
+		 */
 		else if(command.equals("/review/reviewWrite.do")) {
-			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
-		}
-		else if(command.equals("/review/reviewWriteEnd.do")) {
-			com = new ReviewWriteEndCommand();
-			com.execute(req, res);
-			viewPage = "";
-		}
-		else if(command.equals("/review/bookSearch.do")) {
-			viewPage = "/WEB-INF/views/review/bookSearch.jsp";
-		}
+	         viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
+	    }
+		/*
+		 * 15. 리뷰 작성에 대한 정보 입력 후 리뷰 등록
+		 */
+	    else if(command.equals("/review/reviewWriteEnd.do")) {
+	       com = new ReviewWriteEndCommand();
+	       com.execute(req, res);
+	       viewPage = "";
+	    }
+		/*
+		 * 16. BookList에서 책 검색 시 결과
+		 */
+	    else if(command.equals("/review/bookSearch.do")) {
+	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+	    }
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
 		}
-
-
+		
 	}
 }
