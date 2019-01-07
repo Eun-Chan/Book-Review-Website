@@ -129,7 +129,7 @@ class MyAuthentication extends Authenticator{
 	public MyAuthentication() {
 		String id = "eunchan2000";
 		// gmail 계정을 2단계 인증으로 등록하고, 위 소스의 pwd란에 gmail용 비밀번호가 아닌 ACCESS 용 비밀번호를 등록해야 한다.
-		String pw = "mqfhwsgfjkzqopcv";
+		String pw = "dmscks89!";
 		
 		pa = new PasswordAuthentication(id, pw);
 	}
