@@ -3,17 +3,17 @@
 <%
 	String isbn13 = (String)request.getAttribute("isbn13");
 %>     
-<%@ include file="/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>BookInformationTest</title>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookInfo.css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/custom.css">
 </head>
 <body>
 	<!-- <br />
@@ -88,4 +88,4 @@ var isEmpty = function(value){
 </script>
 </body>
 </html>
-<%@ include file="/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
