@@ -40,6 +40,11 @@ public class DAO {
 		return instance;
 	}
 	
+	/*
+	 * 1
+	 * 작성자 : 김은찬
+	 * 내용 : 회원가입
+	 */
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
 		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
@@ -77,7 +82,11 @@ public class DAO {
 		
 		// return result;
 	}
-	
+	/*
+	 * 2
+	 * 작성자 : ?
+	 * 내용 : ?
+	 */
 	public boolean changePwdCheck(Connection con, String userId) {
 		boolean result = false;
 		String query = "B"
@@ -90,6 +99,7 @@ public class DAO {
 	}
 
 	/**
+	 * 3
 	 * 작성자 : 김은찬
 	 * 회원가입때 아이디 중복 버튼 클릭시
 	 * 중복 검사 확인용 메소드
@@ -130,7 +140,12 @@ public class DAO {
 		}
 		return result;
 	}
-	
+
+	/*
+	 * 4
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
 		
@@ -184,6 +199,11 @@ public class DAO {
 		return list;
 	}
 
+	/*
+	 * 5
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public int countReviewAll() {
 		int result = 0;
 		
@@ -218,6 +238,11 @@ public class DAO {
 		return result;
 	}
 
+	/*
+	 * 6
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
 		List<ReviewBoardDTO> list = null;
 		
@@ -274,7 +299,12 @@ public class DAO {
 		
 		return list;
 	}
-
+	
+	/*
+	 * 7
+	 * 작성자 : 정명훈
+	 * 내용 : 넣어주세양
+	 */
 	public int countReviewSearch(String searchType, String searchKeyword) {
 		int result = 0;
 		
@@ -311,7 +341,11 @@ public class DAO {
 	}
 
 
-	//선웅 : 게시판 디테일 
+	/*
+	 * 8
+	 * 작성자 : 장선웅
+	 * 내용 : 게시판 디테일 
+	 */
 	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
 		Connection conn = null;
 		ReviewBoardDTO review = null;
@@ -352,7 +386,11 @@ public class DAO {
 		return review;
 	}
 
-	//선웅 : 댓글 입력
+	/*
+	 * 9
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 입력
+	 */
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -382,7 +420,11 @@ public class DAO {
 		return result;
 	}
 	
-	//선웅 : 댓글 리스트 가져오기
+	/*
+	 * 10
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 리스트 가져오기
+	 */
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -426,8 +468,11 @@ public class DAO {
 		return reviewComment;
 	}
 
-	
-	/*광준:최근리뷰 5개 가져오기*/
+	/**
+	 * 11
+	 * 작성자 : 박광준
+	 * 내용 : 최근리뷰 5개 가져오기
+	 */
 	public List<ReviewBoardDTO> selectReviewRecentList()
 	{
 		Connection conn = null;
@@ -468,6 +513,7 @@ public class DAO {
 		return rbList;
 	}
 	/**
+	 * 12
 	 * 작성자 : 김은찬
 	 * 회원가입 때 이메일 인증 버튼 클릭시
 	 * 이미 가입된 이메일인지 확인하는 메소드
@@ -511,7 +557,11 @@ public class DAO {
 		return result;
 	}
 
-	//선웅 : 댓글 갯수 가져오기 
+	/**
+	 * 13
+	 * 작성자 : 장선웅
+	 * 내용 : 댓글 갯수 가져오기
+	 */
 	public int getReivewBoardCommentAllCount(int rbNo) {
 		int count = 0;
 		Connection conn = null;
@@ -543,8 +593,11 @@ public class DAO {
 		
 		return count;
 	}
-
-	//선웅 : 마지막 댓글 가져오기
+	/**
+	 * 14
+	 * 작성자 : 장선웅
+	 * 내용 : 마지막 댓글 가져오기
+	 */
 	public ReviewBoardComment getReviewBoardCommentLast(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -583,7 +636,11 @@ public class DAO {
 		return lastComment;
 	}
 
-	//선웅 : 리댓글 인서트 dao
+	/**
+	 * 15
+	 * 작성자 : 장선웅
+	 * 내용 : 리댓글 인서트 
+	 */
 	public int insertReComment(int rbCommentNo, String rbCommentContent, String rbCommentWriter, int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
@@ -615,10 +672,9 @@ public class DAO {
 		return result;
 	}
 	/**
-	 * 로그인 메소드 ㅇㅈ? ㅇ ㅇ
-	 * @param userId
-	 * @param userPassword
-	 * @return
+	 * 16
+	 * 작성자 : 김은찬
+	 * 내용 : 로그인 메소드 ㅇㅈ? ㅇ ㅇ
 	 */
 	public int loginCheck(String userId, String userPassword) {
 		int result = 0;
@@ -656,7 +712,11 @@ public class DAO {
 
 		return result;
 	}
-/*	세준  bookreview갖고오기*/
+	/**
+	 * 17
+	 * 작성자 : 박세준
+	 * 내용 : bookreview갖고오기
+	 */
 	public List<ReviewBoardDTO> getbookreview(String iSBN13) {
 		List<ReviewBoardDTO> list = new ArrayList();
 		Connection conn = null;
@@ -700,7 +760,11 @@ public class DAO {
 		}
 		return	list;
 	}
-	//선웅 : 대댓글 리스트 가져오기
+	/**
+	 * 18
+	 * 작성자 : 장선웅
+	 * 내용 : 대댓글 리스트 가져오기
+	 */
 	public List<ReviewBoardComment> getReviewBoardReCommentList(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -745,8 +809,11 @@ public class DAO {
 		}
 		return reviewReComment;
 	}
-
-	//선웅 : 마지막으로 입력한 대댓글 가져오기
+	/**
+	 * 19
+	 * 작성자 : 장선웅
+	 * 내용 : 마지막으로 입력한 대댓글 가져오기 
+	 */
 	public ReviewBoardComment getReviewBoardReCommentLast(int rbCommentNo, int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -787,5 +854,48 @@ public class DAO {
 		
 		
 		return lastReComment;
+	}
+
+	/**
+	 * 20
+	 * 작성자 : 김은찬
+	 * 내용 : 1명의 회원 정보를 가져오기
+	 */
+	public UserDTO selectOneUser(String userId) {
+		UserDTO userDTO = null;
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String query = "select * from tempusertable where userid = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				userDTO = new UserDTO();
+				userDTO.setUserId(rset.getString("userId"));
+				userDTO.setUserName(rset.getString("userName"));
+				userDTO.setUserEmail(rset.getString("userEmail"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return userDTO;
 	}
 }

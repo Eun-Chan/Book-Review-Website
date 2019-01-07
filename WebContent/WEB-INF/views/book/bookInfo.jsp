@@ -3,7 +3,7 @@
 <%
 	String isbn13 = (String)request.getAttribute("isbn13");
 %>     
-<%@ include file="/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -88,4 +88,4 @@ var isEmpty = function(value){
 </script>
 </body>
 </html>
-<%@ include file="/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

@@ -13,7 +13,7 @@
 </head>
 <body onload="startPage()">
 	<!-- Header -->
-	<jsp:include page="header.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 	여기는 index.jsp
 	
 	<!-- Body -->
@@ -284,4 +284,4 @@ function scoreRound(score)
 }
 </script>
 
-<%@ include file="/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
