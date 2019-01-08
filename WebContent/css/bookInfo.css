@@ -8,11 +8,7 @@
 #command-info th, #command-info tr, #command-info td{
    text-align: center;
 }
-#bookInfodsp {
-   max-width : 600px;
-   display : block;
-   margin : 0 auto;
-}
+
 /* 책 오른쪽으로 밀기 */
 #bookInfo-container {
    padding-left : 200px;
