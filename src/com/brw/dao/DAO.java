@@ -1103,4 +1103,48 @@ public class DAO {
 		
 		return result;
 	}
+
+	/**
+	 * 26.
+	 * @광준 : 도서의 isbn별 별점을 조회하기 위한 처리
+	 * @param bookIsbn_Array
+	 * @return
+	 */
+	public List<String> selectStarScoreList(String[] bookIsbn_Array) {
+		List<String> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "SELECT AVG(rb_starscore) AS rb_starscore FROM reviewboard WHERE rb_isbn = ?";
+		ResultSet rset = null;
+		int result = 0;
+		
+		for(int i=0; i<bookIsbn_Array.length; i++) 
+		{
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, bookIsbn_Array[i]);
+				System.out.println("조회 : " + bookIsbn_Array[i]);
+				rset = pstmt.executeQuery();
+				rset.next();
+				
+				if((rset.getString("rb_starscore"))!=null) list.add((rset.getString("rb_starscore")));
+				else list.add("");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return list;
+	}
+
+
 }
