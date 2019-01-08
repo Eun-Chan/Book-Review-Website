@@ -153,7 +153,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -218,7 +218,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' order by rb_no desc";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -257,7 +257,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -326,7 +326,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard where searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -366,7 +366,7 @@ public class DAO {
 		ReviewBoardDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard where rb_no = ?";
+		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -1459,7 +1459,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select count(*) cnt  from reviewboard_comment where rb_ref=?";
+		String query = "select count(*) cnt from reviewboard_comment where rb_comment_delflag = 'N' and rb_ref=?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1488,7 +1488,7 @@ public class DAO {
 		return count;
 	}
 	/**
-	 * 35. 좋아요 총 갯수 구하기!
+	 * 35. 선웅 : 좋아요 총 갯수 구하기!
 	 * @param rbNo 
 	 * @return
 	 */
@@ -1571,7 +1571,7 @@ public class DAO {
 	}
 
 	/**
-	 * 28. 선웅 : 조회수 1 증가시키는 쿼리
+	 * 38. 선웅 : 조회수 1 증가시키는 쿼리
 	 * @param rbNo
 	 * @return
 	 */
