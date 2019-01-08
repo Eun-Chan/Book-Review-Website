@@ -79,7 +79,7 @@ li{
 	vertical-align: middle;
 	margin:0 auto;
 	float:none;
-	padding-left:48%;
+	padding-left:46%;
 }
 #like{
 	text-align: center;
@@ -331,4 +331,7 @@ li{
 	margin-left:15px;
     position: relative;
     bottom: 4px;
+}
+.del{
+	color: gray;
 }
