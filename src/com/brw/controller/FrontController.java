@@ -213,6 +213,11 @@ public class FrontController extends HttpServlet {
 		 */
 	    else if(command.equals("/book/basket.do")) {
 	    	com = new BasketInsertCommand();
+	    	com.execute(req, res);
+	    	String returnIsbnNo = (String) req.getAttribute("returnIsbnNo");
+	    	viewPage = "/book/bookInfo.do?isbn13="+returnIsbnNo;
+	    	System.out.println("viewPage"+viewPage);
+
 	    }
 		
 		if(viewPage!=null){			

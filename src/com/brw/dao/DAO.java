@@ -1265,4 +1265,127 @@ public class DAO {
 		
 		return result;
 	}
+	/*
+	 * 30
+	 * 작성자 : 김민우
+	 * 내용 : 즐겨찾기 클릭 시 basket 테이블에 값 저장
+	 */
+	public int insertBasket(UserDTO user, String isbn, String title, int price) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into basket (basketNo, userId, userName, isbn, bookTitle, price) values (seq_basket.nextval, ?, ?, ?, ?, ?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, user.getUserName());
+			pstmt.setString(3, isbn);
+			pstmt.setString(4, title);
+			pstmt.setInt(5, price);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 31
+	 * 작성자 : 김민우
+	 * 내용 : 로그인 한 유저가 즐겨찾기를 한 책인지 검색
+	 */
+	public boolean isChecked(UserDTO user, String isbn13) {
+		boolean basketCheck = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from basket where userid = ? and isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn13);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				basketCheck = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return basketCheck;
+	}
+	/*
+	 * 32
+	 * 작성자 : 김민우
+	 * 내용 : 이미 즐겨찾기를 한 경우 basket테이블에서 삭제
+	 */
+	public void deleteBasket(UserDTO user, String isbn) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from basket where userId = ? and isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }
