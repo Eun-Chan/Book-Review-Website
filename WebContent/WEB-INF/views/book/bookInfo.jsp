@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	String isbn13 = (String)request.getAttribute("isbn13");
-	
+	boolean basketCheck = (Boolean)request.getAttribute("basketCheck");
 %>     
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!DOCTYPE html>
@@ -78,7 +78,7 @@ p#reviewTab{
 					</tr>				
 				</table>
 				<br />
-				<button onclick="basket();" class="btn btn-info">즐겨찾기</button>
+				<button onclick="basket();" class="btn btn-info" id="basket">즐겨찾기</button>
 			</td>
 		</tr>
 	</table>
@@ -91,8 +91,15 @@ p#reviewTab{
 	<div id="command-info"></div>
 	
 <script>
+<%if(basketCheck == true){%>
+	$("button#basket").text("즐겨찾기 취소");
+<%}else{%>
+	$("button#basket").text("즐겨찾기");
+<%}%>
+
+
 var ISBN13 = <%=isbn13%>;
-console.log(ISBN13);
+//bookList에서 특정 책 클릭 시 그 책의 isbn값을 받아와 api를 통해 책을 검색해 온다
 
 $.ajax({
 	url: "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey=ttbkmw71511428001&itemIdType=ISBN13&ItemId="+ISBN13+"&cover=big&output=js&callback=bookDisplay",
@@ -112,8 +119,8 @@ function bookDisplay(success, data){
 	$("#bookInfo-desc").append("<span id='bookInfodsp'>"+data.item[0].description+"</span>");
 	
 	
-	$("#hiddenInfo").append("<span>isbn13"+data.item[0].isbn13+"</span>");
-	$("#hiddenInfo").append("<span>가격"+data.item[0].priceStandard+"</span>");
+	$("#hiddenInfo").append("<span>"+data.item[0].isbn13+"</span>");
+	$("#hiddenInfo").append("<span>"+data.item[0].priceStandard+"</span>");
 };
 
 $.ajax({
@@ -145,21 +152,21 @@ $.ajax({
 	    		sumStarScore += command.rbStarscore;
 	    		cnt = parseInt(i)+1;
 			}
-			
-			$("#command-info").html(table);
-			
+				
 			console.log("sumStarScore", sumStarScore);
 			console.log("cnt", cnt);
 			var totalStarScore = scoreRound(sumStarScore/cnt);
 			console.log("totalStarScore", totalStarScore);
            	var selectStarScore = totalStarScore / 0.5;
            	console.log("selectStarScore", selectStarScore);
+           	
            	for(var j=0; j<selectStarScore; j++){
            		$("span#star"+j).addClass('on');
        		}
            	$("#starScoreAvg").text("("+totalStarScore+ "/5.0)");
 		}
 		
+		$("#command-info").html(table);
 	},
 	error:function(){
 		console.log("실패");
@@ -181,17 +188,17 @@ function scoreRound(score){
 function basket(){
 
 	<%if(user == null){%>
-		alret("로그인 후 사용이 가능합니다!:D")
+		alert("로그인 후 사용이 가능합니다!:D")
 		return;
 	<%}%>
 
 	var title = $("#bookInfo-title span").text();
 	var author = $("#bookInfo-author span").text();
-	var isbn = $("#hiddenInfo span:nth(1)").text();
-	var priceStandard = $("#hiddenInfo span:nth(2)").text();
+	var isbn13 = $("#hiddenInfo span:nth(0)").text();
+	var priceStandard = $("#hiddenInfo span:nth(1)").text();
 	var publisher = $("#bookInfo-publisher span").text();
 	
-	location.href="<%=request.getContextPath()%>/book/basket.do?title="+title+"&author="+author+"&isbn="+isbn+"&priceStandard="+priceStandard+"&publisher="+publisher;
+	location.href="<%=request.getContextPath()%>/book/basket.do?title="+title+"&author="+author+"&isbn13="+isbn13+"&priceStandard="+priceStandard+"&publisher="+publisher;
 	
 };
 </script>
