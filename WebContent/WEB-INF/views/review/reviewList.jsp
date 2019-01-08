@@ -89,11 +89,7 @@ $(function(){
 
 <div id="review-list-container" class="container-fluid">
    <h2 class="text-primary">리뷰게시판</h2>
-   구현 완성도
-   <div class="progress">
-      <div class="progress-bar progress-bar-striped active progress-bar-success" style="width: 90%">90%</div>
-   </div>
-   
+
    <!-- 리뷰 리스트를 보여줄 테이블 영역 -->
    <div id="table-container">
       <table class="table table-hover table-info table-responsive" id="review-list-table">
