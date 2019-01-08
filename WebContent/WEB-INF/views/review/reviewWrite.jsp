@@ -4,7 +4,15 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <script type="text/javascript" src="<%=request.getContextPath() %>/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
+	// 로그인하지 않고 url을 통해 접근했을 경우 인덱스로 돌려버림
+	<% if(user == null) { %>
+	alert("잘못된 경로로 접근하였습니다.");
+	location.href = "<%=request.getContextPath()%>";
+	<% } %>
 $(function(){
+	
+	
+		
 	
 	// 스마트에디터용 시작
 	var oEditors = [];
@@ -160,7 +168,7 @@ input#rbBookTitle{
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />
 				<!-- 작성자 히든태그 -->
-				<input type="hidden" name="rbWriter" value="<%=user.getUserId()%>"/>
+				<input type="hidden" name="rbWriter" value="<%=user!=null?user.getUserId():""%>"/>
 				<!-- 도서명 인풋태그 -->
 				리뷰할 도서 : <input type="text" name="rbBookTitle" class="form-control" id="rbBookTitle" readonly/>
 				<!-- ISBN 히든태그 -->

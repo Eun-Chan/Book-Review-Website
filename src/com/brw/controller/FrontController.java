@@ -13,6 +13,7 @@ import com.brw.command.Command;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
+import com.brw.command.book.bookBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -219,11 +220,10 @@ public class FrontController extends HttpServlet {
 	    	String returnIsbnNo = (String) req.getAttribute("returnIsbnNo");
 	    	viewPage = "/book/bookInfo.do?isbn13="+returnIsbnNo;
 	    	System.out.println("viewPage"+viewPage);
-
 	    }
 		
 		/*
-		 * 17. 좋아요 버튼 클릭시 처리 ajax 
+		 * 18. 좋아요 버튼 클릭시 처리 ajax 
 		 */
 	    else if(command.equals("/review/reviewLike.do")){
 	    	com = new ReviewBoardLikeCommend();
@@ -231,11 +231,20 @@ public class FrontController extends HttpServlet {
 	    }
 		
 		/*
-		 * 18. 댓글 삭제 쿼리  
+		 * 19. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
 	    	com = new DeleteReviewBoardComment();
 	    	com.execute(req, res);
+	    }
+		/*20. bookInfo에서 즐겨찾기 누를시 결과*/
+	    else if(command.equals("/book/bookbasket.do")) {
+	    	com = new bookBasketCommand();
+	    	com.execute(req, res);
+	    }
+		/*21. 즐겨찾기로 가버렷*/
+	    else if(command.equals("/book/showbasket.do")) {	    	
+	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

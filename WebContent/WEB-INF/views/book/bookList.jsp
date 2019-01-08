@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookList.css" />
 
-
 	<!-- 검색시작 -->
 	
 	<div id="finder">

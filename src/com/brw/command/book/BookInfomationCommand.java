@@ -30,8 +30,10 @@ public class BookInfomationCommand implements Command {
 		DAO dao = DAO.getInstance();
 		
 		//즐겨찾기를 한 책인지 아닌지 검사
-		boolean basketCheck = dao.isChecked(user, isbn13);
-		
+		boolean basketCheck = false;
+		if(user != null) {
+			basketCheck = dao.isChecked(user, isbn13);		
+		}	
 		request.setAttribute("isbn13", isbn13);
 		request.setAttribute("basketCheck", basketCheck);
 
