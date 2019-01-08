@@ -1,4 +1,4 @@
-package com.brw.command;
+package com.brw.command.review;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -7,12 +7,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardLikeDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class ReviewBoardLike implements Command{
+public class ReviewBoardLikeCommend implements Command{
 
 	@Override
 	//좋아요 처리 하는곳
@@ -36,7 +37,6 @@ public class ReviewBoardLike implements Command{
 		//셀렉트 리스트를 가져옴
 		List<ReviewBoardLikeDTO> likeList = dao.selectAllReviewBoardLike(rbNo,userId);
 		//인서트 , 업데이트 결과값에 쓸 변수
-		
 		System.out.println(likeList);
 		int result = 0;
 		//셀렉트한 테이블의 값이 비엇으면이면 인서트 , 그게아니라면 카운터를 0으로 업데이트
@@ -47,10 +47,11 @@ public class ReviewBoardLike implements Command{
 			System.out.println("아아");
 			result = dao.deleteReviewBoardLike(rbNo, userId);
 		}
+		maxLike = dao.selectLikeCount(rbNo);
 		Gson gson = new Gson();
 		
 		try {
-			gson.toJson(result,response.getWriter());
+			gson.toJson(maxLike,response.getWriter());
 		} catch (JsonIOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -10,13 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.bookBasketCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
+import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
@@ -208,16 +211,41 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 	    }
-		/*17. bookInfo에서 즐겨찾기 누를시 결과*/
+		/*
+		 * 17. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 */
+	    else if(command.equals("/book/basket.do")) {
+	    	com = new BasketInsertCommand();
+	    	com.execute(req, res);
+	    	String returnIsbnNo = (String) req.getAttribute("returnIsbnNo");
+	    	viewPage = "/book/bookInfo.do?isbn13="+returnIsbnNo;
+	    	System.out.println("viewPage"+viewPage);
+	    }
+		
+		/*
+		 * 18. 좋아요 버튼 클릭시 처리 ajax 
+		 */
+	    else if(command.equals("/review/reviewLike.do")){
+	    	com = new ReviewBoardLikeCommend();
+	    	com.execute(req,res);
+	    }
+		
+		/*
+		 * 19. 댓글 삭제 쿼리  
+		 */
+	    else if(command.equals("/review/reviewCommentDelete.do")) {
+	    	com = new DeleteReviewBoardComment();
+	    	com.execute(req, res);
+	    }
+		/*20. bookInfo에서 즐겨찾기 누를시 결과*/
 	    else if(command.equals("/book/bookbasket.do")) {
 	    	com = new bookBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*18. 즐겨찾기로 가버렷*/
+		/*21. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
-		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

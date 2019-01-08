@@ -12,6 +12,11 @@
 %>
 
 <style>
+/* 컨테이너 너비 조정 */
+div#review-list-container{
+	width: 950px;
+}
+
 /* 검색창 보이기&보이지 않기 */
 div#search-rb_booktitle{
    display: inline-block;
@@ -34,6 +39,33 @@ div.divInline {
 /* 검색창 */
 div.search-bar {
    width: 400px;
+}
+
+/* 게시판 컬럼별 너무길면 ... 으로 표시 */
+table#review-list-table tbody tr td:nth-child(2) {
+	width: 160px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow : hidden;
+	display : inline-block;
+}
+
+/* 게시판 테이블 색깔 지정 */
+table#review-list-table thead tr{
+	background: #004183;
+	color: white;
+}
+
+/* 글쓰기 버튼 위치 */
+div#btn-write-container {
+	position: relative;
+	top: -50px;
+	left: 840px;
+}
+
+/* 게시판 새 글 new 표시 */
+span.smft {
+	font-size: 11px;
 }
 
 
@@ -64,10 +96,10 @@ $(function(){
    
    <!-- 리뷰 리스트를 보여줄 테이블 영역 -->
    <div id="table-container">
-      <table class="table table-hover table-info" id="review-list-table">
+      <table class="table table-hover table-info table-responsive" id="review-list-table">
          <thead>
             <tr>
-                <th>no</th>
+               <th>no</th>
                <th class="col-sm-2">도서명</th>
                <th class="col-sm-6">제목</th>
                <th>작성자</th>
@@ -81,7 +113,10 @@ $(function(){
             <tr>
                <td><%=rb.getRbNo() %></td>
                <td><%=rb.getRbBookTitle()%></td>
-               <td><a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a></td>
+               <td>
+               		<a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a> 
+             		<span class="smft"><%=rb.getCommentCnt()>0?rb.getCommentCnt():"" %></span> <%=rb.getIsDateNew()?"<span class='mark smft'>new</span>":"" %>
+               </td>
                <td><%=rb.getRbWriter() %></td>
                <td><%=rb.getRbDate() %></td>
                <td><%=rb.getRbReadCnt() %></td>
@@ -92,13 +127,10 @@ $(function(){
       </table>
    </div> <!-- end of #table-container -->
    
-   <!-- 페이지바 영역 --> 
-   <div id="pagebar-container text-center">
-      <%=pageBar %>
-   </div>
+   
    
    <!-- 검색 영역 -->
-   <div id="search-form-container">
+   <div id="search-form-container" class="text-center">
       <!-- 검색 타입 셀렉트 -->
       <div class="form-group divInline">
          <select id="searchType" class="form-control">
@@ -126,13 +158,20 @@ $(function(){
             <button type="submit" class="btn btn-default">검색</button>
          </form>
       </div>
+      
    </div>
    
-   <!-- 글쓰기 버튼 영역 -->
-   <div id="btn-write-container">
-      <button id="btn-write" class="btn btn-success">리뷰 작성</button>
-   </div>
+     <!-- 글쓰기 버튼 영역 -->
+  <div id="btn-write-container">
+     <button id="btn-write" class="btn btn-success">리뷰 작성</button>
+  </div>
    
+   
+   
+   <!-- 페이지바 영역 --> 
+   <div id="pagebar-container" class="text-center">
+      <%=pageBar %>
+   </div>
    
    
 </div> <!-- end of #review-list-container -->

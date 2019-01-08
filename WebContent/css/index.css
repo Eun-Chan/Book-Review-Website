@@ -59,6 +59,28 @@ p.book-Author
 }
 .starR1.on{background-position:0 0;}
 .starR2.on{background-position:-15px 0;}
+/* 외곽 */
+#start-Container {
+    display: inline-block;
+    position: relative;
+    left: 19%;
+}
+/* 안 */
+div#button-Container
+{
+	display: inline-block;
+    position: relative;
+	left: 14%;
+}
+ul#subMenu
+{
+	display: none;
+	position:absolute;
+}
+ul#subMenu:hover
+{
+	display:block;
+}
 /* 인기도서 End*/
 
 
@@ -113,4 +135,17 @@ footer p {
     padding: 10.5px;
     margin: 0px;
     line-height: 100%;
+    display: inline-block;
+}
+#start-Container{
+	margin :0 auto;
+}
+.comment-delete{
+	float: right;
+    /* padding-bottom: 20px; */
+    cursor: Pointer;
+    padding: 0;
+    border: 0;
+    background: white;
+    margin-left: 8px;
 }

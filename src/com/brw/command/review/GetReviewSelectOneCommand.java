@@ -29,7 +29,13 @@ public class GetReviewSelectOneCommand implements Command{
 		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
 		DAO dao = DAO.getInstance();
 		
-		ReviewBoardDTO review = dao.getReviewSelectOne(rbNo);
+		//조회수 +1 해주기
+		int updateReadCount = dao.updateReadCnt(rbNo);
+		ReviewBoardDTO review = null;
+		//셀렉트 원해서 하나 가져오기
+		if(updateReadCount>0) {
+			review = dao.getReviewSelectOne(rbNo);			
+		}
 		
 		//해당 게시물 댓글 가져오기
 		List<ReviewBoardComment> reviewComment = dao.getReviewBoardCommentList(rbNo);
@@ -45,9 +51,12 @@ public class GetReviewSelectOneCommand implements Command{
 		int nextNumber = dao.selectReviewBoardNextNumber(rbNo);
 		//이전 글 번 호 가져오기
 		int prevNumber = dao.selectReviewBoardPrevNumber(rbNo);
+		//좋아요 총 갯수 가져오기
+		Integer maxLike = dao.selectLikeCount(rbNo);
 		
-		//이전 글번호 가져오기
 		
+		
+		request.setAttribute("maxLike", maxLike);
 		request.setAttribute("prevNumber", prevNumber);
 		request.setAttribute("nextNumber", nextNumber);
 		request.setAttribute("reviewReComment", reviewReComment);

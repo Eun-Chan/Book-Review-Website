@@ -193,9 +193,11 @@ input#rbBookTitle{
 				<!-- 스마트에디터용 텍스트에어리어 -->
 				<textarea name="rbContent" id="rbContent" rows="17" cols="100" class="form-control"></textarea>
 			</div>
+			<div id="btn-group" class="text-center">
 			<button type="button" class="btn btn-success" id="btnSave">등록</button>
 			<button type="reset" class="btn btn-warning">초기화</button>
 			<button type="button" class="btn btn-danger" id="cancel">취소</button>
+			</div>
 		</form>
 	</div>
 
