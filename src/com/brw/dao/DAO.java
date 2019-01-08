@@ -13,6 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.BookBasketDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
@@ -1350,7 +1351,6 @@ public class DAO {
 			if(rset.next()) {
 				basketCheck = true;
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -1361,10 +1361,7 @@ public class DAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-		}
-		
-		
+		}	
 		return basketCheck;
 	}
 	/*
@@ -1571,7 +1568,7 @@ public class DAO {
 	}
 
 	/**
-	 * 28. 선웅 : 조회수 1 증가시키는 쿼리
+	 * 38. 선웅 : 조회수 1 증가시키는 쿼리
 	 * @param rbNo
 	 * @return
 	 */
@@ -1593,5 +1590,49 @@ public class DAO {
 		}
 		
 		return updateReadCount;
+	}
+	/*
+	 * 39 작성자 : 박세준
+	 * 내용 : 즐겨찾기 추가
+	 */
+	public List<BookBasketDTO> bookBasket(String userId) {
+		List<BookBasketDTO> list = new ArrayList();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from basket where userId = ?";
+		
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				rset = pstmt.executeQuery();
+				
+				while(rset.next()) {
+					BookBasketDTO bb = new BookBasketDTO(); 
+					bb.setBasketNo(rset.getInt("basketNo"));
+					bb.setUserId(rset.getString("userid"));
+					bb.setUserName(rset.getString("username"));
+					bb.setISBN(rset.getString("isbn"));
+					bb.setBookTitle(rset.getString("booktitle"));
+					bb.setPrice(rset.getInt("price"));
+					bb.setQuantity(rset.getInt("quantity"));
+					bb.setTotalPrice(rset.getInt("totalprice"));
+					bb.setPickDate(rset.getDate("pickdate"));
+				
+					list.add(bb);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return list;
 	}
 }
