@@ -18,7 +18,7 @@ h3.text-muted
 /* 도서 하나의 컨테이너 */
 div.thumbnail
 {
-	min-height: 300px;
+	min-height: 400px;
 }
 span.bestseller-title
 {

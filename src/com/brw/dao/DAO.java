@@ -13,6 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.BookBasketDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
@@ -153,7 +154,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -218,7 +219,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' order by rb_no desc";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -257,7 +258,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -326,7 +327,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard where searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -366,7 +367,7 @@ public class DAO {
 		ReviewBoardDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard where rb_no = ?";
+		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -1350,7 +1351,6 @@ public class DAO {
 			if(rset.next()) {
 				basketCheck = true;
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -1361,10 +1361,7 @@ public class DAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
-		}
-		
-		
+		}	
 		return basketCheck;
 	}
 	/*
@@ -1459,7 +1456,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select count(*) cnt  from reviewboard_comment where rb_ref=?";
+		String query = "select count(*) cnt from reviewboard_comment where rb_comment_delflag = 'N' and rb_ref=?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1642,4 +1639,48 @@ public class DAO {
 		
 		return result;
 	}
+	/*
+	 * 40. 작성자 : 박세준
+	 * 내용 : 즐겨찾기 추가
+	 */
+	public List<BookBasketDTO> bookBasket(String userId) {
+		List<BookBasketDTO> list = new ArrayList();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from basket where userId = ?";
+		
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				rset = pstmt.executeQuery();
+				
+				while(rset.next()) {
+					BookBasketDTO bb = new BookBasketDTO(); 
+					bb.setBasketNo(rset.getInt("basketNo"));
+					bb.setUserId(rset.getString("userid"));
+					bb.setUserName(rset.getString("username"));
+					bb.setISBN(rset.getString("isbn"));
+					bb.setBookTitle(rset.getString("booktitle"));
+					bb.setPrice(rset.getInt("price"));
+					bb.setQuantity(rset.getInt("quantity"));
+					bb.setTotalPrice(rset.getInt("totalprice"));
+					bb.setPickDate(rset.getDate("pickdate"));
+				
+					list.add(bb);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return list;
+		}
 }

@@ -20,6 +20,7 @@
 	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
 	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
 	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
+	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a>
 	
 	<!-- 인기도서 출력 Start -->
 	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
@@ -29,8 +30,8 @@
          <ul class="nav nav-justified">
            <li class="active"><a href="#" id="select-AllBook">통합</a></li>
            <li><a href="#" id="select-NewBook">신간</a></li>
-           <li><a href="#" id="select-CategoryBook">외국</a></li>
-           <li><a href="#" id="select-CategoryBook">e북</a></li>
+           <li><a href="#" id="select-ForeginBook">외국</a></li>
+           <li><a href="#" id="select-eBook">e북</a></li>
          </ul>
        </nav>
      </div>
@@ -208,11 +209,105 @@
     </div>
 <script>
 /**
- * @광준 : 더 보기 버튼을 눌렀을 때 상세보기 페이지로 이동
+ * @광준 : 책정렬 메뉴를 선택했을 시
  */
-/* $("a#detail-Book").click(function(){
-	$(this).
-}); */
+$("a#select-AllBook, a#select-NewBook, a#select-ForeginBook, a#select-eBook").click(function(){
+	var select = $(this).text();
+	var searchUrl = "";
+	
+	switch(select)
+	{
+		case "통합" : searchUrl = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&QueryType=Bestseller&MaxResults=20&start=1&SearchTarget=Book&output=js&Version=20131101"; break;
+		case "신간" : searchUrl = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&QueryType=ItemNewSpecial&MaxResults=20&start=1&SearchTarget=Book&output=js&Version=20131101"; break;
+		case "외국" : searchUrl = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&QueryType=Bestseller&MaxResults=20&start=1&SearchTarget=Foreign&output=js&Version=20131101"; break;
+		case "e북" : searchUrl = "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&QueryType=Bestseller&MaxResults=20&start=1&SearchTarget=eBook&output=js&Version=20131101"; break;
+	}
+	reloadBookInfo(searchUrl);
+});
+
+/**
+ * @광준 : 책정렬 메뉴를 선택했을 때 Data처리
+ */
+ 
+function reloadBookInfo(searchUrl){
+	/* 베스트셀러 10건을 가져온다. */
+	$.ajax({
+	    url: searchUrl,
+	    dataType: "jsonp",
+	    success:function(data)
+	    {	
+	    	/* 책 정보 파싱 >> 리스트 */
+	    	var bookList = [];
+	    	
+	    	for(var i in data.item)
+	   		{    		
+	   			var book = data.item[i]; //가져온 data에 item에 객체배열로 담겨있다. 이걸 하나씩 꺼냄. 각 정보는 api를 참고하면 됨
+	   			var isbn13 = book.isbn13; //도서분류 고유값
+	   			var title = book.title; //도서제목
+	   			var author = book.author; //도서저자
+	   			var cover = book.cover; //도서이미지
+	   			var adult = book.adult; //성인등급 확인(true:ㅎㅎ/false:없음)
+	   			
+	   			//성인등급이 false일 경우에만 추가
+	   			if(!adult) bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
+	   		}
+	    	
+	    	//난수생성
+			var ranNum = new Array();
+	    	
+	    	console.log("bookList.length: " + bookList.length);
+	    	for(var i=0; i<bookList.length; i++)
+	   		{
+	   			ranNum[i] = Math.floor(Math.random()*(bookList.length));
+	
+	   			for(var j=0; j<i; j++)
+				{
+					if(ranNum[j] == ranNum[i])
+					{
+						i--;
+						continue;
+					}
+				}
+	   		}
+	
+	    	/* 데이터 view 처리*/
+			$("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,10)+"…":(bookList[ranNum[0]].title));
+			$("p#book-Author0").html((bookList[ranNum[0]].author).length>10?(bookList[ranNum[0]].author).substr(0,10)+"...":(bookList[ranNum[0]].author));
+			$("#bookImage0").attr("src", bookList[ranNum[0]].cover);
+			
+			$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,10)+"…":(bookList[ranNum[1]].title));
+			$("p#book-Author1").html((bookList[ranNum[1]].author).length>10?(bookList[ranNum[1]].author).substr(0,10)+"...":(bookList[ranNum[1]].author));
+			$("#bookImage1").attr("src", bookList[ranNum[1]].cover);
+			
+			$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,10)+"…":(bookList[ranNum[2]].title));
+			$("p#book-Author2").html((bookList[ranNum[2]].author).length>10?(bookList[ranNum[2]].author).substr(0,10)+"...":(bookList[ranNum[2]].author));
+			$("#bookImage2").attr("src", bookList[ranNum[2]].cover);
+			
+			$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,10)+"…":(bookList[ranNum[3]].title));
+			$("p#book-Author3").html((bookList[ranNum[3]].author).length>10?(bookList[ranNum[3]].author).substr(0,10)+"...":(bookList[ranNum[3]].author));
+			$("#bookImage3").attr("src", bookList[ranNum[3]].cover);	
+			
+			/**
+			 * @광준
+			 * API로 가져온 도서정보에서 우리 DB의 별점 데이터를 가져오기 위해 변수로 IBSN 정보를 저장한다. 
+			 */
+			var bookIsbn = [];
+			bookIsbn.push(bookList[ranNum[0]].isbn13);
+			$("a#detail-Book0").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[0]].isbn13);
+			bookIsbn.push(bookList[ranNum[1]].isbn13);
+			$("a#detail-Book1").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[1]].isbn13);
+			bookIsbn.push(bookList[ranNum[2]].isbn13);
+			$("a#detail-Book2").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[2]].isbn13);
+			bookIsbn.push(bookList[ranNum[3]].isbn13);
+			$("a#detail-Book3").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[3]].isbn13);
+			startPage(bookIsbn);
+	    },
+	    error:function()
+	    {
+	    	console.log("index.jsp_베스트셀러 View_광준@ajax처리에 실패했습니다.");
+	    }
+	 });
+}
 
 function startPage(bookIsbn){
 /* 최근리뷰 view */
@@ -272,82 +367,10 @@ var isEmpty = function(value){
 	}
 }
 
+/*처음 웹페이지 실행 시 강제로 클릭한다.*/
+$("#select-AllBook").trigger("click");
 
-/* 베스트셀러 10건을 가져온다. */
-$.ajax({
-    url: "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&QueryType=Bestseller&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101",
-    dataType: "jsonp",
-    success:function(data)
-    {	
-    	/* 책 정보 파싱 >> 리스트 */
-    	var bookList = [];
-    	
-    	for(var i in data.item)
-   		{    		
-   			var book = data.item[i]; //가져온 data에 item에 객체배열로 담겨있다. 이걸 하나씩 꺼냄. 각 정보는 api를 참고하면 됨
-   			var isbn13 = book.isbn13; //도서분류 고유값
-   			var title = book.title; //도서제목
-   			var author = book.author; //도서저자
-   			var cover = book.cover; //도서이미지
-   			
-   			bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
-   		}
-    	
-    	//난수생성
-		var ranNum = new Array();
-    	
-    	console.log("bookList.length: " + bookList.length);
-    	for(var i=0; i<bookList.length; i++)
-   		{
-   			ranNum[i] = Math.floor(Math.random()*(bookList.length));
 
-   			for(var j=0; j<i; j++)
-			{
-				if(ranNum[j] == ranNum[i])
-				{
-					i--;
-					continue;
-				}
-			}
-   		}
-
-    	/* 데이터 view 처리*/
-		$("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,12)+"…":(bookList[ranNum[0]].title));
-		$("p#book-Author0").html(bookList[ranNum[0]].author);
-		$("#bookImage0").attr("src", bookList[ranNum[0]].cover);
-		
-		$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,12)+"…":(bookList[ranNum[1]].title));
-		$("p#book-Author1").html(bookList[ranNum[1]].author);
-		$("#bookImage1").attr("src", bookList[ranNum[1]].cover);
-		
-		$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,12)+"…":(bookList[ranNum[2]].title));
-		$("p#book-Author2").html(bookList[ranNum[2]].author);
-		$("#bookImage2").attr("src", bookList[ranNum[2]].cover);
-		
-		$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,12)+"…":(bookList[ranNum[3]].title));
-		$("p#book-Author3").html(bookList[ranNum[3]].author);
-		$("#bookImage3").attr("src", bookList[ranNum[3]].cover);	
-		
-		/**
-		 * @광준
-		 * API로 가져온 도서정보에서 우리 DB의 별점 데이터를 가져오기 위해 변수로 IBSN 정보를 저장한다. 
-		 */
-		var bookIsbn = [];
-		bookIsbn.push(bookList[ranNum[0]].isbn13);
-		$("a#detail-Book0").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[0]].isbn13);
-		bookIsbn.push(bookList[ranNum[1]].isbn13);
-		$("a#detail-Book1").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[1]].isbn13);
-		bookIsbn.push(bookList[ranNum[2]].isbn13);
-		$("a#detail-Book2").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[2]].isbn13);
-		bookIsbn.push(bookList[ranNum[3]].isbn13);
-		$("a#detail-Book3").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[3]].isbn13);
-		startPage(bookIsbn);
-    },
-    error:function()
-    {
-    	console.log("index.jsp_베스트셀러 View_광준@ajax처리에 실패했습니다.");
-    }
- });
  
  //0.5반올림
 function scoreRound(score)

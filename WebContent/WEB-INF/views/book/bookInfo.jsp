@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
 	String isbn13 = (String)request.getAttribute("isbn13");
-	boolean basketCheck = (Boolean)request.getAttribute("basketCheck");
+	boolean	basketCheck = (Boolean)request.getAttribute("basketCheck");					
 %>     
-<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +35,7 @@ p#reviewTab{
 		<tr>
 			<td><div id="bookInfo-img"></div></td>
 			<td width="15"></td>
-			<td>
+			<td style="max-width: 700px">
 				<table>
 					<tr>
 						<td width="66"><span>제목: </span></td>
@@ -59,9 +59,9 @@ p#reviewTab{
 					</tr>
 					<tr>
 						<td width="66"><span>리뷰 별점: </span></td>
-						<td><div id="start-Container">
+						<td><div id="start-Container" style="left:0">
 						       <div class="starRev0">
-								  <span class="starR1 on" id="star0">별1_왼쪽</span>
+								  <span class="starR1" id="star0">별1_왼쪽</span>
 								  <span class="starR2" id="star1">별1_오른쪽</span>
 								  <span class="starR1" id="star2">별2_왼쪽</span>
 								  <span class="starR2" id="star3">별2_오른쪽</span>
@@ -82,7 +82,7 @@ p#reviewTab{
 			</td>
 		</tr>
 	</table>
-	<div id="hiddenInfo"></div>	
+	<div id="hiddenInfo" style="display:none"></div>	
 	<br />		
 	</div>
 	<br />
@@ -91,7 +91,7 @@ p#reviewTab{
 	<div id="command-info"></div>
 	
 <script>
-<%if(basketCheck == true){%>
+<%if(user != null && basketCheck == true){%>
 	$("button#basket").text("즐겨찾기 취소");
 <%}else{%>
 	$("button#basket").text("즐겨찾기");
@@ -128,20 +128,20 @@ $.ajax({
 	dataType:"json",
 	data:"ISBN13="+ISBN13,
 	success:function(data) {
-		console.log(data);
-		console.log("ajax실행");
+
 		var table = $("<table class='table'><th>"+"제목"+"</th><th>"+"내용"+"</th><th>"+"작성자"+"</th><th>"+"작성일자"+"</th></table>")
 		
 		if(!data.length > 0 ){
 			var html = "<tr><td colspan='4'>해당 데이터가 없습니다.</td></tr>";
 			table.append(html);
+			$("#starScoreAvg").text("첫 평가자가 되어주세요:D");
 		}else{
 			
 			var sumStarScore = 0;
 			var cnt = 0;
 			
 			for(var i in data) {
-				console.log(data[i]);
+				
 				var command = data[i];
 				var html = "<tr><td><a href='<%=request.getContextPath()%>/review/reviewDetail.do?rbNo="+command.rbNo+"'>"+command.rbTitle+"</a></td>";
 				html += "<td id='rbcontent'>"+command.rbContent+"</td>";
@@ -153,17 +153,18 @@ $.ajax({
 	    		cnt = parseInt(i)+1;
 			}
 				
-			console.log("sumStarScore", sumStarScore);
-			console.log("cnt", cnt);
-			var totalStarScore = scoreRound(sumStarScore/cnt);
-			console.log("totalStarScore", totalStarScore);
-           	var selectStarScore = totalStarScore / 0.5;
-           	console.log("selectStarScore", selectStarScore);
-           	
-           	for(var j=0; j<selectStarScore; j++){
-           		$("span#star"+j).addClass('on');
-       		}
-           	$("#starScoreAvg").text("("+totalStarScore+ "/5.0)");
+				//리뷰 평점이 있는 경우 별 표시!
+		
+				var totalStarScore = scoreRound(sumStarScore/cnt);
+				console.log("totalStarScore", totalStarScore);
+	           	var selectStarScore = totalStarScore / 0.5;
+	           	console.log("selectStarScore", selectStarScore);
+	           	
+	           	for(var j=0; j<selectStarScore; j++){
+	           		$("span#star"+j).addClass('on');
+	       		}
+	           	$("#starScoreAvg").text("("+totalStarScore+ "/5.0)");
+			
 		}
 		
 		$("#command-info").html(table);
@@ -172,14 +173,6 @@ $.ajax({
 		console.log("실패");
 	}
 });
-//요소가 비어있는지 검사
-var isEmpty = function(value){
-	if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
-		return true;
-	}else{ 
-		return false;
-	}
-}
 
 function scoreRound(score){
 	return Math.ceil(score *2 ) / 2;
