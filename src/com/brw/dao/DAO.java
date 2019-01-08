@@ -1600,7 +1600,7 @@ public class DAO {
 	}
 
 	/**
-	 * 선웅 : 대댓글이 있으면 업데이트 , 없으면 댓글 삭제하기
+	 * 39. 선웅 : 대댓글이 있으면 업데이트 , 없으면 댓글 삭제하기
 	 * @param rbCommentNo
 	 * @param rbNo
 	 * @param ud
