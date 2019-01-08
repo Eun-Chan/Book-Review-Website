@@ -11,10 +11,9 @@
 <link rel="shortcut icon" type="image/x-icon" href="https://img.icons8.com/windows/32/000000/literature.png" />
 <title>책 읽는 사람들</title>
 </head>
-<body onload="startPage()">
+<body>
 	<!-- Header -->
 	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-	여기는 index.jsp
 	
 	<!-- Body -->
 	<a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
@@ -28,10 +27,10 @@
        <h3 class="text-muted">책 읽는 사람들</h3>
        <nav>
          <ul class="nav nav-justified">
-           <li class="active"><a href="#">통합</a></li>
-           <li><a href="#">신간</a></li>
-           <li><a href="#">장르별</a></li>
-           <li><a href="#">도서리뷰</a></li>
+           <li class="active"><a href="#" id="select-AllBook">통합</a></li>
+           <li><a href="#" id="select-NewBook">신간</a></li>
+           <li><a href="#" id="select-CategoryBook">외국</a></li>
+           <li><a href="#" id="select-CategoryBook">e북</a></li>
          </ul>
        </nav>
      </div>
@@ -49,20 +48,22 @@
 	       <!-- 별점 -->
 	       <div id="start-Container">
 	       <div class="starRev0">
-			  <span class="starR1 on" id="star0">별1_왼쪽</span>
-			  <span class="starR2" id="star1">별1_오른쪽</span>
-			  <span class="starR1" id="star2">별2_왼쪽</span>
-			  <span class="starR2" id="star3">별2_오른쪽</span>
-			  <span class="starR1" id="star4">별3_왼쪽</span>
-			  <span class="starR2" id="star5">별3_오른쪽</span>
-			  <span class="starR1" id="star6">별4_왼쪽</span>
-			  <span class="starR2" id="star7">별4_오른쪽</span>
-			  <span class="starR1" id="star8">별5_왼쪽</span>
-			  <span class="starR2" id="star9">별5_오른쪽</span>
+			  <span class="starR1" id="star0-0">별1_왼쪽</span>
+			  <span class="starR2" id="star0-1">별1_오른쪽</span>
+			  <span class="starR1" id="star0-2">별2_왼쪽</span>
+			  <span class="starR2" id="star0-3">별2_오른쪽</span>
+			  <span class="starR1" id="star0-4">별3_왼쪽</span>
+			  <span class="starR2" id="star0-5">별3_오른쪽</span>
+			  <span class="starR1" id="star0-6">별4_왼쪽</span>
+			  <span class="starR2" id="star0-7">별4_오른쪽</span>
+			  <span class="starR1" id="star0-8">별5_왼쪽</span>
+			  <span class="starR2" id="star0-9">별5_오른쪽</span>
 			</div>
 			</div>
 			<br /><br />
-	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button">더 보기</a></p>
+			<div id="button-Container">
+	       		<p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a></p>
+	        </div>
 	     </div>
 	   </div>
 	 </div>
@@ -74,7 +75,23 @@
 	     <div class="caption">
 	       <div class="span-center"><span id="book1" class="bestseller-title"></span></div>
 	       <p id="book-Author1" class="book-Author"> </p>
-	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button">더 보기</a></p>
+	       <!-- 별점 -->
+	       <div id="start-Container">
+	       <div class="starRev0">
+			  <span class="starR1" id="star1-0">별1_왼쪽</span>
+			  <span class="starR2" id="star1-1">별1_오른쪽</span>
+			  <span class="starR1" id="star1-2">별2_왼쪽</span>
+			  <span class="starR2" id="star1-3">별2_오른쪽</span>
+			  <span class="starR1" id="star1-4">별3_왼쪽</span>
+			  <span class="starR2" id="star1-5">별3_오른쪽</span>
+			  <span class="starR1" id="star1-6">별4_왼쪽</span>
+			  <span class="starR2" id="star1-7">별4_오른쪽</span>
+			  <span class="starR1" id="star1-8">별5_왼쪽</span>
+			  <span class="starR2" id="star1-9">별5_오른쪽</span>
+			</div>
+			</div>
+			<br /><br />
+	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book1">더 보기</a></p>
 	     </div>
 	   </div>
 	</div>
@@ -86,7 +103,23 @@
 	     <div class="caption">
 	       <div class="span-center"><span id="book2" class="bestseller-title"></span></div>
 	       <p id="book-Author2" class="book-Author"> </p>
-	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button">더 보기</a></p>
+	       <!-- 별점 -->
+	       <div id="start-Container">
+	       <div class="starRev0">
+			  <span class="starR1" id="star2-0">별1_왼쪽</span>
+			  <span class="starR2" id="star2-1">별1_오른쪽</span>
+			  <span class="starR1" id="star2-2">별2_왼쪽</span>
+			  <span class="starR2" id="star2-3">별2_오른쪽</span>
+			  <span class="starR1" id="star2-4">별3_왼쪽</span>
+			  <span class="starR2" id="star2-5">별3_오른쪽</span>
+			  <span class="starR1" id="star2-6">별4_왼쪽</span>
+			  <span class="starR2" id="star2-7">별4_오른쪽</span>
+			  <span class="starR1" id="star2-8">별5_왼쪽</span>
+			  <span class="starR2" id="star2-9">별5_오른쪽</span>
+			</div>
+			</div>
+			<br /><br />
+	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book2">더 보기</a></p>
 	     </div>
 	   </div>
 	 </div>
@@ -98,7 +131,23 @@
 	    <div class="caption">
 	      <div class="span-center"><span id="book3" class="bestseller-title"></span></div>
 	      <p id="book-Author3" class="book-Author"> </p>
-	      <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button">더 보기</a></p>
+	      <!-- 별점 -->
+	       <div id="start-Container">
+	       <div class="starRev0">
+			  <span class="starR1" id="star3-0">별1_왼쪽</span>
+			  <span class="starR2" id="star3-1">별1_오른쪽</span>
+			  <span class="starR1" id="star3-2">별2_왼쪽</span>
+			  <span class="starR2" id="star3-3">별2_오른쪽</span>
+			  <span class="starR1" id="star3-4">별3_왼쪽</span>
+			  <span class="starR2" id="star3-5">별3_오른쪽</span>
+			  <span class="starR1" id="star3-6">별4_왼쪽</span>
+			  <span class="starR2" id="star3-7">별4_오른쪽</span>
+			  <span class="starR1" id="star3-8">별5_왼쪽</span>
+			  <span class="starR2" id="star3-9">별5_오른쪽</span>
+			</div>
+			</div>
+			<br /><br />
+	      <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book3">더 보기</a></p>
 	    </div>
 	  </div>
 	</div>
@@ -157,16 +206,20 @@
     	<br /><br />
     	<hr />	
     </div>
-    
 <script>
-function startPage(){
+/**
+ * @광준 : 더 보기 버튼을 눌렀을 때 상세보기 페이지로 이동
+ */
+/* $("a#detail-Book").click(function(){
+	$(this).
+}); */
+
+function startPage(bookIsbn){
 /* 최근리뷰 view */
 $('#indexForm').ready(function(){
-	
    $.ajax({
         type: 'post',
-        url: "<%=request.getContextPath()%>/index.do",
-        dataType: "json",
+        url: "<%=request.getContextPath()%>/index.do?bookIsbn="+bookIsbn,
         contentType: "application/json; charset=utf-8;",
         success: function(data){
         	console.log(data);
@@ -181,16 +234,20 @@ $('#indexForm').ready(function(){
            		}
            	}    
             /* 베스트셀러 별점처리 */
-            var totalStarScore = scoreRound(data[1][0].starScoreBook);
-           	var selectStarScore = totalStarScore / 0.5;
-           	for(var i=0; i<selectStarScore; i++)
-       		{
-           		$("span#star"+i).addClass('on');
-           		console.log("아");
-       		}
+            
+            for(var j=0; i<data[1].length; j++)
+            {
+	            var totalStarScore = scoreRound(data[1][j].starScoreBook);
+	           	var selectStarScore = totalStarScore / 0.5;
+	           	for(var i=0; i<selectStarScore; i++)
+	       		{
+	           		$("span#star"+j+"-"+i).addClass('on');
+	       		}
+            }
+
         },
         error: function(){
-        	console.log("실패");
+        	console.log("index.jsp_최근리뷰 View, 별점정보를 읽기_광준@ajax처리에 실패했습니다.");
         }
    });
    
@@ -228,12 +285,12 @@ $.ajax({
     	for(var i in data.item)
    		{    		
    			var book = data.item[i]; //가져온 data에 item에 객체배열로 담겨있다. 이걸 하나씩 꺼냄. 각 정보는 api를 참고하면 됨
-   			var itemId = book.itemId; //도서분류 고유값
+   			var isbn13 = book.isbn13; //도서분류 고유값
    			var title = book.title; //도서제목
    			var author = book.author; //도서저자
    			var cover = book.cover; //도서이미지
    			
-   			bookList.push({"itemId":itemId, "title":title, "author":author, "cover":cover});
+   			bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
    		}
     	
     	//난수생성
@@ -270,6 +327,21 @@ $.ajax({
 		$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,12)+"…":(bookList[ranNum[3]].title));
 		$("p#book-Author3").html(bookList[ranNum[3]].author);
 		$("#bookImage3").attr("src", bookList[ranNum[3]].cover);	
+		
+		/**
+		 * @광준
+		 * API로 가져온 도서정보에서 우리 DB의 별점 데이터를 가져오기 위해 변수로 IBSN 정보를 저장한다. 
+		 */
+		var bookIsbn = [];
+		bookIsbn.push(bookList[ranNum[0]].isbn13);
+		$("a#detail-Book0").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[0]].isbn13);
+		bookIsbn.push(bookList[ranNum[1]].isbn13);
+		$("a#detail-Book1").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[1]].isbn13);
+		bookIsbn.push(bookList[ranNum[2]].isbn13);
+		$("a#detail-Book2").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[2]].isbn13);
+		bookIsbn.push(bookList[ranNum[3]].isbn13);
+		$("a#detail-Book3").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[3]].isbn13);
+		startPage(bookIsbn);
     },
     error:function()
     {
@@ -283,5 +355,4 @@ function scoreRound(score)
 	return Math.ceil(score *2 ) / 2;
 }
 </script>
-
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

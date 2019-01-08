@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.index.IndexCommand;
@@ -186,21 +187,39 @@ public class FrontController extends HttpServlet {
 		 * 14. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
 		 */
 		else if(command.equals("/review/reviewWrite.do")) {
-	         viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
-	    }
+			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
+		}
 		/*
-		 * 15. 리뷰 작성에 대한 정보 입력 후 리뷰 등록
+		 * 15. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
 		 */
 	    else if(command.equals("/review/reviewWriteEnd.do")) {
-	       com = new ReviewWriteEndCommand();
-	       com.execute(req, res);
-	       viewPage = "";
+	    	com = new ReviewWriteEndCommand();
+			com.execute(req, res);
+			int result = (int)req.getAttribute("result");
+			if(result > 0) {
+				int lastReviewBoardNo = (int)req.getAttribute("lastReviewBoardNo");
+				viewPage = "/review/reviewDetail.do?rbNo=" + lastReviewBoardNo;
+			}
+			else {
+				viewPage = "/WEB-INF/views/review/bookList.jsp";
+			}
 	    }
 		/*
 		 * 16. BookList에서 책 검색 시 결과
 		 */
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
+	    }
+		/*
+		 * 17. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 */
+	    else if(command.equals("/book/basket.do")) {
+	    	com = new BasketInsertCommand();
+	    	com.execute(req, res);
+	    	String returnIsbnNo = (String) req.getAttribute("returnIsbnNo");
+	    	viewPage = "/book/bookInfo.do?isbn13="+returnIsbnNo;
+	    	System.out.println("viewPage"+viewPage);
+
 	    }
 		
 		/*
