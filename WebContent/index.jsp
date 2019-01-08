@@ -20,6 +20,7 @@
 	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
 	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
 	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
+	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a>
 	
 	<!-- 인기도서 출력 Start -->
 	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
