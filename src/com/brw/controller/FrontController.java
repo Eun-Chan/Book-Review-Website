@@ -21,8 +21,10 @@ import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
+import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
+import com.brw.command.user.LogoutCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -199,7 +201,19 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 	    }
-		
+		/*
+		 * 17. 아이디 혹은 비밀번호 찾기 페이지 이동
+		 */
+	    else if(command.equals("/idAndPwdSearch.do")) {
+	    	viewPage = "/WEB-INF/views/sign/idAndPwdSearch.jsp";
+	    }
+		/*
+		 * 18. 아이디 찾기 시 이메일이 존재하는지 확인
+		 */
+	    else if(command.equals("/emailCheck.do")) {
+	    	com = new FindEmailCheckCommand();
+	    	com.execute(req, res);
+	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

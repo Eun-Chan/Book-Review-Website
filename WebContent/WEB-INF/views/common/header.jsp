@@ -125,7 +125,7 @@
   			<button type="button" class="btn btn-primary" onclick="loginCheck();">로그인</button>
   			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.do'">회원가입</button>
   			<br /><br />
-  			<a href="#">아이디 찾기</a>&nbsp;&nbsp;<a href="#">비밀번호 찾기</a>
+  			<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">아이디 찾기</a>&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">비밀번호 찾기</a>
 		</form>        
       </div> <!-- modal-body 끝 -->
       
