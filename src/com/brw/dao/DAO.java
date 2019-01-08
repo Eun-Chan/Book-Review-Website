@@ -153,7 +153,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) where rnum between ? and ?";
+		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -181,6 +181,13 @@ public class DAO {
 				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
 				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
+				
+				int passingTime = rset.getInt("passingtime");
+				boolean isDateNew = false;
+				if(passingTime <= 1) {
+					isDateNew = true;
+				}
+				rb.setIsDateNew(isDateNew);
 				
 				list.add(rb);
 			}
@@ -250,7 +257,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -280,6 +287,13 @@ public class DAO {
 				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
 				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
+				
+				int passingTime = rset.getInt("passingtime");
+				boolean isDateNew = false;
+				if(passingTime <= 1) {
+					isDateNew = true;
+				}
+				rb.setIsDateNew(isDateNew);
 				
 				list.add(rb);
 			}
@@ -1265,4 +1279,40 @@ public class DAO {
 		
 		return result;
 	}
+	
+	/**
+	 * 30
+	 * 작성자 : 정명훈
+	 * 내용 : 댓글 갯수 모두(level에 상관없이) 다 가져오기
+	 */
+	public int getComment(int rbNo) {
+		int count = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*) cnt  from reviewboard_comment where rb_ref=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				count = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
+	
 }
