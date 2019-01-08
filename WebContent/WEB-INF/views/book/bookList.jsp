@@ -138,10 +138,9 @@ table th{
 	    $("div#pageBar").append(pageBar);
 	}
 	
-	//카테고리 클릭시 관련 카테고리의 신작을 보여주는 첫 펑션
+	//카테고리 클릭시 관련 카테고리의 신작을 보여주는 첫 함수
 	function moveCategoryView(CID){
 		cPage = 1;
-		console.log("1???");
 		CID = CID;
 		$.ajax({
 			url: "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&Sort=PublishTime&QueryType=ItemNewAll&MaxResults=10&start=1&CategoryId="+CID+"&SearchTarget=Book&output=js&callback=bookCListDisplay&Version=20131101",
@@ -150,11 +149,10 @@ table th{
 
 		});
 	};
-	//
+	//카테고리로 검색된 리스트에서 페이징 된 넘버를 누룰때 실행되는 함수
 	function moveCategoryView2(CID, pageNo){
 		CID=CID;
 		cPage = pageNo;
-		console.log("2????")
 		$.ajax({
 			url: "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&Sort=PublishTime&QueryType=ItemNewAll&MaxResults=10&start="+cPage+"&CategoryId="+CID+"&SearchTarget=Book&output=js&callback=bookCListDisplay&Version=20131101",
 			jsonp: "bookCListDisplay",
@@ -162,7 +160,7 @@ table th{
 
 		});
 	};
-
+	//카테고리 클릭 후 받아온 리스트를 화면에 출력하기 위한 함수 : api url을 통해 return되는 값이 다르기 때문에 bookListDisplay()와 중복 사용이 불가하다
 	function bookCListDisplay(data){
 		$("div#pageBar span, div#pageBar a").remove();
 		
