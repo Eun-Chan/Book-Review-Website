@@ -311,7 +311,6 @@ li{
     height: 20px;
     float:left;
     text-indent: -9999px;
-    cursor: pointer;
     display:none;
 }
 .starR2{
@@ -321,7 +320,6 @@ li{
     height: 20px;
     float:left;
     text-indent: -9999px;
-    cursor: pointer;
     display:none;
 }
 .starR1.on{background-position:0 0;}

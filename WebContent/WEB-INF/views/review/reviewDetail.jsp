@@ -11,6 +11,7 @@
 	ReviewBoardComment lastReviewComment = (ReviewBoardComment)request.getAttribute("lastReviewComment");
 	int nextNumber = (int)request.getAttribute("nextNumber");
 	int prevNumber = (int)request.getAttribute("prevNumber");
+	Integer maxLike = (Integer)request.getAttribute("maxLike");
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
@@ -54,7 +55,13 @@
 			<div id="like-Wapper" >
 				<div id ="like">
 					<br />
-					<span id = "likeCounter">0</span>
+					<span id = "likeCounter">
+						<%if(maxLike==null){ %>
+							0
+						<%}else{ %>
+							<%=maxLike %>
+						<%} %>
+					</span>
 					<br />
 					<img src="<%=request.getContextPath() %>/images/heart.png" alt="" style="width: 15px;height: 12px;margin-top: 10px;margin-right:2px"/>
 				</div>
@@ -73,7 +80,7 @@
 		<div id ="comment-Content">
 		<%if(reviewComment!=null) {%>
 			<%for(ReviewBoardComment rbc : reviewComment){ %>
-			<div id="comment-list">
+			<div id="comment-list" class ="comment-list<%=rbc.getRbCommentNo() %>">
 			<%System.out.println(rbc.getRbCommentWriter()); %>
 				<ul>
 					<li>
@@ -85,6 +92,11 @@
 							<div id ="comment-body">
 								<span><%=rbc.getRbCommentContent() %></span>
 							</div>
+							<%if(user!=null && (user.getUserId().equals(rbc.getRbCommentWriter()) || user.getUserId().equals("admin"))){ %>
+							<button class="comment-delete" value="<%=rbc.getRbCommentNo()%>" id="comment-delete<%=rbc.getRbCommentNo()%>">
+								[삭제]
+							</button>
+							<%} %>
 							<button class="comment-recomment" value="<%=rbc.getRbCommentNo()%>"> 
 								[답글]
 							</button>
@@ -158,11 +170,13 @@
 						timeout: 1000,
 						success:function(data){
 							$("#comment-area").val("");
-							var div =$("<div id='comment-list'></div>");
+							var div =$("<div id='comment-list' class='comment-list"+data.rbCommentNo+"'></div>");
 							var html ="";
 							if(data!=null){
 								html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
-								html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div><button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
+								html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div>";
+								html+= "<button class='comment-delete' value="+data.rbCommentNo+">[삭제]</button>";
+								html+= "<button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
 								div.append(html);
 							}
 							$("#comment-Content").append(div);
@@ -210,7 +224,7 @@
 					timeout: 1000,
 					success:function(data){
 						console.log("에이잭스실행완료");
-						var divs =$("<div id='recomment-list'></div>");
+						var divs =$("<div id='recomment-list' class='recomment-list"+data.rbCommentNo+"'></div>");
 						var htmls ="";
 						if(data!=null){
 							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
@@ -265,7 +279,22 @@
 		$("#comment-textArea").click(function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
+				$("#comment-area").blur();
 				return;
 			<%}%>
 		});
+		$(document).on('click','.comment-delete',function(){
+			var replay = confirm("정말 삭제 하실 거에요??");
+			var brNo = $(this).val();
+			if(replay){
+				$.ajax({
+					url:"<%=request.getContextPath()%>/review/reviewCommentDelete.do?rbCommentNo="+$(this).val()+"&rbNo=<%=review.getRbNo()%>",
+					success:function(data){
+						 $(".comment-list"+brNo).remove();
+						 console.log($(".comment-list"+brNo));
+					}		
+				})
+			}
+		});
 	</script>
+

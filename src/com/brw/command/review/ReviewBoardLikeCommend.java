@@ -47,7 +47,7 @@ public class ReviewBoardLikeCommend implements Command{
 			System.out.println("아아");
 			result = dao.deleteReviewBoardLike(rbNo, userId);
 		}
-		maxLike = dao.selectLikeCount();
+		maxLike = dao.selectLikeCount(rbNo);
 		Gson gson = new Gson();
 		
 		try {

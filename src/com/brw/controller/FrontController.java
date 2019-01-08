@@ -13,6 +13,7 @@ import com.brw.command.Command;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
@@ -210,6 +211,13 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req,res);
 	    }
 		
+		/*
+		 * 18. 댓글 삭제 쿼리  
+		 */
+	    else if(command.equals("/review/reviewCommentDelete.do")) {
+	    	com = new DeleteReviewBoardComment();
+	    	com.execute(req, res);
+	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

@@ -61,7 +61,7 @@
 			  <span class="starR2" id="star9">별5_오른쪽</span>
 			</div>
 			</div>
-			<br />
+			<br /><br />
 	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button">더 보기</a></p>
 	     </div>
 	   </div>
@@ -172,7 +172,7 @@ $('#indexForm').ready(function(){
         	console.log(data);
             for(var i in data[0])
            	{
-            	if(data[i] != null && !(isEmpty(data[0][i]))) //isEmpty함수가 없기 때문에, 직접 정의한다.(하단에 변수참고)
+            	if(data[0][i] != null && !(isEmpty(data[0][i]))) //isEmpty함수가 없기 때문에, 직접 정의한다.(하단에 변수참고)
            		{
 	            	$("span#bookName"+i).text(data[0][i].rbBookTitle);
 		            $("span#nickName"+i).text(data[0][i].rbWriter + " | ");

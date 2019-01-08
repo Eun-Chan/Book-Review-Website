@@ -370,6 +370,9 @@ public class DAO {
 				review.setRbReadCnt(res.getInt("rb_readcnt"));
 				review.setRbRecommend(res.getInt("rb_recommend"));
 				review.setRbStarscore(res.getDouble("rb_starscore"));
+				int rb_readcnt = res.getInt("rb_readcnt");
+				review.setRbReadCnt(rb_readcnt);
+				rb_readcnt++;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -1102,41 +1105,5 @@ public class DAO {
 		}
 		
 		return result;
-	}
-
-	/**
-	 * 26. 좋아요 총 갯수 구하기!
-	 * @return
-	 */
-	public int selectLikeCount() {
-		int maxLike = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet res = null;
-		String query = "select count(distinct like_userId)maxLike from reviewboard_like where like_counter = 1";
-		
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			res=  pstmt.executeQuery();
-			if(res.next()) {
-				maxLike = res.getInt("maxlike");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				res.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		
-		return maxLike;
 	}
 }

@@ -113,4 +113,17 @@ footer p {
     padding: 10.5px;
     margin: 0px;
     line-height: 100%;
+    display: inline-block;
+}
+#start-Container{
+	margin :0 auto;
+}
+.comment-delete{
+	float: right;
+    /* padding-bottom: 20px; */
+    cursor: Pointer;
+    padding: 0;
+    border: 0;
+    background: white;
+    margin-left: 8px;
 }
