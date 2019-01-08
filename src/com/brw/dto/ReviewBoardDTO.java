@@ -27,11 +27,17 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbOriginalFilename;
 	private String rbRenamedFilename;
 	private int rbReport;
+	private String delFlag;
+	
+	// 새로운 글인지 아닌지 db에서 계산한 값 입력
+	private boolean isDateNew;
+	// 댓글 개수용
+	private int commentCnt;
 	
 	public ReviewBoardDTO() {}
 
 	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent, String rbDate,
-			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport) {
+			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport, String delFlag) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
 		this.rbWriter = rbWriter;
@@ -45,6 +51,7 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbOriginalFilename = rbOriginalFilename;
 		this.rbRenamedFilename = rbRenamedFilename;
 		this.rbReport = rbReport;
+		this.delFlag = delFlag;
 	}
 
 	public int getRbNo() {
@@ -151,16 +158,37 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbReport = rbReport;
 	}
 
+	public String getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public boolean getIsDateNew() {
+		return isDateNew;
+	}
+	
+	public void setIsDateNew(boolean isDateNew) {
+		this.isDateNew = isDateNew;
+	}
+	
+	public int getCommentCnt() {
+		return commentCnt;
+	}
+
+	public void setCommentCnt(int commentCnt) {
+		this.commentCnt = commentCnt;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewBoardDTO [rbNo=" + rbNo + ", rbTitle=" + rbTitle + ", rbWriter=" + rbWriter + ", rbBookTitle=" + rbBookTitle + ", rbIsbn=" + rbIsbn
 				+ ", rbContent=" + rbContent + ", rbDate=" + rbDate + ", rbStarscore=" + rbStarscore + ", rbReadCnt="
 				+ rbReadCnt + ", rbRecommend=" + rbRecommend + ", rbOriginalFilename=" + rbOriginalFilename
-				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + "]";
+				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + ", delFlag=" + delFlag + "]";
 	}
-	
-	
-	
 	
 	
 }

@@ -10,12 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
+import com.brw.command.book.bookBasketCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
+import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
@@ -185,15 +189,22 @@ public class FrontController extends HttpServlet {
 		 * 14. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
 		 */
 		else if(command.equals("/review/reviewWrite.do")) {
-	         viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
-	    }
+			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
+		}
 		/*
-		 * 15. 리뷰 작성에 대한 정보 입력 후 리뷰 등록
+		 * 15. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
 		 */
 	    else if(command.equals("/review/reviewWriteEnd.do")) {
-	       com = new ReviewWriteEndCommand();
-	       com.execute(req, res);
-	       viewPage = "";
+	    	com = new ReviewWriteEndCommand();
+			com.execute(req, res);
+			int result = (int)req.getAttribute("result");
+			if(result > 0) {
+				int lastReviewBoardNo = (int)req.getAttribute("lastReviewBoardNo");
+				viewPage = "/review/reviewDetail.do?rbNo=" + lastReviewBoardNo;
+			}
+			else {
+				viewPage = "/WEB-INF/views/review/bookList.jsp";
+			}
 	    }
 		/*
 		 * 16. BookList에서 책 검색 시 결과
@@ -214,6 +225,42 @@ public class FrontController extends HttpServlet {
 	    	com = new FindEmailCheckCommand();
 	    	com.execute(req, res);
 	    }
+		/**
+		 * 19. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 */
+	    else if(command.equals("/book/basket.do")) {
+	    	com = new BasketInsertCommand();
+	    	com.execute(req, res);
+	    	String returnIsbnNo = (String) req.getAttribute("returnIsbnNo");
+	    	viewPage = "/book/bookInfo.do?isbn13="+returnIsbnNo;
+	    	System.out.println("viewPage"+viewPage);
+	    }
+		
+		/*
+		 * 20. 좋아요 버튼 클릭시 처리 ajax 
+		 */
+	    else if(command.equals("/review/reviewLike.do")){
+	    	com = new ReviewBoardLikeCommend();
+	    	com.execute(req,res);
+	    }
+		
+		/*
+		 * 21. 댓글 삭제 쿼리  
+		 */
+	    else if(command.equals("/review/reviewCommentDelete.do")) {
+	    	com = new DeleteReviewBoardComment();
+	    	com.execute(req, res);
+	    }
+		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
+	    else if(command.equals("/book/bookbasket.do")) {
+	    	com = new bookBasketCommand();
+	    	com.execute(req, res);
+	    }
+		/*23. 즐겨찾기로 가버렷*/
+	    else if(command.equals("/book/showbasket.do")) {	    	
+	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
+	    }
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

@@ -32,6 +32,11 @@ public class ReviewPaginationCommand implements Command {
 		
 		// 페이징용 리뷰리스트 가져오기
 		List<ReviewBoardDTO> list = dao.reivewPagination(cPage, numPerPage);
+		// 각 게시글에 대한 댓글 개수 가져오기
+		for(int i=0; i<list.size(); i++) {
+			int commentCnt = dao.getComment(list.get(i).getRbNo());
+			list.get(i).setCommentCnt(commentCnt);
+		}
 		
 		// 페이지바 작업
 		int totalContents = dao.countReviewAll();

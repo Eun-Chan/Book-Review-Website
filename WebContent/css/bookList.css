@@ -10,3 +10,7 @@ table th{
 div#pageBar a{
 	cursor: pointer;
 }
+div#bookListContainer img:hover {
+	transform: scale(1.2);
+	overflow:hidden;
+}

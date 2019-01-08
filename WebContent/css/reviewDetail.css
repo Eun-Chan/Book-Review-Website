@@ -1,10 +1,18 @@
 /* 리뷰 디테일 게시판 css */
-div{
+
+#comment-list{
 	display:inline;
 	float:left;
 	margin:0 auto;
 	height:auto;
 }
+#recomment-list{
+	display:inline;
+	float:left;
+	margin:0 auto;
+	height:auto;
+}
+
 li{
 	list-style: none;
 }
@@ -33,6 +41,7 @@ li{
 }
 #reviewDetail-Header #comment{
 	float: right;
+	cursor: pointer;
 }
 #reviewDetail-Header #date{
 	float: left;
@@ -70,7 +79,7 @@ li{
 	vertical-align: middle;
 	margin:0 auto;
 	float:none;
-	padding-left:48%;
+	padding-left:46%;
 }
 #like{
 	text-align: center;
@@ -99,6 +108,9 @@ li{
 	clear:both;
 	background:#f7f7f7;
 	display:inline;
+	 float: left;
+    /* margin: 0 auto; */
+    height: auto;
 }
 #left-menu{
 	float:left;
@@ -177,12 +189,14 @@ li{
 	width:800px;
 	min-height: 50px;
 	/* border: 1px solid #e1e1e1; */
+	float: left;
 }
 #comment-Area{
 	width:800px;
 	border:1px solid #e1e1e1;
 	background:#f1f1f1;
 	padding: 12px 0px 12px 12px;
+	float: left;
 }
 #comment-Area input{
 	width:68px;
@@ -199,16 +213,26 @@ li{
 	width:720px;
 	border-top: 1px solid #dcdcdc;
 	margin-bottom: 20px;
+	display:inline;
+	float:left;
+/* 	margin:0 auto; */
+	height:auto;
 }
 #comment-header{
 	display: inline-block;
 	max-width: 300px;
+	float: left;
+    margin: 0 auto;
+    height: auto;
 }
 #comment-body{
 	display: inline-block;
 	max-width:600px;
 	clear: both;
 	margin-top: 20px;
+	float: left;
+    margin: 0 auto;
+    height: auto;
 }
 .comment-recomment{
 	float:right;
@@ -228,19 +252,29 @@ li{
     left: 45px;
     background: #e9e9e9;
     padding:5px 0px 0px 5px;
+   	display:inline;
+	float:left;
+/* 	margin:0 auto; */
+	height:auto;
 }
 #recomment-header{
 	display: inline-block;
 	max-width: 300px;
+	    float: left;
+    margin: 0 auto;
+    height: auto;
 }
 #recomment-body{
 	display: inline-block;
 	max-width:500px;
 	clear: both;
 	margin-top: 20px;
+	    float: left;
+    margin: 0 auto;
+    height: auto;
 }
 #recomment-html span{
-	font-size: 0.8em;
+	font-size: 1em;
 }
 
 
@@ -253,6 +287,10 @@ li{
 	left: 21px;
     position: relative;
     margin-bottom: 20px;
+    display: inline;
+    float: left;
+    margin: 0 auto;
+    height: auto;
 }
 
 .recomment-textArea{
@@ -261,4 +299,39 @@ li{
 .recomment-button{
 	width: 63px;
     height: 66px;
+}
+#booktitle{
+	float:left;
+}
+/* 별점 */
+.starR1{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
+    background-size: auto 100%;
+    width: 10px;
+    height: 20px;
+    float:left;
+    text-indent: -9999px;
+    display:none;
+}
+.starR2{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
+    background-size: auto 100%;
+    width: 10px;
+    height: 20px;
+    float:left;
+    text-indent: -9999px;
+    display:none;
+}
+.starR1.on{background-position:0 0;}
+.starR2.on{background-position:-10px 0;}
+
+#start-Container{
+	display:inline-block;
+	float:left;
+	margin-left:15px;
+    position: relative;
+    bottom: 4px;
+}
+.del{
+	color: gray;
 }
