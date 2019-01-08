@@ -1487,4 +1487,111 @@ public class DAO {
 		
 		return count;
 	}
+	/**
+	 * 35. 좋아요 총 갯수 구하기!
+	 * @param rbNo 
+	 * @return
+	 */
+	public int selectLikeCount(int rbNo) {
+		int maxLike = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select  count(distinct like_userId)maxLike from reviewboard_like where like_counter = 1 and like_rbNo=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			res=  pstmt.executeQuery();
+			if(res.next()) {
+				maxLike = res.getInt("maxlike");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return maxLike;
+	}
+
+	/**
+	 * 36. 선웅 : 리뷰게시판 댓글 삭제
+	 * @param rbCommentNo
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoardComment(int rbCommentNo, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbCommentNo);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 37. 선웅 : 해당 댓글에 대댓글이 있는지 확인하기
+	 * @param rbCommentNo
+	 * @return
+	 */
+	public List<ReviewBoardComment> checkRecommend(int rbCommentNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * 28. 선웅 : 조회수 1 증가시키는 쿼리
+	 * @param rbNo
+	 * @return
+	 */
+	public int updateReadCnt(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int updateReadCount = 0;
+		String query = "update reviewboard set rb_readcnt = rb_readcnt+1 where rb_no =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			updateReadCount = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return updateReadCount;
+	}
 }
