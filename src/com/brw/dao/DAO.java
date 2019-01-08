@@ -1471,6 +1471,8 @@ public class DAO {
 		} finally {
 			try {
 				res.close();
+				pstmt.close();
+				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
