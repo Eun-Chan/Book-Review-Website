@@ -1,7 +1,5 @@
 @charset "UTF-8";
-#bookInfo-container{
-	text-align : center;	
-}
+
 #command-info th, #command-info tr, #command-info td{
    text-align: center;
 }
@@ -17,7 +15,7 @@
 	white-space: nowrap;
 	overflow : hidden;
 	display : inline-block;
-	border : 0px solid;
+
 }
 /* bookInfo 리뷰테이블 */
 .table tr td:nth-child(1){
@@ -37,15 +35,8 @@
 	padding : 0px 50px 0px 200px ;
     text-align : center;
 }
-#command-info th,tr,td{
-   border : 1px solid black;
-   text-align: center;
-}
-#bookInfodsp {
-   max-width : 600px;
-   display : block;
-   margin : 0 auto;
-}
+
+
 /*별점 표시를 위한 css*/
 .starR1{
     background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
