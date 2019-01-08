@@ -14,6 +14,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
+import com.sun.org.glassfish.gmbal.GmbalMBeanNOPImpl;
 
 /**
  * 작성자 : 김은찬
@@ -57,69 +60,45 @@ public class EmailAuthCommand implements Command {
 			e1.printStackTrace();
 		}
 		
+		String host = "smtp.gmail.com";
+		
+		final String username = "eunchan2000";
+		final String password = "dmscks89!";
+		int port = 465;
+		
+		String recipient = email;
+		String subject = "메일테스트";
+		
+		String body = "제발 가";
 		
 		Properties props = System.getProperties();
-		props.put("mail.smtp.user","eunchan2000@gmail.com");
-		props.put("mail.smtp.host","smtp.gmail.com");
-		props.put("mail.smtp.port","465");
-		props.put("mail.smtp.starttls.enable","true");
-		props.put("mail.smtp.auth","true");
-		props.put("mail.smtp.socketFactory.port","465");
-		props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.socketFactory.fallback","false");
 		
-		Authenticator auth = new MyAuthentication();
+		props.put("mail.smtp.host", host); 
+		props.put("mail.smtp.port", port); 
+		props.put("mail.smtp.auth", "true"); 
+		props.put("mail.smtp.ssl.enable", "true"); 
+		props.put("mail.smtp.ssl.trust", host);
 		
-		// session 생성 및 MimeMessage 생성
-		Session session = Session.getDefaultInstance(props, auth);
-		MimeMessage msg = new MimeMessage(session);
+		Authenticator auth = new MyAuthentication(); 
 		
-		System.out.println("이메일 전송 준비!");
+		Session session = Session.getDefaultInstance(props,auth);
+		session.setDebug(true);
+		
+		Message mimeMessage = new MimeMessage(session); //MimeMessage 생성
 		try {
-			// 편지 보낸 시간
-			
-			msg.setSentDate(new Date());
-			System.out.println("a");
-			
-			InternetAddress from = new InternetAddress("test<test@gmail.com>");
-			System.out.println("b");
-			// 이메일 발신자
-			msg.setFrom(from);
-			
-			// 이메일 수신자
-			System.out.println("email ="+email);
-			
-			InternetAddress to = new InternetAddress(email);
-			msg.setRecipient(Message.RecipientType.TO, to);
-			
-			// 이메일 제목
-			msg.setSubject("도서 리뷰 웹사이트 회원가입 인증번호", "UTF-8");
-			
-			// 인증번호 생성
-			authNum = getAuthNum();
-			
-			// 이메일 내용
-			msg.setText("인증번호 = "+authNum , "UTF-8");
-		
-			// 이메일 헤더
-			msg.setHeader("content-Type", "text/html");
-			
-			// 이메일 보내기
-			javax.mail.Transport.send(msg);
-			System.out.println("이메일 전송 완료!");
-			System.out.println("authNum = "+authNum);
-			try {
-				out = response.getWriter();
-				out.append(String.valueOf(authNum));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			mimeMessage.setFrom(new InternetAddress("eunchan2000@gmail.com"));
+			mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email)); //수신자셋팅 //.TO 외에 .CC(참조) .BCC(숨은참조) 도 있음
+			mimeMessage.setSubject(subject); //제목셋팅
+			mimeMessage.setText(body); //내용셋팅
+			Transport.send(mimeMessage); //javax.mail.Transport.send() 이용
 
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 	}
 }
 
@@ -129,8 +108,8 @@ class MyAuthentication extends Authenticator{
 	public MyAuthentication() {
 		String id = "eunchan2000";
 		// gmail 계정을 2단계 인증으로 등록하고, 위 소스의 pwd란에 gmail용 비밀번호가 아닌 ACCESS 용 비밀번호를 등록해야 한다.
-		String pw = "mqfhwsgfjkzqopcv";
-		
+		String pw = "dmscks89!";
+		 
 		pa = new PasswordAuthentication(id, pw);
 	}
 	
