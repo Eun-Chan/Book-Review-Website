@@ -1116,6 +1116,7 @@ public class DAO {
 		return result;
 	}
 
+
 	/*
 	 * 26
 	 * 작성자 : 정명훈
@@ -1279,9 +1280,174 @@ public class DAO {
 		
 		return result;
 	}
+	/*
+	 * 30
+	 * 작성자 : 김민우
+	 * 내용 : 즐겨찾기 클릭 시 basket 테이블에 값 저장
+	 */
+	public int insertBasket(UserDTO user, String isbn, String title, int price) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into basket (basketNo, userId, userName, isbn, bookTitle, price) values (seq_basket.nextval, ?, ?, ?, ?, ?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, user.getUserName());
+			pstmt.setString(3, isbn);
+			pstmt.setString(4, title);
+			pstmt.setInt(5, price);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 31
+	 * 작성자 : 김민우
+	 * 내용 : 로그인 한 유저가 즐겨찾기를 한 책인지 검색
+	 */
+	public boolean isChecked(UserDTO user, String isbn13) {
+		boolean basketCheck = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from basket where userid = ? and isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn13);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				basketCheck = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return basketCheck;
+	}
+	/*
+	 * 32
+	 * 작성자 : 김민우
+	 * 내용 : 이미 즐겨찾기를 한 경우 basket테이블에서 삭제
+	 */
+	public void deleteBasket(UserDTO user, String isbn) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from basket where userId = ? and isbn = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	/**
-	 * 30
+	 * 33.
+	 * @광준 : 도서의 isbn별 별점을 조회하기 위한 처리
+	 * @param bookIsbn_Array
+	 * @return
+	 */
+	public List<String> selectStarScoreList(String[] bookIsbn_Array) {
+		List<String> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "SELECT AVG(rb_starscore) AS rb_starscore FROM reviewboard WHERE rb_isbn = ?";
+		ResultSet rset = null;
+		int result = 0;
+		
+		for(int i=0; i<bookIsbn_Array.length; i++) 
+		{
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, bookIsbn_Array[i]);
+				System.out.println("조회 : " + bookIsbn_Array[i]);
+				rset = pstmt.executeQuery();
+				rset.next();
+				
+				if((rset.getString("rb_starscore"))!=null) list.add((rset.getString("rb_starscore")));
+				else list.add("");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 34
 	 * 작성자 : 정명훈
 	 * 내용 : 댓글 갯수 모두(level에 상관없이) 다 가져오기
 	 */
@@ -1305,14 +1471,15 @@ public class DAO {
 		} finally {
 			try {
 				res.close();
-				pstmt.close();
-				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			
 		}
+		
+		
+		
 		
 		return count;
 	}
-	
 }

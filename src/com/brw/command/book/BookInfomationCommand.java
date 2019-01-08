@@ -1,9 +1,13 @@
 package com.brw.command.book;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.dao.DAO;
+import com.brw.dto.UserDTO;
 
 /*
  * 작성자 : 김민우
@@ -14,11 +18,22 @@ public class BookInfomationCommand implements Command {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		
-		String isbn13 = request.getParameter("isbn13");
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
-		System.out.println("isbn13@command: "+isbn13);//book.isbn13
+		String isbn13 = request.getParameter("isbn13");
+		UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+		
+		DAO dao = DAO.getInstance();
+		
+		//즐겨찾기를 한 책인지 아닌지 검사
+		boolean basketCheck = dao.isChecked(user, isbn13);
 		
 		request.setAttribute("isbn13", isbn13);
+		request.setAttribute("basketCheck", basketCheck);
 
 	}
 
