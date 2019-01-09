@@ -6,7 +6,9 @@
 
 /* 책 오른쪽으로 밀기 */
 #bookInfo-container {
-	padding-left : 200px;
+	/* 수정함 */
+	width:1000px;
+	margin:30px auto;
 }
 #rbcontent {
 	max-height : 36.8px;
@@ -31,8 +33,10 @@
 .table th {
 	background : #f1f1f1;
 }
-#command-info {
-	padding : 0px 50px 0px 200px ;
+#command-info { 
+	/* 수정함 */
+	width:1000px;
+	margin:0 auto;
     text-align : center;
 }
 
@@ -66,4 +70,67 @@
 /*버튼 태그의 스타일*/
 .btn-info{
 	float:right;
+}
+
+/******* 추가 ******/
+
+#bookInfo-img {
+	float:left;
+	width:20%;
+}
+#bookInfo-img img {
+	width:100%;
+}
+#bookInfo-info {
+	float:left;
+	width:80%;
+	padding:0 20px;
+	box-sizing:border-box;
+}
+.badge-author {
+	background-color:#1b4282;
+}
+#bookInfo-category {
+	color:#444;
+	font-style:italic;
+}
+#bookInfo-desc {
+	margin:12px 0;
+}
+.clear {
+	clear:both;
+}
+
+@media (max-width: 1000px) {
+	#bookInfo-container, #command-info, #oneLineReview-container {
+		width:100%;
+	}
+}
+@media (max-width: 768px) {
+	#bookInfo-img {
+		float:none;
+		width:100%;
+		text-align:center;
+	}
+	#bookInfo-img img {
+		width:40%;
+	}
+	#bookInfo-info {
+		width:100%;
+	}
+}
+p#reviewTab{
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+}
+/******* 추가 끝 ******/
+
+/*한 줄 리뷰 css*/
+#start-Container2{
+	display: inline-block;
+}
+#oneLineView{
+	display:inline-block; 
+	vertical-align: top;
 }
