@@ -41,10 +41,6 @@
 	padding : 0px 50px 0px 200px ;
     text-align : center;
 }
-#command-info th,tr,td{
-   border : 1px solid black;
-   text-align: center;
-}
 #bookInfodsp {
    max-width : 600px;
    display : block;

@@ -14,6 +14,7 @@ import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.bookBasketCommand;
+import com.brw.command.book.checkedBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -245,6 +246,11 @@ public class FrontController extends HttpServlet {
 		/*21. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
+	    }
+		/*22.check된 책 없애기*/
+	    else if(command.equals("/book/checkedBasket.do")) {
+	    	com = new checkedBasketCommand();
+	    	com.execute(req, res);
 	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

@@ -1635,4 +1635,40 @@ public class DAO {
 			}
 			return list;
 	}
+	/*
+	 * 39 작성자 : 박세준
+	 * 내용 : 즐겨찾기 check된거 삭제
+	 */
+	public int checkeddelete(UserDTO user, String isbn) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from basket where userId = ? and isbn = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }
