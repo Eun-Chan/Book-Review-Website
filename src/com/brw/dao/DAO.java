@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.brw.dto.BookBasketDTO;
+import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
@@ -1683,4 +1684,94 @@ public class DAO {
 			}
 			return list;
 		}
+	/*
+	 * 41. 작성자 : 김민우
+	 * 내용 : 한 줄 리뷰 등록
+	 */
+
+	public int insertOneLineRV(String userId, double starScore, String oneLineRV, String isbn13) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into onelinereview(no, isbn, content, starScore, userId) values(seq_oneLine.nextval, ?, ?, ?, ?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, isbn13);
+			pstmt.setString(2, oneLineRV);
+			pstmt.setDouble(3, starScore);
+			pstmt.setString(4, userId);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+		
+		
+		
+	}
+	/*
+	 * 42. 작성자 : 김민우
+	 * 내용 : 한 줄 리뷰 전체 조회
+	 */
+
+	public List<OneLineReviewDTO> selectAllOneLineRV() {
+		List<OneLineReviewDTO> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from onelinereview where delflag = 'N'";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				OneLineReviewDTO o = new OneLineReviewDTO();
+				o.setNo(rset.getInt("no"));
+				o.setIsbn(rset.getString("isbn"));
+				o.setContent(rset.getString("content"));
+				o.setStarScore(rset.getDouble("starScore"));
+				o.setUserId(rset.getString("userId"));
+				o.setNow(rset.getDate("now"));
+				o.setDelFlag(rset.getString("delFlag"));
+				
+				list.add(o);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+				
+		return list;
+	}
 }
