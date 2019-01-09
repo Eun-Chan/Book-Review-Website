@@ -28,7 +28,8 @@
 <meta charset="UTF-8">
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
-<title>header 입니다</title>
+<title>책 읽는 사람들</title>
+<link rel="shortcut icon" type="image/x-icon" href="https://img.icons8.com/windows/32/000000/literature.png" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
@@ -67,13 +68,23 @@
           </ul>
         </li>
       </ul>
-      <form class="navbar-form navbar-left" role="search">
+      <!-- <form action="" class="navbar-form navbar-left" role="search" id="search-Book-Form">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="도서 & 리뷰 검색">
+          <input type="text" class="form-control" id="search-Book" placeholder="도서 & 리뷰 검색">
         </div>
-        <!-- span은 bootstrap 전용 이미지 사용 하기 위해 -->
-        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-      </form>
+        span은 bootstrap 전용 이미지 사용 하기 위해
+        <button type="submit" class="btn btn-default" id="search-Book-Button"><span class="glyphicon glyphicon-search"></span></button>
+      </form> -->
+      <form id="frm">
+			검색타입 :
+			<select id="searchType">
+				<option value="title">제목</option>
+				<option value="author">저자</option>
+			</select>		
+			<!-- 검색 input태그 -->
+			<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요."/>
+			<input type="button" value="검색" id="btn-search"/>
+		</form>
       <!-- header 오른쪽 구석탱이 -->
       <ul class="nav navbar-nav navbar-right">
      	<% if(user == null) { %>
@@ -167,6 +178,35 @@
 			}
 		});
 	}
+	
+/**
+ * @광준 - 도서검색 기능
+ */
+ $("#btn-search").click(function(){
+	 var searchval = $("#search").val();
+	 var searchType = $("#searchType").val();
+	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+ });
+ <%-- $("#search").keydown(function(key) {
+	console.log(key);
+	 if (key.keyCode == 13)//enter를 클릭했다면 
+	 {
+		 var searchval = $("#search").val();
+		 var searchType = $("#searchType").val();
+		 console.log("처리됨");
+		 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+	 }
+
+ }); --%>
+ $("#frm").on("submit", function(event){
+	 event.preventDefault();
+	 var searchval = $("#search").val();
+	 var searchType = $("#searchType").val();
+	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+	 
+ });
+ 
+
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->
