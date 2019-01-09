@@ -1641,8 +1641,44 @@ public class DAO {
 		
 		return result;
 	}
-	/*
+	/**
 	 * 39. 작성자 : 박세준
+	 * 내용 : 즐겨찾기 check된거 삭제
+	 */
+	public int checkeddelete(UserDTO user, String isbn) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from basket where userId = ? and isbn = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 40. 작성자 : 박세준
 	 * 내용 : 즐겨찾기 추가
 	 */
 	public List<BookBasketDTO> bookBasket(String userId) {
@@ -1687,7 +1723,7 @@ public class DAO {
 		}
 	/**
 	 * 작성자 : 김은찬
-	 * 40. 이메일을 통해 아이디 찾아보리기
+	 * 41. 이메일을 통해 아이디 찾아보리기
 	 */
 	public String searchIdForEmail(String userEmail) {
 		String userId = null;
@@ -1721,3 +1757,4 @@ public class DAO {
 		return userId;
 	}
 }
+
