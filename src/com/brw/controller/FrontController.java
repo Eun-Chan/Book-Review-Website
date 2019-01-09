@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.BookOneLineRV;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.bookBasketCommand;
 import com.brw.command.index.IndexCommand;
@@ -246,6 +247,13 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
+		
+		/*22. 한 줄 리뷰 등록*/
+	    else if(command.equals("/book/oneLineRV.do")) {
+	    	com = new BookOneLineRV();
+	    	com.execute(req, res);
+	    }
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
