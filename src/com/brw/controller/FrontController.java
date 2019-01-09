@@ -268,6 +268,12 @@ public class FrontController extends HttpServlet {
 	    	com = new SearchIdForEmailCommand();
 	    	com.execute(req, res);
 	    }
+		/*
+		 * 25. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
+		 */
+	    else if(command.equals("/sign/idSearchEnd.do")) {
+	    	viewPage = "/WEB-INF/views/sign/IdSearchEnd.jsp";
+	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

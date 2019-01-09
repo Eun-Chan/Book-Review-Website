@@ -141,6 +141,15 @@
 		});
 	}
 	
+	function goIdSearchEnd(){
+		$.ajax({
+			url : "<%=request.getContextPath()%>/sign/idSearchEnd.do",
+			success : function(){
+				console.log("idSearchEnd.jsp 로 이동!");
+			}
+		});
+	}
+	
 </script>
 </body>
 </html>

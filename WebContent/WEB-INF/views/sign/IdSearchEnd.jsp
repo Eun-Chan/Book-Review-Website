@@ -11,8 +11,8 @@
 		
 		<br /><br /><br /><br /><br />
  			<div class="div">
-			<h3><p class="text-alert">이메일로 아이디 혹은 패스워드를 보냈습니다.</p></h3>
-			<h3><p class="text-alert">회원정보를 확인해주세요.</p></h3>
+			<h3><p class="text-alert">해당 메일로 고객님의 개인정보를 전송 했습니다.</p></h3>
+			<h3><p class="text-alert">이메일을 확인해 주십시오</p></h3>
 			<br /><br /><br />
 			<button class="btn-success" onclick="location.href='index.jsp'">
 				메인 페이지 가기
