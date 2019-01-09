@@ -499,7 +499,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		List<ReviewBoardDTO> rbList = new ArrayList<>();
-		String query = "SELECT rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
+		String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -514,7 +514,9 @@ public class DAO {
 				rb.setRbBookTitle(rset.getString("rb_booktitle"));
 				rb.setRbDate(rset.getString("rb_date"));
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbReadCnt(rset.getInt("rb_readCnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
 				rbList.add(rb);
 			}
 		} catch (SQLException e) {
@@ -1634,5 +1636,50 @@ public class DAO {
 				}
 			}
 			return list;
+	}
+	/**
+	 * @광준
+	 * 40. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+	 */
+	public List<ReviewBoardDTO> selectReviewBestList()
+	{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		List<ReviewBoardDTO> rbList = new ArrayList<>();
+		String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			while(rset.next())
+			{
+				ReviewBoardDTO rb = new ReviewBoardDTO();
+				
+				rb.setRbTitle(rset.getString("rb_title"));
+				rb.setRbWriter(rset.getString("rb_writer"));
+				rb.setRbBookTitle(rset.getString("rb_booktitle"));
+				rb.setRbDate(rset.getString("rb_date"));
+				rb.setRbStarscore(rset.getInt("rb_starscore"));
+				rb.setRbNo(rset.getInt("rb_no"));
+				rb.setRbReadCnt(rset.getInt("rb_readCnt"));
+				rb.setRbRecommend(rset.getInt("rb_recommend"));
+				rbList.add(rb);
+			}
+		} catch (SQLException e) {
+			System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
+				e.printStackTrace();
+			}
+		}		
+		return rbList;
 	}
 }

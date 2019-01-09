@@ -56,9 +56,13 @@ public class IndexCommand implements Command {
 		    jobj.addProperty("rbTitle", rb.getRbTitle());
 		    jobj.addProperty("rbWriter", rb.getRbWriter());
 		    jobj.addProperty("rbBookTitle", rb.getRbBookTitle());
+		    jobj.addProperty("rb_readCnt", rb.getRbReadCnt());
+		    jobj.addProperty("rb_recommend", rb.getRbRecommend());
 		    String dateResult = rb.getRbDate();
 		    jobj.addProperty("rbDate", dateResult);
 		    jobj.addProperty("rbStarscore", rb.getRbStarscore());
+		    jobj.addProperty("rbNo", rb.getRbNo());
+		    
 		    
 			result.add(jobj);
 		}
@@ -87,6 +91,33 @@ public class IndexCommand implements Command {
 			}
 		}
 		
+		/**
+		 * @광준
+		 * 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+		 */
+		List<ReviewBoardDTO> reviewBestList = dao.selectReviewBestList();
+		
+		JsonArray result3 = new JsonArray();
+		ReviewBoardDTO rb2 = null;
+		
+		for(int i=0; i<reviewBestList.size(); i++)
+		{
+			rb2 = reviewBestList.get(i);
+			JsonObject jobj3 = new JsonObject();
+		    jobj3.addProperty("rbTitle", rb2.getRbTitle());
+		    jobj3.addProperty("rbWriter", rb2.getRbWriter());
+		    jobj3.addProperty("rbBookTitle", rb2.getRbBookTitle());
+		    jobj3.addProperty("rb_readCnt", rb2.getRbReadCnt());
+		    jobj3.addProperty("rb_recommend", rb2.getRbRecommend());
+		    String dateResult2 = rb2.getRbDate();
+		    jobj3.addProperty("rbDate", dateResult2);
+		    jobj3.addProperty("rbStarscore", rb2.getRbStarscore());
+		    jobj3.addProperty("rbNo", rb2.getRbNo());
+		    
+		    
+			result3.add(jobj3);
+		}
+		
 		
 		/**
 		 * @광준
@@ -95,6 +126,7 @@ public class IndexCommand implements Command {
 		JsonArray total_result = new JsonArray();
 		total_result.add(result);
 		total_result.add(result2);
+		total_result.add(result3);
 		
 		
 		
