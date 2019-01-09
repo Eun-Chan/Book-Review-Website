@@ -293,13 +293,13 @@ function reloadBookInfo(searchUrl){
 			 */
 			var bookIsbn = [];
 			bookIsbn.push(bookList[ranNum[0]].isbn13);
-			$("a#detail-Book0").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[0]].isbn13);
+			$("a#detail-Book0").prop('href', "<%=request.getContextPath()%>/book/bookInfo.do?isbn13=" + bookList[ranNum[0]].isbn13);
 			bookIsbn.push(bookList[ranNum[1]].isbn13);
-			$("a#detail-Book1").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[1]].isbn13);
+			$("a#detail-Book1").prop('href', "<%=request.getContextPath()%>/book/bookInfo.do?isbn13=" + bookList[ranNum[1]].isbn13);
 			bookIsbn.push(bookList[ranNum[2]].isbn13);
-			$("a#detail-Book2").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[2]].isbn13);
+			$("a#detail-Book2").prop('href', "<%=request.getContextPath()%>/book/bookInfo.do?isbn13=" + bookList[ranNum[2]].isbn13);
 			bookIsbn.push(bookList[ranNum[3]].isbn13);
-			$("a#detail-Book3").prop('href', "http://localhost:9090/brw/book/bookInfo.do?isbn13=" + bookList[ranNum[3]].isbn13);
+			$("a#detail-Book3").prop('href', "<%=request.getContextPath()%>/book/bookInfo.do?isbn13=" + bookList[ranNum[3]].isbn13);
 			startPage(bookIsbn);
 	    },
 	    error:function()
