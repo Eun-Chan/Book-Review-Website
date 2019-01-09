@@ -33,7 +33,9 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
-
+<script>
+	
+</script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -91,6 +93,7 @@
        	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
       	<% } 
       	else {%>
+      	<li><a href="#">채팅</a></li>
       	<li class="dropdown">
       		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">
@@ -118,14 +121,14 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-		<form>
+		<form name="loginForm">
   			<div class="form-group">
     			<label for="text">아이디</label>
     			<input type="text" class="form-control" id="userId" value="<%=userId%>">
   			</div>
   			<div class="form-group">
     			<label for="userPassword">비밀번호</label>
-    			<input type="password" class="form-control" id="userPassword">
+    			<input type="password" class="form-control" id="userPassword" onkeyup="enterkey();">
   			</div>
   			<div class="form-group form-check">
     			<label class="form-check-label">
@@ -136,7 +139,7 @@
   			<button type="button" class="btn btn-primary" onclick="loginCheck();">로그인</button>
   			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.do'">회원가입</button>
   			<br /><br />
-  			<a href="#">아이디 찾기</a>&nbsp;&nbsp;<a href="#">비밀번호 찾기</a>
+  			<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">아이디 찾기</a>&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">비밀번호 찾기</a>
 		</form>        
       </div> <!-- modal-body 끝 -->
       
@@ -151,6 +154,10 @@
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
 	<script>
+	function enterkey(){
+		if(window.event.keyCode == 13)
+			loginCheck();
+	}
 	
 	function loginCheck(){
 		var userId = $("#userId").val().trim();
@@ -168,9 +175,10 @@
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
 			success : function(data){
 				if(data == "true"){
-					location.href = "<%=request.getContextPath()%>";
-				}
+					location.reload();
+					console.log("여긴 오지");
 					
+				}	
 				else if(data == "false"){
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
 					$("#login-help").addClass("text-danger");

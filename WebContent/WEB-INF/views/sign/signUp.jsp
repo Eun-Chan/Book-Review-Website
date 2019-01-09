@@ -7,7 +7,7 @@
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
 <title>회원 가입</title>
-<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 </head>
 <body>
 <div class="contentwrap">

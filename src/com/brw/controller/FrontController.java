@@ -14,6 +14,7 @@ import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.bookBasketCommand;
+import com.brw.command.book.checkedBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -25,9 +26,11 @@ import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
+import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
+import com.brw.command.user.SearchIdForEmailCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -212,7 +215,20 @@ public class FrontController extends HttpServlet {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 	    }
 		/*
-		 * 17. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 * 17. 아이디 혹은 비밀번호 찾기 페이지 이동
+		 */
+	    else if(command.equals("/idAndPwdSearch.do")) {
+	    	viewPage = "/WEB-INF/views/sign/idAndPwdSearch.jsp";
+	    }
+		/*
+		 * 18. 아이디 찾기 시 이메일이 존재하는지 확인
+		 */
+	    else if(command.equals("/emailCheck.do")) {
+	    	com = new FindEmailCheckCommand();
+	    	com.execute(req, res);
+	    }
+		/**
+		 * 19. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
 		 */
 	    else if(command.equals("/book/basket.do")) {
 	    	com = new BasketInsertCommand();
@@ -223,29 +239,49 @@ public class FrontController extends HttpServlet {
 	    }
 		
 		/*
-		 * 18. 좋아요 버튼 클릭시 처리 ajax 
+		 * 20. 좋아요 버튼 클릭시 처리 ajax 
 		 */
 	    else if(command.equals("/review/reviewLike.do")){
 	    	com = new ReviewBoardLikeCommend();
 	    	com.execute(req,res);
 	    }
-		
 		/*
-		 * 19. 댓글 삭제 쿼리  
+		 * 21. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
 	    	com = new DeleteReviewBoardComment();
 	    	com.execute(req, res);
 	    }
-		/*20. bookInfo에서 즐겨찾기 누를시 결과*/
+		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
 	    else if(command.equals("/book/bookbasket.do")) {
 	    	com = new bookBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*21. 즐겨찾기로 가버렷*/
+		/*23. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
+		/**
+		 * 24. 이메일을 통해 아이디 찾아보리기
+		 */
+	    else if(command.equals("/sign/searchIdForEmail.do")) {
+	    	com = new SearchIdForEmailCommand();
+	    	com.execute(req, res);
+	    }
+		/*
+		 * 25. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
+		 */
+	    else if(command.equals("/sign/idSearchEnd.do")) {
+	    	viewPage = "/WEB-INF/views/sign/IdSearchEnd.jsp";
+	    }
+		/*
+		 * 26.check된 책 없애기
+		 */
+	    else if(command.equals("/book/checkedBasket.do")) {
+	    	com = new checkedBasketCommand();
+	    	com.execute(req, res);
+	    }
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

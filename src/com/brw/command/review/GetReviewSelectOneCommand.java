@@ -44,7 +44,7 @@ public class GetReviewSelectOneCommand implements Command{
 		List<ReviewBoardComment> reviewReComment = dao.getReviewBoardReCommentList(rbNo);
 		
 		//해당 게시물 댓글갯수 가져오기
-		int count = dao.getReivewBoardCommentAllCount(rbNo);
+		int count = dao.getComment(rbNo);
 		//제일 마지막 댓글 가져오기
 		ReviewBoardComment lastReviewComment = dao.getReviewBoardCommentLast(rbNo);
 		//다음 글번호 가져오기

@@ -1,0 +1,19 @@
+@charset "UTF-8";
+#basketInfo {
+	text-align : center;
+}
+#basketList {
+	text-align : center;
+}
+table.table {
+	width : 800px;
+	margin : 0 auto;
+}
+table.table th {
+	text-align : center;
+	background : #f1f1f1;
+}
+#deleteButton {
+	float : right;
+	margin-right :50px;
+}
