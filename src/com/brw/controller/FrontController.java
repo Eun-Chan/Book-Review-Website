@@ -29,6 +29,7 @@ import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
+import com.brw.command.user.SearchIdForEmailCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -260,7 +261,13 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
-		
+		/**
+		 * 24. 이메일을 통해 아이디 찾아보리기
+		 */
+	    else if(command.equals("/sign/searchIdForEmail.do")) {
+	    	com = new SearchIdForEmailCommand();
+	    	com.execute(req, res);
+	    }
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

@@ -84,7 +84,7 @@
 			data : {userEmail : userEmail},
 			success : function(data){
 				if(data == "true"){
-					
+					findId();
 				}
 				else if(data == "false"){
 					alert("해당 이메일로 가입된 아이디가 없습니다.");
@@ -129,6 +129,17 @@
 		});
 	});
 	
+	function findId(){
+		var userEmail = $("#userEmail").val().trim();
+		
+		$.ajax({
+			url : "<%=request.getContextPath()%>/sign/searchIdForEmail.do",
+			data : {userEmail : userEmail},
+			success : function(data){
+				
+			}
+		});
+	}
 	
 </script>
 </body>

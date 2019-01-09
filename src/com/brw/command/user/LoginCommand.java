@@ -62,7 +62,11 @@ public class LoginCommand implements Command {
 				session.setMaxInactiveInterval(60);
 				session.setAttribute("user", userDTO);
 				
-				out.append("true");	
+				out.append("true");
+				System.out.println("1"+request.getHeader("referer"));
+				System.out.println("2"+request.getContextPath());
+				System.out.println("3"+request.getRequestURL());
+				System.out.println("4"+request.getRequestURI());
 			}
 				
 			// 로그인 실패 !

@@ -28,7 +28,7 @@ public class LogoutCommand implements Command {
 		}
 		
 		try {
-			response.sendRedirect(request.getContextPath());
+			response.sendRedirect(request.getHeader("referer"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

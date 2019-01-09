@@ -32,7 +32,9 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
-
+<script>
+	
+</script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -107,14 +109,14 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-		<form>
+		<form name="loginForm">
   			<div class="form-group">
     			<label for="text">아이디</label>
     			<input type="text" class="form-control" id="userId" value="<%=userId%>">
   			</div>
   			<div class="form-group">
     			<label for="userPassword">비밀번호</label>
-    			<input type="password" class="form-control" id="userPassword">
+    			<input type="password" class="form-control" id="userPassword" onkeyup="enterkey();">
   			</div>
   			<div class="form-group form-check">
     			<label class="form-check-label">
@@ -140,6 +142,10 @@
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
 	<script>
+	function enterkey(){
+		if(window.event.keyCode == 13)
+			loginCheck();
+	}
 	
 	function loginCheck(){
 		var userId = $("#userId").val().trim();
@@ -157,9 +163,10 @@
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
 			success : function(data){
 				if(data == "true"){
-					location.href = "<%=request.getContextPath()%>";
-				}
+					location.reload();
+					console.log("여긴 오지");
 					
+				}	
 				else if(data == "false"){
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
 					$("#login-help").addClass("text-danger");

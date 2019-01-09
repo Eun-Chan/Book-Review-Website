@@ -414,7 +414,7 @@ public class DAO {
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default,default)";
 		int result = 0;
 		try {
 			conn = dataSource.getConnection();
@@ -665,7 +665,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
 		int result = 0;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,2,?,?,?,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,2,?,?,?,default,default)";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1213,7 +1213,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from book where aladin_isbn = ?";
+		String query = "select * from book where isbn = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1251,7 +1251,7 @@ public class DAO {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into booktest (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
+		String query = "insert into book (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1685,4 +1685,39 @@ public class DAO {
 			}
 			return list;
 		}
+	/**
+	 * 작성자 : 김은찬
+	 * 40. 이메일을 통해 아이디 찾아보리기
+	 */
+	public String searchIdForEmail(String userEmail) {
+		String userId = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select userId from tempusertable where userEmail = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userEmail);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				userId = rset.getString("userId");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return userId;
+	}
 }
