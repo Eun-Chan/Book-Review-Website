@@ -154,7 +154,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -219,7 +219,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' order by rb_no desc";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -258,7 +258,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -327,7 +327,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard where searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -367,7 +367,7 @@ public class DAO {
 		ReviewBoardDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard where rb_no = ?";
+		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -582,37 +582,37 @@ public class DAO {
 	 * 작성자 : 장선웅
 	 * 내용 : 댓글 갯수 가져오기
 	 */
-	public int getReivewBoardCommentAllCount(int rbNo) {
-		int count = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet res = null;
-		String query = "select count(*)count  from reviewboard_comment where rb_ref=? and rb_comment_level=1";
-		
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, rbNo);
-			res = pstmt.executeQuery();
-			if(res.next()) {
-				count = res.getInt("count");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				res.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return count;
-	}
+//	public int getReivewBoardCommentAllCount(int rbNo) {
+//		int count = 0;
+//		Connection conn = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet res = null;
+//		String query = "select count(*)count  from reviewboard_comment where rb_ref=? and rb_comment_level=1";
+//		
+//		try {
+//			conn = dataSource.getConnection();
+//			pstmt = conn.prepareStatement(query);
+//			pstmt.setInt(1, rbNo);
+//			res = pstmt.executeQuery();
+//			if(res.next()) {
+//				count = res.getInt("count");
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				res.close();
+//				pstmt.close();
+//				conn.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		return count;
+//	}
 	/**
 	 * 14
 	 * 작성자 : 장선웅
@@ -1456,7 +1456,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select count(*) cnt  from reviewboard_comment where rb_ref=?";
+		String query = "select count(*) cnt from reviewboard_comment where rb_comment_delflag = 'N' and rb_ref=?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1522,30 +1522,44 @@ public class DAO {
 		return maxLike;
 	}
 
+
 	/**
-	 * 36. 선웅 : 리뷰게시판 댓글 삭제
+	 * 37. 선웅 : 해당 댓글에 대댓글이 있는지 확인하기
 	 * @param rbCommentNo
-	 * @param rbNo
+	 * @param rbNo 
 	 * @return
 	 */
-	public int deleteReviewBoardComment(int rbCommentNo, int rbNo) {
+	public List<ReviewBoardComment> checkRecommend(int rbCommentNo, int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "delete from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
-		int result = 0;
+		ResultSet res = null;
+		String query = "select * from reviewboard_comment where rb_ref = ? and rb_comment_ref =?";
+		List<ReviewBoardComment> commentList = null;
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, rbCommentNo);
-			pstmt.setInt(2, rbNo);
+			pstmt.setInt(1, rbNo);
+			pstmt.setInt(2, rbCommentNo);
+			commentList = new ArrayList<>();
+			res = pstmt.executeQuery();
+			while(res.next()) {
+				ReviewBoardComment rc = new ReviewBoardComment();
+				rc.setRbCommentNo(res.getInt("rb_comment_No"));
+				rc.setRbCommentWriter(res.getString("rb_comment_writer"));
+				rc.setRbCommentContent(res.getString("rb_comment_content"));
+				rc.setRbRef(res.getInt("rb_ref"));
+				rc.setRbCommentRef(res.getInt("rb_comment_ref"));
+				rc.setRbCommentDate(res.getString("rb_comment_date"));
+				commentList.add(rc);
+			}
 			
-			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
+				res.close();
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
@@ -1554,17 +1568,7 @@ public class DAO {
 			}
 		}
 		
-		return result;
-	}
-
-	/**
-	 * 37. 선웅 : 해당 댓글에 대댓글이 있는지 확인하기
-	 * @param rbCommentNo
-	 * @return
-	 */
-	public List<ReviewBoardComment> checkRecommend(int rbCommentNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return commentList;
 	}
 
 	/**
@@ -1591,8 +1595,88 @@ public class DAO {
 		
 		return updateReadCount;
 	}
+
+	/**
+	 * 39. 선웅 : 대댓글이 있으면 업데이트 , 없으면 댓글 삭제하기
+	 * @param rbCommentNo
+	 * @param rbNo
+	 * @param ud
+	 * @return
+	 */
+	public int udReviewBoardComment(int rbCommentNo, int rbNo, int ud) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "";
+		//ud 가 1일 경우 업데이트 2일 경우 딜리트
+		if(ud==1) {
+			query ="update reviewboard_comment set rb_comment_content = '[삭제된 댓글 입니다.]' where rb_comment_no = ? and rb_ref = ?";
+		}else if(ud==2) {
+			query ="delete from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
+		}
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbCommentNo);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return result;
+	}
 	/*
-	 * 39 작성자 : 박세준
+	 * 40 작성자 : 박세준
+	 * 내용 : 즐겨찾기 check된거 삭제
+	 */
+	public int checkeddelete(UserDTO user, String isbn) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from basket where userId = ? and isbn = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, user.getUserId());
+			pstmt.setString(2, isbn);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 41. 작성자 : 박세준
 	 * 내용 : 즐겨찾기 추가
 	 */
 	public List<BookBasketDTO> bookBasket(String userId) {
@@ -1635,40 +1719,6 @@ public class DAO {
 			}
 			return list;
 	}
-	/*
-	 * 39 작성자 : 박세준
-	 * 내용 : 즐겨찾기 check된거 삭제
-	 */
-	public int checkeddelete(UserDTO user, String isbn) {
-		int result = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		String query = "delete from basket where userId = ? and isbn = ?";
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, user.getUserId());
-			pstmt.setString(2, isbn);
-			
-			result = pstmt.executeUpdate();
-			
-			if(result > 0) {
-				conn.commit();
-			}
-			else {
-				conn.rollback();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
-	}
+
 }
+

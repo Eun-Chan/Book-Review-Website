@@ -1,5 +1,6 @@
 package com.brw.command.review;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardComment;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 public class DeleteReviewBoardComment implements Command{
 
@@ -24,15 +27,30 @@ public class DeleteReviewBoardComment implements Command{
 		
 		int rbCommentNo = Integer.parseInt(request.getParameter("rbCommentNo"));
 		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
-		int result = 0;		
+		int result = 0;
+		int ud = 0;
 		DAO dao = DAO.getInstance();
-		List<ReviewBoardComment> commentList = dao.checkRecommend(rbCommentNo);
-		result = dao.deleteReviewBoardComment(rbCommentNo,rbNo);
-//		if(commentList.isEmpty() || commentList==null) {
-//			
-//		}else {
-//			
-//		}
+		List<ReviewBoardComment> commentList = dao.checkRecommend(rbCommentNo,rbNo);
+		System.out.println(commentList);
+		if(!commentList.isEmpty()) {
+			ud = 1;
+			result = dao.udReviewBoardComment(rbCommentNo,rbNo,ud);
+		}else {
+			ud = 2;
+			result = dao.udReviewBoardComment(rbCommentNo,rbNo,ud);
+		}
+		
+		Gson gson = new Gson();
+		 
+		try {
+			gson.toJson(ud , response.getWriter());
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

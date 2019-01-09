@@ -90,7 +90,7 @@
 								<span style="font-size:0.8em;"><%=rbc.getRbCommentDate() %></span>
 							</div>
 							<div id ="comment-body">
-								<span><%=rbc.getRbCommentContent() %></span>
+								<span id="review-con"><%=rbc.getRbCommentContent() %></span>
 							</div>
 							<%if(user!=null && (user.getUserId().equals(rbc.getRbCommentWriter()) || user.getUserId().equals("admin"))){ %>
 							<button class="comment-delete" value="<%=rbc.getRbCommentNo()%>" id="comment-delete<%=rbc.getRbCommentNo()%>">
@@ -290,11 +290,17 @@
 				$.ajax({
 					url:"<%=request.getContextPath()%>/review/reviewCommentDelete.do?rbCommentNo="+$(this).val()+"&rbNo=<%=review.getRbNo()%>",
 					success:function(data){
-						 $(".comment-list"+brNo).remove();
-						 console.log($(".comment-list"+brNo));
+						console.log(data);
+						if(data==2){
+							$(".comment-list"+brNo).remove();	
+						}
+						else if(data==1){
+							$("#review-con").html("[삭제된 댓글입니다.]");
+							$("#review-con").addClass("del");
+						}
 					}		
 				})
 			}
 		});
 	</script>
-
+<%-- <%@ include file="/WEB-INF/views/common/footer.jsp" %> --%>
