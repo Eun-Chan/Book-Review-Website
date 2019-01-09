@@ -136,7 +136,8 @@
 			url : "<%=request.getContextPath()%>/sign/searchIdForEmail.do",
 			data : {userEmail : userEmail},
 			success : function(data){
-				
+				console.log("findId()");
+				goIdSearchEnd();
 			}
 		});
 	}

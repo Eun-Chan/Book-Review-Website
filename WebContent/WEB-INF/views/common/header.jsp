@@ -82,6 +82,7 @@
        	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
       	<% } 
       	else {%>
+      	<li><a href="#">채팅</a></li>
       	<li class="dropdown">
       		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">

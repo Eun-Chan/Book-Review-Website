@@ -59,7 +59,7 @@ public class LoginCommand implements Command {
 				
 				HttpSession session = request.getSession(true);
 				
-				session.setMaxInactiveInterval(60);
+				session.setMaxInactiveInterval(60*10);
 				session.setAttribute("user", userDTO);
 				
 				out.append("true");

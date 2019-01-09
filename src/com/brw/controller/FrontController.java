@@ -245,7 +245,6 @@ public class FrontController extends HttpServlet {
 	    	com = new ReviewBoardLikeCommend();
 	    	com.execute(req,res);
 	    }
-		
 		/*
 		 * 21. 댓글 삭제 쿼리  
 		 */
@@ -282,6 +281,7 @@ public class FrontController extends HttpServlet {
 	    	com = new checkedBasketCommand();
 	    	com.execute(req, res);
 	    }
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
