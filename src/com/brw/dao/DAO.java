@@ -1760,7 +1760,7 @@ public class DAO {
 	}
 	/**
 	 * @광준
-	 * 41. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+	 * 42. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
 	 */
 	public List<ReviewBoardDTO> selectReviewBestList()
 	{
