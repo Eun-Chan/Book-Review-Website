@@ -32,6 +32,7 @@ import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
+import com.brw.command.user.nickNameCheckCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -293,6 +294,11 @@ public class FrontController extends HttpServlet {
 	    	com = new BookOneLineRVCommand();
 	    	com.execute(req, res);
 	    }
+		/*29 . 회원가입시 닉네임 체크*/
+		else if(command.equals("/nickNameCheck.do")) {
+			com = new nickNameCheckCommand();
+			com.execute(req, res);
+		}
 
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

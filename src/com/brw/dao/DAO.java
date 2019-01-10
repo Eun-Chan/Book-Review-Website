@@ -50,7 +50,7 @@ public class DAO {
 	 */
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
-		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
+		String query = "insert into tempUserTable(userid,userpassword,username,useremail,userNickName) values(?,?,?,?,?)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -66,6 +66,7 @@ public class DAO {
 			pstmt.setString(2, user.getUserPassword());
 			pstmt.setString(3, user.getUserName());
 			pstmt.setString(4, user.getUserEmail());
+			pstmt.setString(5, user.getUserNickName());
 			
 			result = pstmt.executeUpdate();
 			
@@ -1903,6 +1904,43 @@ public class DAO {
 						
 		return list;
 		}
+
+	/* 45. 닉네임 중복 검사*/
+	public int nickNameCheck(String userNickName) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) as cnt from tempusertable where userNickName = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userNickName);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 }
 
