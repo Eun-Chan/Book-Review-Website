@@ -6,34 +6,37 @@
 
 /* 책 오른쪽으로 밀기 */
 #bookInfo-container {
+
 	/* 수정함 */
 	width:1000px;
 	margin:30px auto;
+
 }
 #rbcontent {
-	max-height : 36.8px;
-	width: 400px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow : hidden;
-	display : inline-block;
+   max-height : 36.8px;
+   width: 400px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   overflow : hidden;
+   display : inline-block;
 
 }
 /* bookInfo 리뷰테이블 */
 .table tr td:nth-child(1){
-	width : 300px;
-	cursor : pointer;
+   width : 300px;
+   cursor : pointer;
 }
 .table tr td:nth-child(3){
-	width : 200px;
+   width : 200px;
 }
 .table tr td:nth-child(4){
-	width : 250px;
+   width : 250px;
 }
 .table th {
-	background : #f1f1f1;
+   background : #f1f1f1;
 }
 #command-info { 
+
 	/* 수정함 */
 	width:1000px;
 	margin:0 auto;
@@ -63,74 +66,76 @@
 .starR1.on{background-position:0 0;}
 .starR2.on{background-position:-15px 0;}
 #starScoreAvg{
-	display:inline-block;
-	margin-top: 10px;
+   display:inline-block;
+   margin-top: 10px;
 }
 
 /*버튼 태그의 스타일*/
 .btn-info{
+
 	float:right;
+
 }
 
 /******* 추가 ******/
 
 #bookInfo-img {
-	float:left;
-	width:20%;
+   float:left;
+   width:20%;
 }
 #bookInfo-img img {
-	width:100%;
+   width:100%;
 }
 #bookInfo-info {
-	float:left;
-	width:80%;
-	padding:0 20px;
-	box-sizing:border-box;
+   float:left;
+   width:80%;
+   padding:0 20px;
+   box-sizing:border-box;
 }
 .badge-author {
-	background-color:#1b4282;
+   background-color:#1b4282;
 }
 #bookInfo-category {
-	color:#444;
-	font-style:italic;
+   color:#444;
+   font-style:italic;
 }
 #bookInfo-desc {
-	margin:12px 0;
+   margin:12px 0;
 }
 .clear {
-	clear:both;
+   clear:both;
 }
 
 @media (max-width: 1000px) {
-	#bookInfo-container, #command-info, #oneLineReview-container {
-		width:100%;
-	}
+   #bookInfo-container, #command-info, #oneLineReview-container {
+      width:100%;
+   }
 }
 @media (max-width: 768px) {
-	#bookInfo-img {
-		float:none;
-		width:100%;
-		text-align:center;
-	}
-	#bookInfo-img img {
-		width:40%;
-	}
-	#bookInfo-info {
-		width:100%;
-	}
+   #bookInfo-img {
+      float:none;
+      width:100%;
+      text-align:center;
+   }
+   #bookInfo-img img {
+      width:40%;
+   }
+   #bookInfo-info {
+      width:100%;
+   }
 }
 p#reviewTab{
-	font-size: 24px;
-	font-weight: bold;
-	text-align: center;
+   font-size: 24px;
+   font-weight: bold;
+   text-align: center;
 }
 /******* 추가 끝 ******/
 
 /*한 줄 리뷰 css*/
 #start-Container2{
-	display: inline-block;
+   display: inline-block;
 }
 #oneLineView{
-	display:inline-block; 
-	vertical-align: top;
+   display:inline-block; 
+   vertical-align: top;
 }

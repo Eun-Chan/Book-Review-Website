@@ -91,6 +91,17 @@ hr.my-hr2
     background: #ccc;
 }
 /* 최근 리뷰 */
+
+#recent-Review
+{
+	margin-left: 15%;
+	float: left;
+}
+#bestReview
+{
+	margin-left: 5%;
+	display: inline-block;
+}
 span.bookName
 {
 	font-size: 20px;
@@ -99,7 +110,6 @@ h3.subTitle
 {
 	margin-top: 2%;
 	margin-bottom: 2%;
-	margin-left: 10%;
 }
 hr.title-line
 {
