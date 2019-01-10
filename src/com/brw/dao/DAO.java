@@ -181,9 +181,8 @@ public class DAO {
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
+				rb.setRbWriterNickName(rset.getString("rb_writer_nickname"));
 				
 				int passingTime = rset.getInt("passingtime");
 				boolean isDateNew = false;
@@ -287,9 +286,8 @@ public class DAO {
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
+				rb.setRbWriterNickName(rset.getString("rb_writer_nickname"));
 				
 				int passingTime = rset.getInt("passingtime");
 				boolean isDateNew = false;
@@ -1139,8 +1137,8 @@ public class DAO {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore) " + 
-						"values (seq_review_no.nextval,?,?,?,?,?,?)";
+		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore,rb_writer_nickname) " + 
+						"values (seq_review_no.nextval,?,?,?,?,?,?,?)";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1151,6 +1149,7 @@ public class DAO {
 			pstmt.setString(4, rb.getRbIsbn());
 			pstmt.setString(5, rb.getRbContent());
 			pstmt.setDouble(6, rb.getRbStarscore());
+			pstmt.setString(7, rb.getRbWriterNickName());
 			
 			result = pstmt.executeUpdate();
 			

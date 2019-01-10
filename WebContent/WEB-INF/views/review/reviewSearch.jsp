@@ -114,9 +114,9 @@ $(function(){
 					<td><%=rb.getRbBookTitle()%></td>
 	                <td>
 	               		<a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a> 
-	             		<span class="smft"><%=rb.getCommentCnt()>0?rb.getCommentCnt():"" %></span> <%=rb.getIsDateNew()?"<span class='mark smft'>new</span>":"" %>
+	             		<span class="smft"><%=rb.getCommentCnt()>0?"+" + rb.getCommentCnt():"" %></span> <%=rb.getIsDateNew()?"<span class='mark smft'>new</span>":"" %>
 	                </td>
-					<td><%=rb.getRbWriter() %></td>
+					<td><%=rb.getRbWriterNickName() %></td>
 					<td><%=rb.getRbDate() %></td>
 					<td><%=rb.getRbReadCnt() %></td>
 					<td><%=rb.getRbRecommend() %></td>
