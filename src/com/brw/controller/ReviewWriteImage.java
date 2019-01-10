@@ -18,7 +18,7 @@ public class ReviewWriteImage implements Command  {
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		
 		// 이미지 업로드할 경로
-		String saveDir = request.getServletContext().getRealPath("/") + "upload/reviewImage/";
+        String saveDir = request.getServletContext().getRealPath("/") + "upload/reviewImage/";
 		//String saveDir = "/Users/mhjung/git/brw/WebContent/upload/reviewImage";
 		System.out.println(saveDir);
 		// 경로가 왜 아래처럼 잡히지? metadata에 왜 들어가는 걸까?
