@@ -46,7 +46,7 @@ table th{
 </style>	
 <script>
 
-	var cPage;//현제 페이지
+	var cPage = 1;//현제 페이지
 	var searchVal = "<%=searchval%>";
 	var searchType = "<%=searchType%>";
 	var pageBar = "";
