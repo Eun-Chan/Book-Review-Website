@@ -9,16 +9,40 @@
 <script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
 <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <style>
-div.form-group{
+/* input타입 inline-block으로 변경 */
+div.myformgroup{
 	display: inline-block;
 }
+
+/* 검색 결과 테이블 th 색지정 */
+table#mytable thead tr{
+	background: #004183;
+	color: white;
+}
+
+/* 검색 input태그 width 지정 */
+input#search{
+	width: 300px;
+}
+body{
+	text-align: center;
+}
+div#finder {
+	border: 3px dotted #004183;
+	width: 600px;
+	display: inline-block;
+	margin: 0 auto;
+}
+
 </style>
 </head>
 <body>
 	<!-- 검색시작 -->
-	<div id="finder">
+	<div id="finder" class="text-center">
+		<h3>리뷰할 도서를 검색해주세요.</h3>
 		<!-- 검색 select태그 -->
-		<div id="search-container" class="form-group">
+		<form action="" id="myFrm">
+		<div id="search-container" class="form-group myformgroup">
 			<label for="searchType">검색타입 :</label>
 			<select id="searchType" class="form-control">
 				<option value="title">제목</option>
@@ -26,17 +50,19 @@ div.form-group{
 			</select>
 		</div>
 		<!-- 검색 input태그 -->
-		<div class="form-group">
+		<div class="form-group myformgroup">
 			<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요." class="form-control"/>
 		</div>
 		<input type="button" value="검색" id="btn-search" class="btn btn-default"/>
-	</div>
-	<div id="totalContent"></div>
-	<div id="bookListContainer">
-		<table class="table"></table>
+		</form>
 	</div>
 	
-	<div id="pageBar"></div>
+	<div id="totalContent"></div>
+	<div id="bookListContainer">
+		<table class="table" id="mytable"></table>
+	</div>
+	
+	<div id="pageBar" class="text-center"></div>
 	
 <script>
 
@@ -51,6 +77,14 @@ $("#btn-search").click(function(){
 	searchType = $("#searchType").val();
 	cPage = 1;
 	
+	test111(cPage);	
+});
+
+$("form#myFrm").on("submit", function(event){
+	event.preventDefault();
+	cPage = 1;
+	searchVal = $("input#search").val();
+	searchType = $("#searchType").val();
 	test111(cPage);	
 });
 

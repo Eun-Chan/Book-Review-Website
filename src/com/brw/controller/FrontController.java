@@ -282,7 +282,13 @@ public class FrontController extends HttpServlet {
 	    	com = new checkedBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*27. 한 줄 리뷰 등록: 김민우*/
+
+		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
+	    else if(command.equals("/review/reviewWriteImage.do")) {
+	    	com = new ReviewWriteImage();
+	    	com.execute(req, res);
+	    }
+		/*28. 한 줄 리뷰 등록: 김민우*/
 	    else if(command.equals("/book/oneLineRV.do")) {
 	    	com = new BookOneLineRVCommand();
 	    	com.execute(req, res);
