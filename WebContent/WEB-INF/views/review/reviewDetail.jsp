@@ -4,13 +4,28 @@
     pageEncoding="UTF-8"%>
 <%@page import="com.brw.dto.*" %>
 <%
+	
+	//해당 글번호에 맞는 selectOne
  	ReviewBoardDTO review = (ReviewBoardDTO)request.getAttribute("review");
+
+	//해당 글번호에 맞는 댓글리스트
 	List<ReviewBoardComment> reviewComment = (List<ReviewBoardComment>)request.getAttribute("reviewComment");
+	
+	//해당 글번호에 맞는 대댓글 리스트
 	List<ReviewBoardComment> reviewReComment = (List<ReviewBoardComment>)request.getAttribute("reviewReComment");
+	
+	//해당글에 있는 댓글 겟수(삭제된 댓글 제외)
 	int count = (int)request.getAttribute("count");
+	
+	//마지막으로 입력된 댓글 가져오기
 	ReviewBoardComment lastReviewComment = (ReviewBoardComment)request.getAttribute("lastReviewComment");
+	
+	//다음글번호 조회
 	int nextNumber = (int)request.getAttribute("nextNumber");
+	//이전글 번호
 	int prevNumber = (int)request.getAttribute("prevNumber");
+	
+	//좋아요 총 겟수
 	Integer maxLike = (Integer)request.getAttribute("maxLike");
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -212,6 +227,8 @@
            		$(".starR2.on").css("display","block");
        		}
 		});
+		
+		//댓글 입력시 ajax로 div 생성해서 붙이기
 		$("#comment-button").on('click',function(){
 			if($("#comment-area").val().trim().length ==0){
 				alert("댓글을 입력해 주세요.");
@@ -243,6 +260,7 @@
 			}
 		});
 
+		//답글 textarea가 한번만 생성되고 생성 안되게 막는 코드
 		$(document).one('click','.comment-recomment',function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
@@ -259,6 +277,8 @@
 			$(this).off("click");
 		});
 		
+		
+		//대댓글 입력시 ajax로 insert 처리 후 div 생성해서 요청한 댓글 밑에 div 생성 후 붙이기
 		$(document).on('click',".recomment-button",function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
@@ -298,6 +318,8 @@
 				<%}%>
 			}
 		});
+		
+		//다음글 클릭시 쿼리로 다음글 조회후 페이지 이동
 		$("#nextpage").click(function(){
 			if(<%=nextNumber%>==0){
 				alert("다음글이 존재하지 않습니다.");
@@ -305,6 +327,8 @@
 			}
 			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=nextNumber%>";
 		});
+		
+		//이전글 클릭시 쿼리로 이전글 조회후 페이지 이동
 		$("#prevpage").click(function(){
 			if(<%=prevNumber%>==0){
 				alert("이전글이 존재하지 않습니다.");
@@ -313,6 +337,7 @@
 			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=prevNumber%>";
 		});
 		
+		//좋아요 클릭시 해당 아이디로 좋아요가 있으면 좋아요 해제 아니면 좋아요 입력
 		$("#like").click(function(){
 			<%if(user==null){%>
 				alert("로그인후 이용할 수 있습니다.");
@@ -329,10 +354,12 @@
 			<%}%>
 		});
 		
+		//상단에 댓글 갯수 클릭시 댓글이 입력되어있는 div로 이동
 		$("#comment").click(function(){
 			var offset = $("#comment-list").offset();
 			$('html, body').animate({scrollTop : offset.top}, 400);
 		});
+		
 		
 		$("#comment-textArea").click(function(){
 			<%if(user==null){%>
@@ -341,6 +368,8 @@
 				return;
 			<%}%>
 		});
+		
+		//댓글 삭제시 해당 댓글에 대댓글이 있으면[삭제된 댓글입니다] 로 업데이트 하고 해당 댓글에 대댓글이 없으면 댓글 삭제 (ajax로 처리)
 		$(document).on('click','.comment-delete',function(){
 			var replay = confirm("정말 삭제 하실 거에요??");
 			var brNo = $(this).val();

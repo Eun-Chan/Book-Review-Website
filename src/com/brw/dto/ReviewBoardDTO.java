@@ -28,6 +28,7 @@ public class ReviewBoardDTO implements Serializable{
 	private String rbRenamedFilename;
 	private int rbReport;
 	private String delFlag;
+	private String rbWriterNickName;
 	
 	// 새로운 글인지 아닌지 db에서 계산한 값 입력
 	private boolean isDateNew;
@@ -37,7 +38,7 @@ public class ReviewBoardDTO implements Serializable{
 	public ReviewBoardDTO() {}
 
 	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent, String rbDate,
-			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport, String delFlag) {
+			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport, String delFlag, String rbWriterNickName) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
 		this.rbWriter = rbWriter;
@@ -52,6 +53,7 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbRenamedFilename = rbRenamedFilename;
 		this.rbReport = rbReport;
 		this.delFlag = delFlag;
+		this.rbWriterNickName = rbWriterNickName;
 	}
 
 	public int getRbNo() {
@@ -182,12 +184,20 @@ public class ReviewBoardDTO implements Serializable{
 		this.commentCnt = commentCnt;
 	}
 
+	public String getRbWriterNickName() {
+		return rbWriterNickName;
+	}
+
+	public void setRbWriterNickName(String rbWriterNickName) {
+		this.rbWriterNickName = rbWriterNickName;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewBoardDTO [rbNo=" + rbNo + ", rbTitle=" + rbTitle + ", rbWriter=" + rbWriter + ", rbBookTitle=" + rbBookTitle + ", rbIsbn=" + rbIsbn
 				+ ", rbContent=" + rbContent + ", rbDate=" + rbDate + ", rbStarscore=" + rbStarscore + ", rbReadCnt="
 				+ rbReadCnt + ", rbRecommend=" + rbRecommend + ", rbOriginalFilename=" + rbOriginalFilename
-				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + ", delFlag=" + delFlag + "]";
+				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + ", delFlag=" + delFlag + ", rbWriterNickName=" + rbWriterNickName + "]";
 	}
 	
 	

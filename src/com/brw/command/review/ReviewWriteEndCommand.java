@@ -28,6 +28,8 @@ public class ReviewWriteEndCommand implements Command {
 		String rbContent = request.getParameter("rbContent");
 		String rbIsbn = request.getParameter("rbIsbn");
 		double rbStarscore = Double.parseDouble(request.getParameter("rbStarscore"));
+		String rbWriterNickName = request.getParameter("rbWriterNickName");
+		
 		// book 테이블 저장용 파라미터
 		String bookAuthor = request.getParameter("bookAuthor");
 		int bookPriceStandard = Integer.parseInt(request.getParameter("bookPriceStandard"));
@@ -35,11 +37,11 @@ public class ReviewWriteEndCommand implements Command {
 		
 		
 		// 객체 확인용
-		System.out.println(rbTitle);
-		System.out.println(rbWriter);
-		System.out.println(rbBookTitle);
-		System.out.println(rbIsbn);
-		System.out.println(rbStarscore);
+//		System.out.println(rbTitle);
+//		System.out.println(rbWriter);
+//		System.out.println(rbBookTitle);
+//		System.out.println(rbIsbn);
+//		System.out.println(rbStarscore);
 		
 		// 가져온 ISBN이 book테이블에 존재하는 지 검사 후 없다면 등록
 		// dao 1번 사용
@@ -64,6 +66,7 @@ public class ReviewWriteEndCommand implements Command {
 		rb.setRbContent(rbContent);
 		rb.setRbIsbn(rbIsbn);
 		rb.setRbStarscore(rbStarscore);
+		rb.setRbWriterNickName(rbWriterNickName);
 		
 		// dao 갔다오기
 		// dao 3번 사용
