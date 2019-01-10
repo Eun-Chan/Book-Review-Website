@@ -904,6 +904,7 @@ public class DAO {
 				userDTO.setUserId(rset.getString("userId"));
 				userDTO.setUserName(rset.getString("userName"));
 				userDTO.setUserEmail(rset.getString("userEmail"));
+				userDTO.setUserNickName(rset.getString("userNickName"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
