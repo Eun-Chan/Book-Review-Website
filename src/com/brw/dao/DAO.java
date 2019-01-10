@@ -762,8 +762,8 @@ public class DAO {
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+//				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+//				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
 				
 				list.add(rb);
@@ -1863,19 +1863,21 @@ public class DAO {
 	
 	/*
 	 * 44. 작성자 : 김민우
-	 * 내용 : 한 줄 리뷰 전체 조회
+	 * 내용 : 현재 보고 있는 책에 모든 한 줄 리뷰 조회
 	 */
 
-	public List<OneLineReviewDTO> selectAllOneLineRV() {
+	public List<OneLineReviewDTO> selectAllOneLineRV(String isbn13) {
 		List<OneLineReviewDTO> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from onelinereview where delflag = 'N'";
+		String query = "select * from onelinereview where isbn = ? and delflag = 'N'";
 
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, isbn13);
+			rset = pstmt.executeQuery();
 			
 			while(rset.next()) {
 				OneLineReviewDTO o = new OneLineReviewDTO();
