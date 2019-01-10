@@ -29,16 +29,6 @@ function sendFile(file) {
 		contentType: false,
 		processData: false,
 		success: function(url) {
-			console.log("url=",url);
-			// 아래 코드는 아무 반응이 없음..
-			//$(editor).summernote('editor.insertImage', url);
-			// 아래 코드는 url 앞에 http가 붙음. 즉 로컬이미지를 사용할 수 없음. 방법이 없나?
-			// /Users/mhjung/khJavaAcamey/workspaces/webserver_workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/BookReviewWebSite/upload/reviewImage/soulG019.jpeg
-			// 위와 같은 로컬 절대경로로 url을 넣게되면 자동으로 http:// 가 붙게된다.
-			// 하지만 <%=request.getContextPath()%>/images/heart.png 이런식으로 넣어주게되면 붙지않고 프로젝트폴더에 있는 파일을 잘 가져온다.
-			//$("#summernote").summernote('insertImage', url);
-			
-			//test -> 성공
             // editor안에 이미지 삽입
 			$("#summernote").summernote('insertImage', url);
 		},
@@ -69,7 +59,7 @@ $(function(){
     		return;
     	}
     	// 리뷰 내용
-    	if($("textarea[name=rbContent]").val() == ""){
+    	if($("#summernote").summernote('code') == ""){
     		alert("리뷰 내용을 입력하세요.");
     		return;
     	}
@@ -133,6 +123,8 @@ $(function(){
 	
 	/* 취소 버튼 */
 	$("button#cancel").on("click",function(){
+		var bool = confirm("정말 취소하시겠습니까?");
+		if(!bool) return;
 		location.href = "<%=request.getContextPath()%>/review/reviewList.do";
 	});
 	
@@ -184,7 +176,7 @@ input#rbBookTitle{
 
 /* 별점별 평가내용 */
 #starscore{
-	font-size: 2em;
+	font-size: 1.5em;
 }
 
 </style>
@@ -225,7 +217,7 @@ input#rbBookTitle{
 					<span class="starR2">별5_오른쪽</span>
 				</div>
 				<!-- 별점별 평가내용 -->
-				<span id="starscore"></span>
+				<span id="starscore">별점을 입력해주세요.</span>
 				
 				<!-- summernote용 텍스트에어리어 -->
 				<textarea name="rbContent" id="summernote"></textarea>
