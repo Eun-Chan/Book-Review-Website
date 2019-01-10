@@ -1211,7 +1211,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from book where aladin_isbn = ?";
+		String query = "select * from book where isbn = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1249,7 +1249,7 @@ public class DAO {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into booktest (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
+		String query = "insert into book (booktitle, author, isbn, pricestandard, publisher) values (?, ?, ?, ?, ?)";
 		
 		try {
 			conn = dataSource.getConnection();
