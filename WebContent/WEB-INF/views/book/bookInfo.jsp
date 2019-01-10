@@ -69,8 +69,8 @@
 	</div>
 	<div id="oneLineView">
 		<ul id="ul_oneLineView">
-			<li>어디 나오니?</li>
-			<li><div id="showStat">별:<i class="fas fa-star"></i></div> 컨탠츠: <span id="oneLineContent"></span> 작성자: <span></span> 작성일: <span></span> <a href="#">삭제</a></li>
+			<li></li>
+			<!-- <li><div id="showStat">별:<i class="fas fa-star"></i></div> 컨탠츠: <span id="oneLineContent"></span> 작성자: <span></span> 작성일: <span></span> <a href="#">삭제</a></li> -->
 		</ul>
 	</div>
 	<div id="oneLineReview-container"></div>

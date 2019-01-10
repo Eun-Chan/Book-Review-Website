@@ -27,7 +27,9 @@
 			</h2>
 		</div>
 		<div id="reviewDetail-Writer">
-			<span id="booktitle">도서명 : <%=review.getRbBookTitle() %> </span>
+			<div id="reviewDetail-booktitle">
+				도서명 : <%=review.getRbBookTitle() %>
+			</div>
 	       <div id="start-Container">
 	       <div class="starRev0">
 			  <span class="starR1 on" id="star0"></span>
@@ -47,8 +49,8 @@
 		</div>
 			
 			<span>작성자 : <%=review.getRbWriter() %></span>
-			<hr />
 		</div>
+		<hr / id="bs_hr">
 		<div id ="reviewDetail-Content">
 			<p>
 			<span>
@@ -191,7 +193,7 @@
 		});
 		
 		//도서명 클릭시 도서 상세정보로 가기
-		$("#booktitle").click(function(){
+		$("#reviewDetail-booktitle").click(function(){
 			var search = confirm("해당 도서 상세보기로 이동하시겠습니까?");
 			if(search){
 				location.href="<%=request.getContextPath()%>/book/bookInfo.do?isbn13=<%=review.getRbIsbn()%>";
