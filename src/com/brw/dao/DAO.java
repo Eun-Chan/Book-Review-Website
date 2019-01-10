@@ -50,7 +50,7 @@ public class DAO {
 	 */
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
-		String query = "insert into tempUserTable(userid,userpassword,username,useremail,userNickName) values(?,?,?,?,?)";
+		String query = "insert into tempUserTable(userid,userpassword,username,useremail,userNickName,userPoint,userGrade) values(?,?,?,?,?,default,default)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -903,6 +903,8 @@ public class DAO {
 				userDTO.setUserName(rset.getString("userName"));
 				userDTO.setUserEmail(rset.getString("userEmail"));
 				userDTO.setUserNickName(rset.getString("userNickName"));
+				userDTO.setUserGrade(rset.getInt("usergrade"));
+				userDTO.setUserLevel(rset.getInt("userlevel"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
