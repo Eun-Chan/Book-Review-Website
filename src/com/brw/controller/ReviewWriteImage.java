@@ -1,5 +1,6 @@
 package com.brw.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 
@@ -18,7 +19,7 @@ public class ReviewWriteImage implements Command  {
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
 		
 		// 이미지 업로드할 경로
-        String saveDir = request.getServletContext().getRealPath("/") + "upload/reviewImage/";
+		String saveDir = request.getServletContext().getRealPath("") + "upload" + File.separator + "reviewImage";
 		//String saveDir = "/Users/mhjung/git/brw/WebContent/upload/reviewImage";
 		System.out.println(saveDir);
 		// 경로가 왜 아래처럼 잡히지? metadata에 왜 들어가는 걸까?
@@ -39,14 +40,12 @@ public class ReviewWriteImage implements Command  {
 		}
 		
 	    // 업로드된 경로와 파일명을 통해 이미지의 경로를 생성
-		String loadingPath = request.getContextPath() + "/upload/reviewImage/" + fileName;
+		String loadingPath = request.getContextPath() + File.separator + "upload" + File.separator + "reviewImage" + File.separator + fileName;
 		System.out.println(loadingPath);
 		
 	    // 생성된 경로를 JSON 형식으로 보내주기 위한 설정
-//		JSONObject jobj = new JSONObject();
-//		jobj.put("url", uploadPath_);
 		
-		response.setContentType("application/json"); // 데이터 타입을 json으로 설정하기 위한 세팅
+		response.setContentType("application/json; charset=utf-8"); // 데이터 타입을 json으로 설정하기 위한 세팅
 		try {
 			new Gson().toJson(loadingPath, response.getWriter());
 		} catch (JsonIOException e) {
