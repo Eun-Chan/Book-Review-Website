@@ -13,7 +13,7 @@ import com.brw.dto.BookBasketDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class bookBasketCommand implements Command {
+public class BookBasketCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
