@@ -190,6 +190,8 @@ input#rbBookTitle{
 				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />
 				<!-- 작성자 히든태그 -->
 				<input type="hidden" name="rbWriter" value="<%=user!=null?user.getUserId():""%>"/>
+				<!-- 작성자 닉네임 히든태그 -->
+				<input type="hidden" name="rbWriterNickName" value="<%=user!=null?user.getUserNickName():""%>"/>
 				<!-- 도서명 인풋태그 -->
 				리뷰할 도서 : <input type="text" name="rbBookTitle" class="form-control" id="rbBookTitle" readonly/>
 				<!-- ISBN 히든태그 -->
