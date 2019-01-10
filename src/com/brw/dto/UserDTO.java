@@ -14,7 +14,7 @@ public class UserDTO implements Serializable {
 	private String userEmail;
 	private String userNickName;
 	private int userGrade;
-	private int userLevel;
+	private int userPoint;
 	
 	public UserDTO() {}
 	
@@ -76,19 +76,19 @@ public class UserDTO implements Serializable {
 		this.userGrade = userGrade;
 	}
 
-	public int getUserLevel() {
-		return userLevel;
+	public int getUserPoint() {
+		return userPoint;
 	}
 
-	public void setUserLevel(int userLevel) {
-		this.userLevel = userLevel;
+	public void setUserPoint(int userPoint) {
+		this.userPoint = userPoint;
 	}
 
 	@Override
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", userPassword=" + userPassword + ", userName=" + userName
 				+ ", userEmail=" + userEmail + ", userNickName=" + userNickName + ", userGrade=" + userGrade
-				+ ", userLevel=" + userLevel + "]";
+				+ ", userLevel=" + userPoint + "]";
 	}
 
 	
