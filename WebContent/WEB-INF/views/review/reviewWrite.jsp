@@ -2,35 +2,65 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO" %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<script type="text/javascript" src="<%=request.getContextPath() %>/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+<!-- 서머노트용 js, css 적용 -->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet"> 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+
+
 <script type="text/javascript">
-	// 로그인하지 않고 url을 통해 접근했을 경우 인덱스로 돌려버림
-	<% if(user == null) { %>
-	alert("잘못된 경로로 접근하였습니다.");
-	location.href = "<%=request.getContextPath()%>";
-	<% } %>
+
+// 로그인하지 않고 url을 통해 접근했을 경우 인덱스로 돌려버림
+<% if(user == null) { %>
+alert("잘못된 경로로 접근하였습니다.");
+location.href = "<%=request.getContextPath()%>";
+<% } %>
+
+
+//summernote 이미지업로드시 사용할 함수
+function sendFile(file) {
+    // 파일 전송을 위한 폼생성
+	var form_data = new FormData();
+	form_data.append('file', file);
+	$.ajax({
+		data: form_data,
+		type: "POST",
+		url: '<%=request.getContextPath()%>/review/reviewWriteImage.do',
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(url) {
+			console.log("url=",url);
+			// 아래 코드는 아무 반응이 없음..
+			//$(editor).summernote('editor.insertImage', url);
+			// 아래 코드는 url 앞에 http가 붙음. 즉 로컬이미지를 사용할 수 없음. 방법이 없나?
+			// /Users/mhjung/khJavaAcamey/workspaces/webserver_workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/BookReviewWebSite/upload/reviewImage/soulG019.jpeg
+			// 위와 같은 로컬 절대경로로 url을 넣게되면 자동으로 http:// 가 붙게된다.
+			// 하지만 <%=request.getContextPath()%>/images/heart.png 이런식으로 넣어주게되면 붙지않고 프로젝트폴더에 있는 파일을 잘 가져온다.
+			//$("#summernote").summernote('insertImage', url);
+			
+			//test -> 성공
+            // editor안에 이미지 삽입
+			$("#summernote").summernote('insertImage', url);
+		},
+	});
+}
+	
 $(function(){
 	
-	
-		
-	
-	// 스마트에디터용 시작
-	var oEditors = [];
-
-	nhn.husky.EZCreator.createInIFrame({
-	
-	    oAppRef: oEditors,
-	    elPlaceHolder: "rbContent",
-	    sSkinURI: "<%=request.getContextPath() %>/se2/SmartEditor2Skin.html",
-	    fCreator: "createSEditor2"
-	
+	// summernote 에디터 준비
+	$("#summernote").summernote({
+		height: 300,
+		placeholder: '내용을 작성해주세요',
+		callbacks: {
+			// 이미지 업로드시 사용될 콜백함수
+			onImageUpload: function(files){
+				sendFile(files[0]);
+			}
+		}
 	});
-	// 스마트 에디터용 끝
-	
+
 	
 	$("#btnSave").on("click",function(){
-		// id가 rbContent인 textarea에 에디터에서 대입
-        oEditors.getById["rbContent"].exec("UPDATE_CONTENTS_FIELD", []);
 		
 		// 유효성 검사는 이곳에서
      	// 리뷰 제목
@@ -39,7 +69,7 @@ $(function(){
     		return;
     	}
     	// 리뷰 내용
-    	if($("textarea[name=rbContent]").val().trim() == "<p><br></p>"){
+    	if($("textarea[name=rbContent]").val() == ""){
     		alert("리뷰 내용을 입력하세요.");
     		return;
     	}
@@ -58,7 +88,8 @@ $(function(){
     		return;
     	}
     	
-		
+    	
+    	
 		// form 제출
 		$("#write-form").submit();
 
@@ -95,11 +126,9 @@ $(function(){
 	});	
 	/* 별점 jquery 끝 */
 	
-	/* 초기화 버튼 */
-	$("button[type=reset]").on("click",function(){
-		oEditors.getById["rbContent"].exec("SET_IR",[""]);
-		$('.starRev span').removeClass("on");
-		$("span#starscore").text("");
+	/* summernote 내용 초기화 버튼 */
+	$("button:reset").on("click",function(){
+		$("#summernote").summernote("code","");
 	});
 	
 	/* 취소 버튼 */
@@ -198,15 +227,16 @@ input#rbBookTitle{
 				<!-- 별점별 평가내용 -->
 				<span id="starscore"></span>
 				
-				<!-- 스마트에디터용 텍스트에어리어 -->
-				<textarea name="rbContent" id="rbContent" rows="17" cols="100" class="form-control"></textarea>
+				<!-- summernote용 텍스트에어리어 -->
+				<textarea name="rbContent" id="summernote"></textarea>
 			</div>
 			<div id="btn-group" class="text-center">
-			<button type="button" class="btn btn-success" id="btnSave">등록</button>
+			<button type="submit" class="btn btn-success" id="btnSave">등록</button>
 			<button type="reset" class="btn btn-warning">초기화</button>
 			<button type="button" class="btn btn-danger" id="cancel">취소</button>
 			</div>
 		</form>
+		
 	</div>
 
 	
