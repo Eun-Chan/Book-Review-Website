@@ -16,6 +16,7 @@
 	<br />
 	<br />
 	<div id="basketList"></div>
+	<div id="totalbasket"></div>
 	<br />
 <script>
 
@@ -33,10 +34,12 @@ $.ajax({
 			html += "<td>"+basket.ISBN+"</td>";
 			html += "<td>"+basket.price+"</td>";
 			html += "<td>"+basket.pickDate+"</td>";
-			html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>"
+			html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
 			
 			table.append(html);
 		}
+		var cnt = parseInt(i)+1;
+		console.log("cnt",cnt);
 		$("#basketList").html(table);
 		
 	},
@@ -44,7 +47,7 @@ $.ajax({
 		console.log("실패");
 	}
 });
-$("#delButton").click(function() {
+$("#deleteButton").click(function() {
 	$("input:checkbox[name='chk']:checked").each(function() {
 		var ISBN = $(this).val();
 		$.ajax({
@@ -63,7 +66,11 @@ $("#delButton").click(function() {
 					table.append(html);
 				}
 				$("#basketList").html(table);
+				location.reload();
 				
+			},
+			error : function() {
+				console.log("응안돼");
 			}
 		});
 	});
