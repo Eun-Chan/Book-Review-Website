@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.BookOneLineRVCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.bookBasketCommand;
 import com.brw.command.book.checkedBasketCommand;
@@ -281,12 +282,18 @@ public class FrontController extends HttpServlet {
 	    	com = new checkedBasketCommand();
 	    	com.execute(req, res);
 	    }
+
 		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
 	    else if(command.equals("/review/reviewWriteImage.do")) {
 	    	com = new ReviewWriteImage();
 	    	com.execute(req, res);
 	    }
-		
+		/*28. 한 줄 리뷰 등록: 김민우*/
+	    else if(command.equals("/book/oneLineRV.do")) {
+	    	com = new BookOneLineRVCommand();
+	    	com.execute(req, res);
+	    }
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

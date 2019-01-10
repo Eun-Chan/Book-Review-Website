@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.brw.dto.BookBasketDTO;
+import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
@@ -380,6 +381,7 @@ public class DAO {
 				review.setRbTitle(res.getString("rb_title"));
 				review.setRbWriter(res.getString("rb_writer"));
 				review.setRbBookTitle(res.getString("rb_booktitle"));
+				review.setRbIsbn(res.getString("rb_isbn"));
 				review.setRbContent(res.getString("rb_content"));
 				review.setRbDate(res.getString("rb_date"));
 				review.setRbReadCnt(res.getInt("rb_readcnt"));
@@ -448,7 +450,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date\r\n" + 
+		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date,rb_comment_delflag\r\n" + 
 				"from reviewboard_comment where rb_ref=? and rb_comment_level =1 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
@@ -467,7 +469,7 @@ public class DAO {
 				comment.setRbCommentContent(res.getString("rb_comment_content"));
 				comment.setRbRef(res.getInt("rb_ref"));
 				comment.setRbCommentDate(res.getString("rb_comment_date"));
-				
+				comment.setRbCommentDelflag(res.getString("rb_comment_delflag"));
 				reviewComment.add(comment);
 			}
 			
@@ -1595,6 +1597,14 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return updateReadCount;
@@ -1614,7 +1624,7 @@ public class DAO {
 		String query = "";
 		//ud 가 1일 경우 업데이트 2일 경우 딜리트
 		if(ud==1) {
-			query ="update reviewboard_comment set rb_comment_content = '[삭제된 댓글 입니다.]' where rb_comment_no = ? and rb_ref = ?";
+			query ="update reviewboard_comment set rb_comment_content = '[삭제된 댓글 입니다.]',rb_comment_delflag='Y' where rb_comment_no = ? and rb_ref = ?";
 		}else if(ud==2) {
 			query ="delete from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
 		}
@@ -1723,6 +1733,7 @@ public class DAO {
 			}
 			return list;
 		}
+
 	/**
 	 * 작성자 : 김은찬
 	 * 41. 이메일을 통해 아이디 찾아보리기
@@ -1737,6 +1748,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+
 			pstmt.setString(1, userEmail);
 			rset = pstmt.executeQuery();
 			
@@ -1774,6 +1786,7 @@ public class DAO {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			rset = pstmt.executeQuery();
+
 			while(rset.next())
 			{
 				ReviewBoardDTO rb = new ReviewBoardDTO();
@@ -1797,11 +1810,99 @@ public class DAO {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
+
 				System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
 				e.printStackTrace();
 			}
 		}		
 		return rbList;
 	}
+	
+	/*
+	 * 43. 작성자 : 김민우
+	 * 내용 : 한 줄 리뷰 등록
+	 */
+
+	public int insertOneLineRV(String userId, double starScore, String oneLineRV, String isbn13) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into onelinereview(no, isbn, content, starScore, userId) values(seq_oneLine.nextval, ?, ?, ?, ?)";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, isbn13);
+			pstmt.setString(2, oneLineRV);
+			pstmt.setDouble(3, starScore);
+			pstmt.setString(4, userId);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return result;
+	}
+	
+	/*
+	 * 44. 작성자 : 김민우
+	 * 내용 : 한 줄 리뷰 전체 조회
+	 */
+
+	public List<OneLineReviewDTO> selectAllOneLineRV() {
+		List<OneLineReviewDTO> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from onelinereview where delflag = 'N'";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			while(rset.next()) {
+				OneLineReviewDTO o = new OneLineReviewDTO();
+				o.setNo(rset.getInt("no"));
+				o.setIsbn(rset.getString("isbn"));
+				o.setContent(rset.getString("content"));
+				o.setStarScore(rset.getDouble("starScore"));
+				o.setUserId(rset.getString("userId"));
+				o.setNow(rset.getDate("now"));
+				o.setDelFlag(rset.getString("delFlag"));
+				
+				list.add(o);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+						
+		return list;
+		}
+	
 }
 
