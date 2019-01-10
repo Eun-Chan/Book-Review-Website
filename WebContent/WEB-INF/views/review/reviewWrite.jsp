@@ -11,8 +11,10 @@
 	<% } %>
 $(function(){
 	
-	
-		
+	//이미지 고고띵
+	$(document).on('click','.se2_mntxt',function(){
+		console.log("하이루");
+	})
 	
 	// 스마트에디터용 시작
 	var oEditors = [];

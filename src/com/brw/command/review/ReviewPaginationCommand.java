@@ -1,5 +1,6 @@
 package com.brw.command.review;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,11 @@ public class ReviewPaginationCommand implements Command {
 		
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 10;
+		List<ReviewBoardDTO> list = new ArrayList<>();
 		
 		// 페이징용 리뷰리스트 가져오기
-		List<ReviewBoardDTO> list = dao.reivewPagination(cPage, numPerPage);
+		list = dao.reivewPagination(cPage, numPerPage);
+
 		// 각 게시글에 대한 댓글 개수 가져오기
 		for(int i=0; i<list.size(); i++) {
 			int commentCnt = dao.getComment(list.get(i).getRbNo());
@@ -51,36 +54,37 @@ public class ReviewPaginationCommand implements Command {
 		
 		// bootstrap 처리위해 리스트로 처리
 		String pageBar = "<ul class='pagination'>";
-		
-		// [이전] 이전
-		if(pageNo == 1) {
-			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
-		}
-		else {
-			pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + (pageNo-1)
-						+ "'>이전</a></li>";
-		}
-		
-		// 페이지 숫자 영역
-		while(!(pageNo > endPage || pageNo > totalPages)) {
-			if(pageNo == cPage) {
-				pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
+			
+			// [이전] 이전
+			if(pageNo == 1) {
+				pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + pageNo
-						+ "'>" + pageNo + "</a></li>";
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + (pageNo-1)
+							+ "'>이전</a></li>";
 			}
-			pageNo++;
-		}
-
-		// [다음] 영역
-		if(pageNo > totalPages) {
-			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
-		}
-		else {
-			pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" 
-						+ pageNo + "'>다음</a>";
-		}
+			
+			// 페이지 숫자 영역
+			while(!(pageNo > endPage || pageNo > totalPages)) {
+				if(pageNo == cPage) {
+					pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
+				}
+				else {
+					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + pageNo
+							+ "'>" + pageNo + "</a></li>";
+				}
+				pageNo++;
+			}
+	
+			// [다음] 영역
+			if(pageNo > totalPages) {
+				pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
+			}
+			else {
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" 
+							+ pageNo + "'>다음</a>";
+			}
+	
 		
 		pageBar += "</ul>";
 		

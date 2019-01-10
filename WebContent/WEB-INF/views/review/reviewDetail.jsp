@@ -17,14 +17,17 @@
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
 	<div id ="reviewDetail">
 		<div id ="reviewDetail-Header">
-			<span id="date">작성일 : <%=review.getRbDate() %></span>
+			<span id="date"><%=review.getRbDate() %></span>
 			<span id="comment">댓글 : <%=count %></span>
 		</div>
 		<div id ="reviewDetail-Title">
-			<span>[리뷰]<%=review.getRbTitle() %></span>
+			<h2>
+				<span>[리뷰]</span>
+				<span><%=review.getRbTitle() %></span>
+			</h2>
 		</div>
 		<div id="reviewDetail-Writer">
-			<span id="booktitle">제목 : <%=review.getRbBookTitle() %> </span>
+			<span id="booktitle">도서명 : <%=review.getRbBookTitle() %> </span>
 	       <div id="start-Container">
 	       <div class="starRev0">
 			  <span class="starR1 on" id="star0"></span>
@@ -41,7 +44,7 @@
 			   <span>(<%=review.getRbStarscore()%>점)</span>
 			</div>
 			 
-			</div>
+		</div>
 			
 			<span>작성자 : <%=review.getRbWriter() %></span>
 			<hr />
@@ -78,6 +81,12 @@
 			</ul>
 		</div>
 		<div id ="comment-Content">
+		<div id="comment-menu">
+			<h5>댓글<strong>(<%=count %>)</strong></h5>
+<!-- 			<ul id="comment-submenu">
+				<li>등록순&nbsp;</li><li>| 최신순</li>
+			</ul> -->
+		</div>
 		<%if(reviewComment!=null) {%>
 			<%for(ReviewBoardComment rbc : reviewComment){ %>
 			<div id="comment-list" class ="comment-list<%=rbc.getRbCommentNo() %>">
@@ -86,33 +95,53 @@
 					<li>
 						<div id="comment-html">
 							<div id="comment-header">
-								<span><%=rbc.getRbCommentWriter() %></span>
-								<span style="font-size:0.8em;"><%=rbc.getRbCommentDate() %></span>
+								<span class="comment-writer<%=rbc.getRbCommentNo()%>"><%=rbc.getRbCommentWriter() %></span>
+								<input type="hidden" class="comment-writerval" value=<%=rbc.getRbCommentNo()%>>
+								<span style="font-size:0.7em;">(<%=rbc.getRbCommentDate() %>)</span>
 							</div>
 							<div id ="comment-body">
-								<span id="review-con"><%=rbc.getRbCommentContent() %></span>
+								<%if(rbc.getRbCommentDelflag().equals("N")){ %>
+									<span id="review-con"><%=rbc.getRbCommentContent() %></span>
+								<%}else{%>
+									<span id="review-con" class="del"><%=rbc.getRbCommentContent() %></span>
+								<%} %>
 							</div>
 							<%if(user!=null && (user.getUserId().equals(rbc.getRbCommentWriter()) || user.getUserId().equals("admin"))){ %>
-							<button class="comment-delete" value="<%=rbc.getRbCommentNo()%>" id="comment-delete<%=rbc.getRbCommentNo()%>">
-								[삭제]
-							</button>
-							<%} %>
+								<%if(rbc.getRbCommentDelflag().equals("N")){ %>
+									<button class="comment-delete" value="<%=rbc.getRbCommentNo()%>" id="comment-delete<%=rbc.getRbCommentNo()%>">
+										[삭제]
+									</button>
+								<%} %>
 							<button class="comment-recomment" value="<%=rbc.getRbCommentNo()%>"> 
 								[답글]
 							</button>
+							<%} %>
 						</div>
 					</li>
 				</ul>
+				<script>
+					$(".comment-writer<%=rbc.getRbCommentNo()%>").click(function(e){
+						var x = $(this).position().top+20;
+						var y = $(this).position().left+25;
+						console.log(x,y);
+						$("#hide-div").css("visibility","visible");
+						$("#hide-div").css("top",x).css("left",y);
+						$("#hide-div").append("<input type='hidden' id='Writer'value='<%=rbc.getRbCommentWriter()%>'>");
+					})
+				</script>
 		<%if(reviewReComment!=null) {%>
 			<%for(ReviewBoardComment rbrc : reviewReComment) {%>
 				<%if(rbrc.getRbCommentRef()==rbc.getRbCommentNo()) {%>
+					<div id="comment-enter">
+						<img src="<%=request.getContextPath() %>/images/enter.png" alt="" />
+					</div>
 					<div id ="recomment-list">
 						<ul>
 							<li>
 								<div id="recomment-html">
 									<div id="recomment-header">
 										<span><%=rbrc.getRbCommentWriter() %></span>
-										<span><%=rbrc.getRbCommentDate() %></span>
+										<span style="font-size:0.7em;">(<%=rbrc.getRbCommentDate() %>)</span>
 									</div>
 									<div id="recomment-body">
 											<span><%=rbrc.getRbCommentContent() %></span>
@@ -142,9 +171,34 @@
 				</tr>
 			</table>
 		</div>
+		<div id="hide-div">
+			<ul>
+				<li>
+					<a href="#" id="nameSearch">이름으로 검색하기</a>
+				</li>
+				<li>
+					<span>닫기</span>
+				</li>
+			</ul>
+		</div>
 	</div>
 
 	<script>
+		//이름으로 검색하기 클릭시 처리
+		$("#nameSearch").click(function(){
+			var rbCommentWriter = $("#Writer").val();
+			location.href="<%=request.getContextPath()%>/review/reviewSearch.do?searchType=rb_writer&searchKeyword="+rbCommentWriter;
+		});
+		
+		//도서명 클릭시 도서 상세정보로 가기
+		$("#booktitle").click(function(){
+			var search = confirm("해당 도서 상세보기로 이동하시겠습니까?");
+			if(search){
+				location.href="<%=request.getContextPath()%>/book/bookInfo.do?isbn13=<%=review.getRbIsbn()%>";
+			}
+		});
+		
+		
 		var result = 0;
 		var starscore = <%=review.getRbStarscore()%>
 		$(function(){
@@ -174,7 +228,7 @@
 							var html ="";
 							if(data!=null){
 								html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
-								html+= "<div id='comment-body'><span>"+data.rbCommentContent+"</span></div>";
+								html+= "<div id='comment-body'><span id='review-con'>"+data.rbCommentContent+"</span></div>";
 								html+= "<button class='comment-delete' value="+data.rbCommentNo+">[삭제]</button>";
 								html+= "<button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
 								div.append(html);
@@ -187,7 +241,7 @@
 			}
 		});
 
-		$(document).on('click','.comment-recomment',function(){
+		$(document).one('click','.comment-recomment',function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
 				return;
@@ -226,11 +280,13 @@
 						console.log("에이잭스실행완료");
 						var divs =$("<div id='recomment-list' class='recomment-list"+data.rbCommentNo+"'></div>");
 						var htmls ="";
+						var imgs = $("<div id='comment-enter'><img src='<%=request.getContextPath()%>/images/enter.png'/></div>");
 						if(data!=null){
 							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
 							htmls+= "<div id='recomment-body'><span>"+data.rbCommentContent+"</span></div></div></li></ul>";
 						}
 						divs.append(htmls);
+						$("#recomment-area").parents("#comment-list").append(imgs);
 						$("#recomment-area").parents("#comment-list").append(divs);
 						$(".recomment-Area").remove();
 						console.log(data);
@@ -294,8 +350,10 @@
 						if(data==2){
 							$(".comment-list"+brNo).remove();	
 						}
-						else if(data==1){
-							$("#review-con").html("[삭제된 댓글입니다.]");
+						if(data==1){
+							$(".comment-list"+brNo+" #review-con").html("<span id='review-con' class='del'>[삭제된 댓글 입니다.]</span>");
+							$(".comment-list"+brNo+" .comment-delete").remove();
+							/* $("#review-con").html("[삭제된 댓글입니다.]"); */
 							$("#review-con").addClass("del");
 						}
 					}		
@@ -303,4 +361,5 @@
 			}
 		});
 	</script>
+
 <%-- <%@ include file="/WEB-INF/views/common/footer.jsp" %> --%>
