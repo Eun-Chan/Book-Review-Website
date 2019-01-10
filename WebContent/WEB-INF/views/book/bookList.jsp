@@ -2,7 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %> 
 <%@ include file="/WEB-INF/views/common/categoryMenu.jsp" %>
-
+<%
+	String searchval = request.getParameter("searchVal");
+	String searchType = request.getParameter("searchType");
+%>
 <title>bookList</title>
 <script src = "<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
@@ -13,18 +16,18 @@
 	
 	<div id="finder">
 		<!-- 검색 select태그 -->
-		<div id="search-container">
+		<!-- <div id="search-container">
 			<form id="frm">
 				검색타입 :
 				<select id="searchType">
 					<option value="title">제목</option>
 					<option value="author">저자</option>
 				</select>		
-				<!-- 검색 input태그 -->
+				검색 input태그
 				<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요."/>
 				<input type="button" value="검색" id="btn-search"/>
 			</form>		
-		</div>
+		</div> -->
 	<div id="totalContent"></div>
 	<div id="bookListContainer"></div>
 	
@@ -44,11 +47,15 @@ table th{
 <script>
 
 	var cPage;//현제 페이지
-	var searchVal = "";
-	var searchType = "";
+	var searchVal = "<%=searchval%>";
+	var searchType = "<%=searchType%>";
 	var pageBar = "";
 	var CID = "";//카테고리 넘버를 가져오기 위한 변수
 
+	$(document).ready(function(){
+		test111(cPage);
+	});
+	
 	$("#btn-search").click(function(){	
 		cPage = 1;
 		searchVal = $("input#search").val();
@@ -79,6 +86,8 @@ table th{
 		
 		console.log(data);
 		
+		
+		
 		var table = $("<table class='table'><tr><th>표지</th><th>책제목</th><th>내용</th><th>작가</th><th style='width:95px'>출판일</th><th>정가</th></tr></table>");
 		var numPerPage = 10;
 		var totalResults = data.totalResults;//검색 결과 총 수
@@ -90,15 +99,16 @@ table th{
 		var pageNo = startPage;//출력될 페이지 번호
 		
 		//도서정보 리스트 출력부
-		console.log("isbn13!!!",data.item[0].isbn13);
 		for(var i in data.item) {
 			var book  = data.item[i];
+				
 			var html = "<tr><td>"+"<img src ='"+book.cover+"'></td>";
 			html += "<td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'>"+book.title+"</td>";
 			html += "<td>"+book.description+"</td>";
 			html += "<td>"+book.author+"</td>";
 			html += "<td>"+book.pubDate+"</td>";
 			html += "<td>"+book.priceStandard+"</td></tr>";	
+			
 			table.append(html);
 		}
 		$("#totalContent").html("<span>"+totalResults+"건의 검색결과 중 "+cPage+" 페이지</span>");
