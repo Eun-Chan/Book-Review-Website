@@ -14,8 +14,8 @@ import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookOneLineRVCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.bookBasketCommand;
-import com.brw.command.book.checkedBasketCommand;
+import com.brw.command.book.BookBasketCommand;
+import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -255,7 +255,7 @@ public class FrontController extends HttpServlet {
 	    }
 		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
 	    else if(command.equals("/book/bookbasket.do")) {
-	    	com = new bookBasketCommand();
+	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
@@ -279,7 +279,7 @@ public class FrontController extends HttpServlet {
 		 * 26.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
-	    	com = new checkedBasketCommand();
+	    	com = new CheckedBasketCommand();
 	    	com.execute(req, res);
 	    }
 
