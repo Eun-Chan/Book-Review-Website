@@ -246,6 +246,12 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/book/showbasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
+		/*22. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
+	    else if(command.equals("/review/reviewWriteImage.do")) {
+	    	com = new ReviewWriteImage();
+	    	com.execute(req, res);
+	    }
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
