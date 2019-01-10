@@ -1428,7 +1428,6 @@ public class DAO {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, bookIsbn_Array[i]);
-				System.out.println("조회 : " + bookIsbn_Array[i]);
 				rset = pstmt.executeQuery();
 				rset.next();
 				

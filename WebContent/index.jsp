@@ -332,6 +332,7 @@ function reloadBookInfo(searchUrl){
 	    dataType: "jsonp",
 	    success:function(data)
 	    {	
+	    	console.log(data);
 	    	/* 책 정보 파싱 >> 리스트 */
 	    	var bookList = [];
 	    	
@@ -426,7 +427,7 @@ $('#indexForm').ready(function(){
 		           	$("input#rbNo"+i).text(data[0][i].rbNo);
 		           	
 		           	/* 인기 리뷰 */
-		           	$("td#best-bookName"+i).text((data[2][i].rbBookTitle).length > 10?(data[0][i].rbBookTitle).substr(0,10)+"…":(data[0][i].rbBookTitle));
+		           	$("td#best-bookName"+i).text((data[2][i].rbBookTitle).length > 10?(data[2][i].rbBookTitle).substr(0,10)+"…":(data[2][i].rbBookTitle));
 		            $("td#best-writer"+i).text(data[2][i].rbWriter);
 		            $("td#best-rbTitle"+i).text(data[2][i].rbTitle);
 		           	$("td#best-readCnt"+i).text(data[2][i].rb_readCnt);
