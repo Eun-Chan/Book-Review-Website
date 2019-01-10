@@ -88,7 +88,8 @@ public class UserDTO implements Serializable {
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", userPassword=" + userPassword + ", userName=" + userName
 				+ ", userEmail=" + userEmail + ", userNickName=" + userNickName + ", userGrade=" + userGrade
-				+ ", userLevel=" + userPoint + "]";
+				+ ", userPoint=" + userPoint + "]";
+
 	}
 
 	
