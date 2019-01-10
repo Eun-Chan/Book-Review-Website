@@ -53,14 +53,14 @@ table th{
 	var CID = "";//카테고리 넘버를 가져오기 위한 변수
 
 	$(document).ready(function(){
-		test111(cPage);
+		bookSearch(cPage);
 	});
 	
 	$("#btn-search").click(function(){	
 		cPage = 1;
 		searchVal = $("input#search").val();
 		searchType = $("#searchType").val();
-		test111(cPage);	
+		bookSearch(cPage);	
 	});
 
 	$("form").on("submit", function(event){
@@ -68,10 +68,10 @@ table th{
 		cPage = 1;
 		searchVal = $("input#search").val();
 		searchType = $("#searchType").val();
-		test111(cPage);	
+		bookSearch(cPage);	
 	});
-	
-	function test111(pageNo){
+	//알라딘 open api를 사용하여 검색하는 함수
+	function bookSearch(pageNo){
 		cPage = pageNo;
 		$.ajax({
 			url : "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbkmw71511428001&SearchTarget=Book&Query="+searchVal
@@ -80,7 +80,7 @@ table th{
 			dataType: "jsonp"
 		});
 	}
-
+	//ajax로 불러온 리스트 값을 출력하는 함수
 	function bookListDisplay(success, data) {
 		$("div#pageBar span, div#pageBar a").remove();
 		
@@ -122,7 +122,7 @@ table th{
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 	    }
 	    else {
-	        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='test111("+(pageNo-1)+")'>이전</a></li>";
+	        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='bookSearch("+(pageNo-1)+")'>이전</a></li>";
 	    }
 	        
 		//[페이지] section
@@ -132,7 +132,7 @@ table th{
 	            pageBar += "<li class='page-item active'><a class='page-link' href='#'><span class='cPage'>"+pageNo+"</span></a></li> ";
 	        }
 	        else {
-	            pageBar += "<li class='page-item'><a class='page-link' onclick='test111("+pageNo+")'>"+pageNo+"</a></li> ";
+	            pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>"+pageNo+"</a></li> ";
 	        }
 	        pageNo++;
 	    }
@@ -141,7 +141,7 @@ table th{
 	    if(pageNo > totalPage){
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
 	    } else {
-	        pageBar += "<li class='page-item'><a class='page-link' onclick='test111("+pageNo+")'>다음</a></li>";
+	        pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>다음</a></li>";
 	    }
 	    
 	    $("div#pageBar").append(pageBar);
