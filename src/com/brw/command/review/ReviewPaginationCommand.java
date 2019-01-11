@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
-import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardViewDTO;
 
 /*
  * 작성자 : 정명훈
@@ -30,7 +30,7 @@ public class ReviewPaginationCommand implements Command {
 		
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 10;
-		List<ReviewBoardDTO> list = new ArrayList<>();
+		List<ReviewBoardViewDTO> list = new ArrayList<>();
 		
 		// 페이징용 리뷰리스트 가져오기
 		list = dao.reivewPagination(cPage, numPerPage);

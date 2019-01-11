@@ -1,7 +1,6 @@
 package com.brw.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +17,8 @@ import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
-import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
+import com.brw.dto.ReviewBoardViewDTO;
+import com.brw.dto.UserDTO;
 
 public class DAO {
 	
@@ -150,13 +150,13 @@ public class DAO {
 	 * 작성자 : 정명훈
 	 * 내용 : 리뷰리스트 페이징
 	 */
-	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
-		List<ReviewBoardDTO> list = null;
+	public List<ReviewBoardViewDTO> reivewPagination(int cPage, int numPerPage) {
+		List<ReviewBoardViewDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -170,28 +170,34 @@ public class DAO {
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewBoardDTO rb = new ReviewBoardDTO();
+				ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
 				
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("rb_date"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbReport(rset.getInt("rb_report"));
-				rb.setRbWriterNickName(rset.getString("rb_writer_nickname"));
+				// 리뷰보드DTO에 있는 것들
+				rbv.setRbNo(rset.getInt("rb_no"));
+				rbv.setRbTitle(rset.getString("rb_title"));
+				rbv.setRbWriter(rset.getString("rb_writer"));
+				rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+				rbv.setRbContent(rset.getString("rb_content"));
+				rbv.setRbStarscore(rset.getInt("rb_starscore"));
+				rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rbv.setRbRecommend(rset.getInt("rb_recommend"));
+				rbv.setRbReport(rset.getInt("rb_report"));
 				
+				// 리뷰보드뷰DTO에 있는 것들
+				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
-				boolean isDateNew = false;
 				if(passingTime <= 1) {
-					isDateNew = true;
+					dateNew = true;
+					rbv.setRbDate(rset.getString("datenew"));
 				}
-				rb.setIsDateNew(isDateNew);
+				else {
+					rbv.setRbDate(rset.getString("strdate"));
+				}
+				rbv.setDateNew(dateNew);
+				rbv.setUserNickName(rset.getString("usernickname"));
+				rbv.setUserGrade(rset.getInt("usergrade"));
 				
-				list.add(rb);
+				list.add(rbv);
 			}
 			
 		} catch (SQLException e) {
@@ -253,13 +259,13 @@ public class DAO {
 	 * 작성자 : 정명훈
 	 * 내용 : 리뷰검색 리스트 페이징
 	 */
-	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
-		List<ReviewBoardDTO> list = null;
+	public List<ReviewBoardViewDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
+		List<ReviewBoardViewDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -275,28 +281,32 @@ public class DAO {
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewBoardDTO rb = new ReviewBoardDTO();
+				ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
 				
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("strdate"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbReport(rset.getInt("rb_report"));
-				rb.setRbWriterNickName(rset.getString("rb_writer_nickname"));
+				rbv.setRbNo(rset.getInt("rb_no"));
+				rbv.setRbTitle(rset.getString("rb_title"));
+				rbv.setRbWriter(rset.getString("rb_writer"));
+				rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+				rbv.setRbContent(rset.getString("rb_content"));
+				rbv.setRbStarscore(rset.getInt("rb_starscore"));
+				rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rbv.setRbRecommend(rset.getInt("rb_recommend"));
+				rbv.setRbReport(rset.getInt("rb_report"));
 				
+				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
-				boolean isDateNew = false;
 				if(passingTime <= 1) {
-					isDateNew = true;
+					dateNew = true;
+					rbv.setRbDate(rset.getString("datenew"));
 				}
-				rb.setIsDateNew(isDateNew);
+				else {
+					rbv.setRbDate(rset.getString("strdate"));
+				}
+				rbv.setDateNew(dateNew);
+				rbv.setUserNickName(rset.getString("usernickname"));
+				rbv.setUserGrade(rset.getInt("usergrade"));
 				
-				list.add(rb);
+				list.add(rbv);
 			}
 			
 		} catch (SQLException e) {
@@ -327,7 +337,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -1139,8 +1149,8 @@ public class DAO {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore,rb_writer_nickname) " + 
-						"values (seq_review_no.nextval,?,?,?,?,?,?,?)";
+		String query = "insert into reviewboard (rb_no,rb_booktitle,rb_title,rb_writer,rb_isbn,rb_content,rb_starscore) " + 
+						"values (seq_review_no.nextval,?,?,?,?,?,?)";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1151,7 +1161,6 @@ public class DAO {
 			pstmt.setString(4, rb.getRbIsbn());
 			pstmt.setString(5, rb.getRbContent());
 			pstmt.setDouble(6, rb.getRbStarscore());
-			pstmt.setString(7, rb.getRbWriterNickName());
 			
 			result = pstmt.executeUpdate();
 			
