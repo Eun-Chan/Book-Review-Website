@@ -372,9 +372,9 @@ public class DAO {
 	 * 작성자 : 장선웅
 	 * 내용 : 게시판 디테일 
 	 */
-	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
+	public ReviewBoardViewDTO getReviewSelectOne(int reviewNo) {
 		Connection conn = null;
-		ReviewBoardDTO review = null;
+		ReviewBoardViewDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
 		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
@@ -385,7 +385,7 @@ public class DAO {
 
 			res = pstmt.executeQuery();
 			if(res.next()) {
-				review = new ReviewBoardDTO();
+				review = new ReviewBoardViewDTO();
 				review.setRbNo(res.getInt("rb_no"));
 				review.setRbTitle(res.getString("rb_title"));
 				review.setRbWriter(res.getString("rb_writer"));
@@ -396,6 +396,8 @@ public class DAO {
 				review.setRbReadCnt(res.getInt("rb_readcnt"));
 				review.setRbRecommend(res.getInt("rb_recommend"));
 				review.setRbStarscore(res.getDouble("rb_starscore"));
+				review.setUserNickName(res.getString("usernickname"));
+				review.setUserGrade(res.getInt("usergrade"));
 				int rb_readcnt = res.getInt("rb_readcnt");
 				review.setRbReadCnt(rb_readcnt);
 				rb_readcnt++;

@@ -6,7 +6,7 @@
 <%
 	
 	//해당 글번호에 맞는 selectOne
- 	ReviewBoardDTO review = (ReviewBoardDTO)request.getAttribute("review");
+ 	ReviewBoardViewDTO review = (ReviewBoardViewDTO)request.getAttribute("review");
 
 	//해당 글번호에 맞는 댓글리스트
 	List<ReviewBoardComment> reviewComment = (List<ReviewBoardComment>)request.getAttribute("reviewComment");
@@ -62,8 +62,7 @@
 			</div>
 			 
 		</div>
-			
-			<span>작성자 : <%=review.getRbWriterNickName() %></span>
+			<span>작성자 : <img src="<%=request.getContextPath() %>/imags/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" /><%=review.getUserNickName() %></span>
 		</div>
 		<hr id="bs_hr">
 		<div id ="reviewDetail-Content">
