@@ -1,0 +1,83 @@
+/* 메뉴바 */
+/* 기호제거 */
+ul.navbar-nav
+{
+	list-style:none;
+    padding-left:0px;
+    margin-right: 5%;
+}
+	
+/* 텍스트 */
+a.navbar-brand
+{
+	color: lightgray;	
+}
+a.navbar-brand:hover
+{
+	color: white;	
+}
+/* 메뉴 */
+#searchType
+{
+	margin: 0 auto;
+}
+li.nav-item
+{
+	margin-top: 8%;
+}
+ul#navbar-menu
+{
+	margin-left: 3%;
+	float: right;
+	margin-bottom: 1%;
+}
+ul.nav navbar-nav navbar-right
+{
+	margin: 0 auto;
+}
+#loginBtn-Li
+{
+	margin-top: 8%;
+}
+/* 검색 */
+#search
+{
+	width: 40%;
+	height: 40px;
+	border: 3px solid #286aa3;
+}
+#navMenu
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+ul#navbar-menu
+{
+	display: flex;
+	align-items: center;
+}
+
+.search-btn {
+    height: 30px;
+    right: 0;
+    top: 5px;
+    border-radius:1px;
+}
+#frm
+{
+	width: 30%;
+	margin: 0 auto;
+}
+
+/* #btn-search
+{
+	height: 40px;
+	float: left;
+  	padding: 10px;
+  	background: #2196F3;
+  	color: white;
+  	font-size: 17px;
+  	border-left: none; Prevent double borders
+  	cursor: pointer;
+} */
