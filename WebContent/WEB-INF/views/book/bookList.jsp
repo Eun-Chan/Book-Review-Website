@@ -46,21 +46,21 @@ table th{
 </style>	
 <script>
 
-	var cPage;//현제 페이지
+	var cPage = 1;//현제 페이지
 	var searchVal = "<%=searchval%>";
 	var searchType = "<%=searchType%>";
 	var pageBar = "";
 	var CID = "";//카테고리 넘버를 가져오기 위한 변수
 
 	$(document).ready(function(){
-		test111(cPage);
+		bookSearch(cPage);
 	});
 	
 	$("#btn-search").click(function(){	
 		cPage = 1;
 		searchVal = $("input#search").val();
 		searchType = $("#searchType").val();
-		test111(cPage);	
+		bookSearch(cPage);	
 	});
 
 	$("form").on("submit", function(event){
@@ -68,10 +68,10 @@ table th{
 		cPage = 1;
 		searchVal = $("input#search").val();
 		searchType = $("#searchType").val();
-		test111(cPage);	
+		bookSearch(cPage);	
 	});
-	
-	function test111(pageNo){
+	//알라딘 open api를 사용하여 검색하는 함수
+	function bookSearch(pageNo){
 		cPage = pageNo;
 		$.ajax({
 			url : "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbkmw71511428001&SearchTarget=Book&Query="+searchVal
@@ -80,11 +80,13 @@ table th{
 			dataType: "jsonp"
 		});
 	}
-
+	//ajax로 불러온 리스트 값을 출력하는 함수
 	function bookListDisplay(success, data) {
 		$("div#pageBar span, div#pageBar a").remove();
 		
 		console.log(data);
+		
+		
 		
 		var table = $("<table class='table'><tr><th>표지</th><th>책제목</th><th>내용</th><th>작가</th><th style='width:95px'>출판일</th><th>정가</th></tr></table>");
 		var numPerPage = 10;
@@ -97,15 +99,16 @@ table th{
 		var pageNo = startPage;//출력될 페이지 번호
 		
 		//도서정보 리스트 출력부
-		console.log("isbn13!!!",data.item[0].isbn13);
 		for(var i in data.item) {
 			var book  = data.item[i];
+				
 			var html = "<tr><td>"+"<img src ='"+book.cover+"'></td>";
 			html += "<td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'>"+book.title+"</td>";
 			html += "<td>"+book.description+"</td>";
 			html += "<td>"+book.author+"</td>";
 			html += "<td>"+book.pubDate+"</td>";
 			html += "<td>"+book.priceStandard+"</td></tr>";	
+			
 			table.append(html);
 		}
 		$("#totalContent").html("<span>"+totalResults+"건의 검색결과 중 "+cPage+" 페이지</span>");
@@ -119,7 +122,7 @@ table th{
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 	    }
 	    else {
-	        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='test111("+(pageNo-1)+")'>이전</a></li>";
+	        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='bookSearch("+(pageNo-1)+")'>이전</a></li>";
 	    }
 	        
 		//[페이지] section
@@ -129,7 +132,7 @@ table th{
 	            pageBar += "<li class='page-item active'><a class='page-link' href='#'><span class='cPage'>"+pageNo+"</span></a></li> ";
 	        }
 	        else {
-	            pageBar += "<li class='page-item'><a class='page-link' onclick='test111("+pageNo+")'>"+pageNo+"</a></li> ";
+	            pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>"+pageNo+"</a></li> ";
 	        }
 	        pageNo++;
 	    }
@@ -138,7 +141,7 @@ table th{
 	    if(pageNo > totalPage){
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
 	    } else {
-	        pageBar += "<li class='page-item'><a class='page-link' onclick='test111("+pageNo+")'>다음</a></li>";
+	        pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>다음</a></li>";
 	    }
 	    
 	    $("div#pageBar").append(pageBar);

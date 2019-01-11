@@ -5,7 +5,7 @@
 
 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <style>
-div#category-container{
+#category-container{
 	border: 1px solid gray;
 	border-radius: 10px;
 	max-width: 180px;
@@ -14,14 +14,45 @@ div#category-container{
 	margin-top: 10px;
 	margin-left:5px;
 	cursor: pointer;
-	display: inline-block;
+	display: block;
 	float: left;
 	position: absolute;
 }
-div#category-container a{
+#category-container a{
 	color: white;
 }
+#category-container ul {
+	padding:10px;
+}
+#category-container ul li {
+	list-style:none;
+}
+
+#open-category {
+	display:none;
+}
+.open {
+	display:block;
+}
+
+@media (max-width: 768px) {
+	#open-category {
+		display:inline-block;
+	}
+	#category-container {
+		display: none;
+	}
+	.open {
+		display: block!important;
+		position:absolute;
+	}
+	#bookListContainer{
+		width:100%;	
+	}
+	div#finder {margin:0!important; }
+}
 </style>
+	<a id="open-category" class="btn">카테고리 펼치기</a>
 
 	<div id="category-container">
 		<ul>
@@ -57,3 +88,8 @@ div#category-container a{
 			<li><a onclick="moveCategoryView(351)">컴퓨터/모바일</a></li>
 		</ul>
 	</div>
+<script>
+	$("#open-category").click(function(){
+		$("#category-container").toggleClass("open");
+	});
+</script>

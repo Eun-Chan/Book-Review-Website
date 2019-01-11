@@ -1,7 +1,6 @@
 package com.brw.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,10 +13,12 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.brw.dto.BookBasketDTO;
+import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
-import com.brw.dto.UserDTO;import sun.security.krb5.internal.ccache.CCacheOutputStream;
+import com.brw.dto.ReviewBoardViewDTO;
+import com.brw.dto.UserDTO;
 
 public class DAO {
 	
@@ -49,7 +50,7 @@ public class DAO {
 	 */
 	public void createUser(UserDTO user) throws SQLException {
 		int result = 0;
-		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
+		String query = "insert into tempUserTable(userid,userpassword,username,useremail,userNickName,userPoint,userGrade) values(?,?,?,?,?,default,default)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -65,6 +66,7 @@ public class DAO {
 			pstmt.setString(2, user.getUserPassword());
 			pstmt.setString(3, user.getUserName());
 			pstmt.setString(4, user.getUserEmail());
+			pstmt.setString(5, user.getUserNickName());
 			
 			result = pstmt.executeUpdate();
 			
@@ -148,13 +150,13 @@ public class DAO {
 	 * 작성자 : 정명훈
 	 * 내용 : 리뷰리스트 페이징
 	 */
-	public List<ReviewBoardDTO> reivewPagination(int cPage, int numPerPage) {
-		List<ReviewBoardDTO> list = null;
+	public List<ReviewBoardViewDTO> reivewPagination(int cPage, int numPerPage) {
+		List<ReviewBoardViewDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -168,29 +170,34 @@ public class DAO {
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewBoardDTO rb = new ReviewBoardDTO();
+				ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
 				
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("rb_date"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
-				rb.setRbReport(rset.getInt("rb_report"));
+				// 리뷰보드DTO에 있는 것들
+				rbv.setRbNo(rset.getInt("rb_no"));
+				rbv.setRbTitle(rset.getString("rb_title"));
+				rbv.setRbWriter(rset.getString("rb_writer"));
+				rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+				rbv.setRbContent(rset.getString("rb_content"));
+				rbv.setRbStarscore(rset.getInt("rb_starscore"));
+				rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rbv.setRbRecommend(rset.getInt("rb_recommend"));
+				rbv.setRbReport(rset.getInt("rb_report"));
 				
+				// 리뷰보드뷰DTO에 있는 것들
+				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
-				boolean isDateNew = false;
 				if(passingTime <= 1) {
-					isDateNew = true;
+					dateNew = true;
+					rbv.setRbDate(rset.getString("datenew"));
 				}
-				rb.setIsDateNew(isDateNew);
+				else {
+					rbv.setRbDate(rset.getString("strdate"));
+				}
+				rbv.setDateNew(dateNew);
+				rbv.setUserNickName(rset.getString("usernickname"));
+				rbv.setUserGrade(rset.getInt("usergrade"));
 				
-				list.add(rb);
+				list.add(rbv);
 			}
 			
 		} catch (SQLException e) {
@@ -252,13 +259,13 @@ public class DAO {
 	 * 작성자 : 정명훈
 	 * 내용 : 리뷰검색 리스트 페이징
 	 */
-	public List<ReviewBoardDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
-		List<ReviewBoardDTO> list = null;
+	public List<ReviewBoardViewDTO> reivewSearch(String searchType, String searchKeyword, int cPage, int numPerPage) {
+		List<ReviewBoardViewDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI:SS') as strdate, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -274,29 +281,32 @@ public class DAO {
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewBoardDTO rb = new ReviewBoardDTO();
+				ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
 				
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("strdate"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
-				rb.setRbReport(rset.getInt("rb_report"));
+				rbv.setRbNo(rset.getInt("rb_no"));
+				rbv.setRbTitle(rset.getString("rb_title"));
+				rbv.setRbWriter(rset.getString("rb_writer"));
+				rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+				rbv.setRbContent(rset.getString("rb_content"));
+				rbv.setRbStarscore(rset.getInt("rb_starscore"));
+				rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rbv.setRbRecommend(rset.getInt("rb_recommend"));
+				rbv.setRbReport(rset.getInt("rb_report"));
 				
+				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
-				boolean isDateNew = false;
 				if(passingTime <= 1) {
-					isDateNew = true;
+					dateNew = true;
+					rbv.setRbDate(rset.getString("datenew"));
 				}
-				rb.setIsDateNew(isDateNew);
+				else {
+					rbv.setRbDate(rset.getString("strdate"));
+				}
+				rbv.setDateNew(dateNew);
+				rbv.setUserNickName(rset.getString("usernickname"));
+				rbv.setUserGrade(rset.getInt("usergrade"));
 				
-				list.add(rb);
+				list.add(rbv);
 			}
 			
 		} catch (SQLException e) {
@@ -327,7 +337,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -362,12 +372,12 @@ public class DAO {
 	 * 작성자 : 장선웅
 	 * 내용 : 게시판 디테일 
 	 */
-	public ReviewBoardDTO getReviewSelectOne(int reviewNo) {
+	public ReviewBoardViewDTO getReviewSelectOne(int reviewNo) {
 		Connection conn = null;
-		ReviewBoardDTO review = null;
+		ReviewBoardViewDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
+		String query = "select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N'  and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -375,16 +385,19 @@ public class DAO {
 
 			res = pstmt.executeQuery();
 			if(res.next()) {
-				review = new ReviewBoardDTO();
+				review = new ReviewBoardViewDTO();
 				review.setRbNo(res.getInt("rb_no"));
 				review.setRbTitle(res.getString("rb_title"));
 				review.setRbWriter(res.getString("rb_writer"));
 				review.setRbBookTitle(res.getString("rb_booktitle"));
+				review.setRbIsbn(res.getString("rb_isbn"));
 				review.setRbContent(res.getString("rb_content"));
 				review.setRbDate(res.getString("rb_date"));
 				review.setRbReadCnt(res.getInt("rb_readcnt"));
 				review.setRbRecommend(res.getInt("rb_recommend"));
 				review.setRbStarscore(res.getDouble("rb_starscore"));
+				review.setUserNickName(res.getString("usernickname"));
+				review.setUserGrade(res.getInt("usergrade"));
 				int rb_readcnt = res.getInt("rb_readcnt");
 				review.setRbReadCnt(rb_readcnt);
 				rb_readcnt++;
@@ -414,7 +427,7 @@ public class DAO {
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default,default,?)";
 		int result = 0;
 		try {
 			conn = dataSource.getConnection();
@@ -422,6 +435,7 @@ public class DAO {
 			pstmt.setString(1, comment.getRbCommentWriter());
 			pstmt.setString(2, comment.getRbCommentContent());
 			pstmt.setInt(3, comment.getRbRef());
+			pstmt.setString(4, comment.getRbCommentWriterNickName());
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -448,7 +462,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date\r\n" + 
+		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date,rb_comment_delflag\r\n" + 
 				"from reviewboard_comment where rb_ref=? and rb_comment_level =1 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
@@ -467,7 +481,7 @@ public class DAO {
 				comment.setRbCommentContent(res.getString("rb_comment_content"));
 				comment.setRbRef(res.getInt("rb_ref"));
 				comment.setRbCommentDate(res.getString("rb_comment_date"));
-				
+				comment.setRbCommentDelflag(res.getString("rb_comment_delflag"));
 				reviewComment.add(comment);
 			}
 			
@@ -760,8 +774,8 @@ public class DAO {
 				rb.setRbStarscore(rset.getInt("rb_starscore"));
 				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
 				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
+//				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
+//				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
 				rb.setRbReport(rset.getInt("rb_report"));
 				
 				list.add(rb);
@@ -901,6 +915,9 @@ public class DAO {
 				userDTO.setUserId(rset.getString("userId"));
 				userDTO.setUserName(rset.getString("userName"));
 				userDTO.setUserEmail(rset.getString("userEmail"));
+				userDTO.setUserNickName(rset.getString("userNickName"));
+				userDTO.setUserGrade(rset.getInt("usergrade"));
+				userDTO.setUserPoint(rset.getInt("userpoint"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -1594,6 +1611,14 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return updateReadCount;
@@ -1613,7 +1638,7 @@ public class DAO {
 		String query = "";
 		//ud 가 1일 경우 업데이트 2일 경우 딜리트
 		if(ud==1) {
-			query ="update reviewboard_comment set rb_comment_content = '[삭제된 댓글 입니다.]' where rb_comment_no = ? and rb_ref = ?";
+			query ="update reviewboard_comment set rb_comment_content = '[삭제된 댓글 입니다.]',rb_comment_delflag='Y' where rb_comment_no = ? and rb_ref = ?";
 		}else if(ud==2) {
 			query ="delete from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
 		}
@@ -1722,6 +1747,7 @@ public class DAO {
 			}
 			return list;
 		}
+
 	/**
 	 * 작성자 : 김은찬
 	 * 41. 이메일을 통해 아이디 찾아보리기
@@ -1736,6 +1762,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+
 			pstmt.setString(1, userEmail);
 			rset = pstmt.executeQuery();
 			
@@ -1773,6 +1800,7 @@ public class DAO {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			rset = pstmt.executeQuery();
+
 			while(rset.next())
 			{
 				ReviewBoardDTO rb = new ReviewBoardDTO();
@@ -1796,11 +1824,138 @@ public class DAO {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
+
 				System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
 				e.printStackTrace();
 			}
 		}		
 		return rbList;
 	}
+	
+	/*
+	 * 43. 작성자 : 김민우
+	 * 내용 : 한 줄 리뷰 등록
+	 */
+
+	public int insertOneLineRV(String userId, double starScore, String oneLineRV, String isbn13) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into onelinereview(no, isbn, content, starScore, userId) values(seq_oneLine.nextval, ?, ?, ?, ?)";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, isbn13);
+			pstmt.setString(2, oneLineRV);
+			pstmt.setDouble(3, starScore);
+			pstmt.setString(4, userId);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return result;
+	}
+	
+	/*
+	 * 44. 작성자 : 김민우
+	 * 내용 : 현재 보고 있는 책에 모든 한 줄 리뷰 조회
+	 */
+
+	public List<OneLineReviewDTO> selectAllOneLineRV(String isbn13) {
+		List<OneLineReviewDTO> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from onelinereview where isbn = ? and delflag = 'N'";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, isbn13);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				OneLineReviewDTO o = new OneLineReviewDTO();
+				o.setNo(rset.getInt("no"));
+				o.setIsbn(rset.getString("isbn"));
+				o.setContent(rset.getString("content"));
+				o.setStarScore(rset.getDouble("starScore"));
+				o.setUserId(rset.getString("userId"));
+				o.setNow(rset.getDate("now"));
+				o.setDelFlag(rset.getString("delFlag"));
+				
+				list.add(o);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+						
+		return list;
+		}
+
+	/* 45. 닉네임 중복 검사*/
+	public int nickNameCheck(String userNickName) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) as cnt from tempusertable where userNickName = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userNickName);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+			System.out.println("dao - cnt = "+result);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 }
 

@@ -1,9 +1,5 @@
 package com.brw.command.review;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +24,7 @@ public class ReviewWriteEndCommand implements Command {
 		String rbContent = request.getParameter("rbContent");
 		String rbIsbn = request.getParameter("rbIsbn");
 		double rbStarscore = Double.parseDouble(request.getParameter("rbStarscore"));
+		
 		// book 테이블 저장용 파라미터
 		String bookAuthor = request.getParameter("bookAuthor");
 		int bookPriceStandard = Integer.parseInt(request.getParameter("bookPriceStandard"));
@@ -35,17 +32,18 @@ public class ReviewWriteEndCommand implements Command {
 		
 		
 		// 객체 확인용
-		System.out.println(rbTitle);
-		System.out.println(rbWriter);
-		System.out.println(rbBookTitle);
-		System.out.println(rbIsbn);
-		System.out.println(rbStarscore);
+//		System.out.println(rbTitle);
+//		System.out.println(rbWriter);
+//		System.out.println(rbBookTitle);
+//		System.out.println(rbIsbn);
+//		System.out.println(rbStarscore);
 		
 		// 가져온 ISBN이 book테이블에 존재하는 지 검사 후 없다면 등록
 		// dao 1번 사용
 		boolean isIsbnExist = dao.isIsbnExist(rbIsbn);
 		
 		if(!isIsbnExist) {
+			// dao 2번 사용
 			int result = dao.insertBook(rbBookTitle, bookAuthor, rbIsbn, bookPriceStandard, bookPublisher);
 			
 			if(result > 0) {
@@ -57,13 +55,7 @@ public class ReviewWriteEndCommand implements Command {
 		}
 		
 		// 객체에 담기
-		ReviewBoardDTO rb = new ReviewBoardDTO();
-		rb.setRbTitle(rbTitle);
-		rb.setRbWriter(rbWriter);
-		rb.setRbBookTitle(rbBookTitle);
-		rb.setRbContent(rbContent);
-		rb.setRbIsbn(rbIsbn);
-		rb.setRbStarscore(rbStarscore);
+		ReviewBoardDTO rb = new ReviewBoardDTO(rbTitle,rbWriter,rbBookTitle,rbIsbn,rbContent,rbStarscore);
 		
 		// dao 갔다오기
 		// dao 3번 사용
