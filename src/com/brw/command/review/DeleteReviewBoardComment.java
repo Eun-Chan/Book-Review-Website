@@ -32,10 +32,13 @@ public class DeleteReviewBoardComment implements Command{
 		DAO dao = DAO.getInstance();
 		List<ReviewBoardComment> commentList = dao.checkRecommend(rbCommentNo,rbNo);
 		System.out.println(commentList);
+		
 		if(!commentList.isEmpty()) {
 			ud = 1;
+			System.out.println("업데이트");
 			result = dao.udReviewBoardComment(rbCommentNo,rbNo,ud);
 		}else {
+			System.out.println("딜리트");
 			ud = 2;
 			result = dao.udReviewBoardComment(rbCommentNo,rbNo,ud);
 		}

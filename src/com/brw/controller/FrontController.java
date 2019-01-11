@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.BookOneLineRVCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.bookBasketCommand;
-import com.brw.command.book.checkedBasketCommand;
+import com.brw.command.book.BookBasketCommand;
+import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -24,6 +25,7 @@ import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
+import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
@@ -31,6 +33,7 @@ import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
+import com.brw.command.user.nickNameCheckCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -254,7 +257,7 @@ public class FrontController extends HttpServlet {
 	    }
 		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
 	    else if(command.equals("/book/bookbasket.do")) {
-	    	com = new bookBasketCommand();
+	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
@@ -278,9 +281,25 @@ public class FrontController extends HttpServlet {
 		 * 26.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
-	    	com = new checkedBasketCommand();
+	    	com = new CheckedBasketCommand();
 	    	com.execute(req, res);
 	    }
+
+		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
+	    else if(command.equals("/review/reviewWriteImage.do")) {
+	    	com = new ReviewWriteImageCommand();
+	    	com.execute(req, res);
+	    }
+		/*28. 한 줄 리뷰 등록: 김민우*/
+	    else if(command.equals("/book/oneLineRV.do")) {
+	    	com = new BookOneLineRVCommand();
+	    	com.execute(req, res);
+	    }
+		/*29 . 회원가입시 닉네임 체크*/
+		else if(command.equals("/nickNameCheck.do")) {
+			com = new nickNameCheckCommand();
+			com.execute(req, res);
+		}
 
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

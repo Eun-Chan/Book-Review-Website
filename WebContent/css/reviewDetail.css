@@ -12,9 +12,15 @@
 	margin:0 auto;
 	height:auto;
 }
-
+#bs_hr{
+	margin-top:5px;
+	margin-bottom:0;
+}
 li{
 	list-style: none;
+}
+#comment-menu li{
+	float:left;
 }
 #side-menu #left-menu a{
 	text-decoration: none;
@@ -28,12 +34,13 @@ li{
 	clear: both;
 	margin: 0 auto;
 	padding: 0;
+	position: relative;
 }
 #reviewDetail-Header{
 	width:800px;
 /* 	border-bottom: 1px solid black; */
 	padding: 8px 0px 5px 10px;
-	min-height: 40px;
+	min-height: 35px;
 	background: #f1f1f1;
 }
 #reviewDetail-Header span{
@@ -42,6 +49,7 @@ li{
 #reviewDetail-Header #comment{
 	float: right;
 	cursor: pointer;
+	margin-right: 8px;
 }
 #reviewDetail-Header #date{
 	float: left;
@@ -49,17 +57,35 @@ li{
 #reviewDetail-Title{
 	width:800px;
 	border-bottom: 1px solid #f1f1f1;
-	padding : 35px 0 25px;
+	padding : 10px 0 25px;
 	min-height: 50px;
 	text-align: center;
+}
+#reviewDetail-Title span{
+	letter-spacing: 2px;
+	font-weight: bold;
+	color: violet;
+} 
+#reviewDetail-booktitle{
+    max-width: 380px;
+    height: auto;
+    float: left;
+    text-align: left;
+    cursor: pointer;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 #reviewDetail-Writer{
 	width:800px;
 	text-align: right;
 	margin-top: 8px;
+	height: auto;
+    overflow: hidden;
 }
-#reviewDetail-Writer span{
-	font-size: 0.8em;
+#booktitle:hover{
+	background:violet;
 }
 #reviewDetail-Writer hr{
 	margin-top: 0;
@@ -70,7 +96,8 @@ li{
 /* 	border: 1px solid black; */
 	margin: 25px 0px 30px 0px;
 	padding-top:20px;
-	padding-left: 10px;
+	padding-left: 10px;\
+	position: relative;
 }
 /*좋아요 버튼*/
 #like-Wapper{
@@ -80,6 +107,8 @@ li{
 	margin:0 auto;
 	float:none;
 	padding-left:46%;
+	position: absolute;
+    bottom: 0;
 }
 #like{
 	text-align: center;
@@ -103,7 +132,7 @@ li{
 #side-menu{
 	width:800px;
 	margin-top:5px;
-	margin-bottom : 10px;
+	margin-bottom: 5px;
 	padding:10px 0 5px 0;
 	clear:both;
 	background:#f7f7f7;
@@ -217,6 +246,7 @@ li{
 	float:left;
 /* 	margin:0 auto; */
 	height:auto;
+    margin-bottom: 10px;
 }
 #comment-header{
 	display: inline-block;
@@ -224,6 +254,7 @@ li{
 	float: left;
     margin: 0 auto;
     height: auto;
+    margin-bottom: 5px;
 }
 #comment-body{
 	display: inline-block;
@@ -260,9 +291,10 @@ li{
 #recomment-header{
 	display: inline-block;
 	max-width: 300px;
-	    float: left;
+	float: left;
     margin: 0 auto;
     height: auto;
+    margin-bottom: 5px;
 }
 #recomment-body{
 	display: inline-block;
@@ -291,6 +323,7 @@ li{
     float: left;
     margin: 0 auto;
     height: auto;
+   	margin-bottom: 15px;
 }
 
 .recomment-textArea{
@@ -302,6 +335,7 @@ li{
 }
 #booktitle{
 	float:left;
+	cursor: pointer;
 }
 /* 별점 */
 .starR1{
@@ -328,10 +362,72 @@ li{
 #start-Container{
 	display:inline-block;
 	float:left;
-	margin-left:15px;
+	margin-left: 7px;
     position: relative;
     bottom: 4px;
+    left:0%;
+    margin-top: 3px;
 }
 .del{
 	color: gray;
+}
+#comment-enter{
+	width: 50px;
+    height: 30px;
+    position: relative;
+    left: 7%;
+}
+#comment-menu{
+	clear:both;
+	width:800px;
+}
+#comment-menu h5{
+	clear: both;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-left: 37px;
+    white-space: nowrap;
+    font-size:14px;
+    display:inline-block;
+}
+#comment-menu strong{
+	color:violet;
+}
+#comment-submenu{
+	display:inline-block;
+	margin-bottom:0px;
+	position: relative;
+	top: 7px;
+    padding-left: 15px;
+}
+#hide-div{
+	border:1px solid black;
+	width:140px;
+	height:45px;
+	visibility: hidden;
+	position: absolute;
+	background:white;
+}
+#hide-div ul{
+	float:left;
+	padding:0;
+	width:138px;
+	height:48px;
+	margin:0;
+}
+#hide-div li:hover{
+	background:#f7f7f7;
+	font-weight:bold;
+}
+#hide-div a{
+	font-size: 0.85em;
+    padding: 5px 0px 2px 20px;
+    text-decoration: none;
+    color: black;
+}
+#hide-div span{
+	font-size: 0.85em;
+    padding: 5px 0px 2px 20px;
+    text-decoration: none;
+    color: black;
 }
