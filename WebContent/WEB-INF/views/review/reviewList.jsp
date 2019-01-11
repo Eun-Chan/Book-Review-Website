@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO"%>
+<%@ page import="java.util.List"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	// FrontController에서 보낸 list 받기
 	List<ReviewBoardViewDTO> list = (List<ReviewBoardViewDTO>)request.getAttribute("list");
+	List<NoticeDTO> ntcList = (List<NoticeDTO>)request.getAttribute("ntcList");
 	String pageBar = (String)request.getAttribute("pageBar");
 	
 	String searchType = request.getParameter("searchType");
@@ -27,13 +28,13 @@ div#search-rb_title {
 }
 
 /* 게시판 컬럼별 너무길면 ... 으로 표시 */
-table#review-list-table tbody tr td:nth-child(2) {
+table#review-list-table tbody tr td.booktitle {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 	display: inline-block;
 	position: relative;
-	padding-top: 17px;
+	padding-top: 16px;
 }
 
 /* 테이블 영역 */
@@ -91,6 +92,12 @@ th.w150 {
 th.w100 {
 	width: 100px;
 }
+
+/* 공지사항용 tr 색 지정 */
+tr.notice{
+	background: #a6ceff7d;
+}
+
 </style>
 <script>
 $(function(){
@@ -144,10 +151,26 @@ $(function(){
 				</tr>
 			</thead>
 			<tbody>
+				<% for(NoticeDTO n : ntcList) { %>
+				<tr class="notice">
+					<td class="text-center" colspan="2"><span class="badge">공지사항</span></td>
+					<td>
+						<a href="<%=request.getContextPath()%>/admin/noticeDetail.do?ntcNo=<%=n.getNtcNo()%>"><%=n.getNtcTitle() %></a>
+						<%=n.isDateNew()?"<span class='mark smft'>new</span>":"" %>
+					</td>
+					<td>
+						<img src="<%=request.getContextPath()%>/images/userGradeImage/10.svg" width='30px' height='30px' alt='userGrade icon'>
+						관리자
+					</td>
+					<td class="text-center"><%=n.getNtcDate() %></td>
+					<td class="text-center"><%=n.getNtcReadcnt() %></td>
+					<td class="text-center">-</td>
+				</tr>
+				<% } %>
 				<% for(ReviewBoardViewDTO rbv : list) { %>
 				<tr>
 					<td class="text-center"><%=rbv.getRbNo() %></td>
-					<td class="w220"><%=rbv.getRbBookTitle()%></td>
+					<td class="w220 booktitle"><%=rbv.getRbBookTitle()%></td>
 					<td>
 						<a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rbv.getRbNo() %>"><%=rbv.getRbTitle() %></a>
 						<span class="smft"><%=rbv.getCommentCnt()>0?"+" + rbv.getCommentCnt():"" %></span>

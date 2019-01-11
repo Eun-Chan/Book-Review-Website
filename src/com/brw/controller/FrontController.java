@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.book.BasketInsertCommand;
+import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookOneLineRVCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
@@ -299,6 +300,13 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/nickNameCheck.do")) {
 			com = new nickNameCheckCommand();
 			com.execute(req, res);
+		}
+		/*30. 명훈 : 공지사항 상세보기*/
+		else if(command.equals("/admin/noticeDetail.do")) {
+			//해당 게시물 가져오는 쿼리
+			com = new NoticeDetailViewCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
 		}
 
 		if(viewPage!=null){			

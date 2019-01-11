@@ -13,6 +13,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.brw.dto.BookBasketDTO;
+import com.brw.dto.NoticeDTO;
 import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
@@ -1592,7 +1593,7 @@ public class DAO {
 	}
 
 	/**
-	 * 37. 선웅 : 조회수 1 증가시키는 쿼리
+	 * 37. 선웅 : 리뷰글 조회수 1 증가시키는 쿼리
 	 * @param rbNo
 	 * @return
 	 */
@@ -1920,7 +1921,8 @@ public class DAO {
 		return list;
 		}
 
-	/* 45. 닉네임 중복 검사*/
+	/* 45. 작성자 : 장선웅
+	 *     내용 : 닉네임 중복 검사*/
 	public int nickNameCheck(String userNickName) {
 		int result = 0;
 		
@@ -1955,6 +1957,139 @@ public class DAO {
 			}
 		}
 		return result;
+	}
+	/*
+	 * 46. 작성자 : 정명훈
+	 * 내용 : db에서 공지사항 리스트 가져오기 (삭제되지 않았고 ntc_allowview = Y 인 것들만) 
+	 */
+	public List<NoticeDTO> noticeList() {
+		List<NoticeDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(ntc_date, 'HH24:MI') datenew, (sysdate - ntc_date) passingtime from notice n where ntc_allowview = 'Y' and ntc_delflag = 'N'";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				NoticeDTO n = new NoticeDTO();
+				
+				n.setNtcNo(rset.getInt("ntc_no"));
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				
+				int passingtime = rset.getInt("passingtime");
+				boolean dateNew = false;
+				if(passingtime <= 0) {
+					n.setNtcDate(rset.getString("datenew"));
+					dateNew = true;
+				}
+				else {
+					n.setNtcDate(rset.getString("strdate"));
+				}
+				
+				n.setDateNew(dateNew);
+				
+				list.add(n);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	/*
+	 * 47. 작성자 : 정명훈
+	 * 내용 : 공지사항 조회수 1 올리기 
+	 */
+	public int noticeReadcntUp(int ntcNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update notice set ntc_readcnt = ntc_readcnt+1 where ntc_no =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, ntcNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 48. 작성자 : 정명훈
+	 * 내용 : 공지사항 번호로 공지사항 하나 가져오기
+	 */
+	public NoticeDTO selectNoticeOne(int ntcNo) {
+		NoticeDTO n = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate from notice n where ntc_no = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, ntcNo);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				n = new NoticeDTO();
+				n.setNtcNo(ntcNo);
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcDate(rset.getString("strdate"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return n;
 	}
 	
 }
