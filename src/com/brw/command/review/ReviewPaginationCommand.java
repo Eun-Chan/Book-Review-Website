@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
+import com.brw.dto.NoticeDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 
 /*
@@ -30,8 +31,14 @@ public class ReviewPaginationCommand implements Command {
 		
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 10;
-		List<ReviewBoardViewDTO> list = new ArrayList<>();
 		
+		// 공지사항 목록 리스트
+		List<NoticeDTO> ntcList = new ArrayList<>();
+		// 리뷰게시판 목록 리스트
+		List<ReviewBoardViewDTO> list = new ArrayList<>();
+
+		// 공지사항 가져오기 (allowview = Y 인 것만)
+		ntcList = dao.noticeList();
 		// 페이징용 리뷰리스트 가져오기
 		list = dao.reivewPagination(cPage, numPerPage);
 
@@ -98,6 +105,7 @@ public class ReviewPaginationCommand implements Command {
 		
 		
 		
+		request.setAttribute("ntcList", ntcList);
 		request.setAttribute("list", list);
 		request.setAttribute("pageBar", pageBar);
 		

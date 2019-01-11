@@ -1,7 +1,29 @@
-/* 인기도서 Start*/
-#select-AllBook
+body
 {
-	
+	min-height: 0px !important;
+}
+/*검색*/
+div#search-Container
+{
+	display: inline-block;
+}
+#searchType
+{
+	margin: 0;
+	margin-right: 0;
+	color: black;
+	height: 35px;
+	margin-left: 75px;
+}
+#searchType>option
+{
+	font-size: 15px;
+}
+/* 인기도서 Start*/
+div#search-Container
+{
+	width: 1000px;
+	margin: 0 auto;
 }
 /* 이미지 */
 img#bookImage0, img#bookImage1, img#bookImage2, img#bookImage3
@@ -98,7 +120,7 @@ hr.my-hr2
 
 #recent-Review
 {
-	margin-left: 15%;
+	margin-left: 5%;
 	float: left;
 }
 #bestReview
