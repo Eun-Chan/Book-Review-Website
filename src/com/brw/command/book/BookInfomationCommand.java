@@ -1,12 +1,14 @@
 package com.brw.command.book;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
+import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.UserDTO;
 
 /*
@@ -33,9 +35,14 @@ public class BookInfomationCommand implements Command {
 		boolean basketCheck = false;
 		if(user != null) {
 			basketCheck = dao.isChecked(user, isbn13);		
-		}	
+		}
+		
+		//현재 클릭된 책 isbn으로 한 줄 리뷰 작성된 값을 불러와 돌려주는 부분
+		List<OneLineReviewDTO> list = dao.selectAllOneLineRV(isbn13);
+		
 		request.setAttribute("isbn13", isbn13);
 		request.setAttribute("basketCheck", basketCheck);
+		request.setAttribute("oneLineList", list);
 
 	}
 

@@ -29,16 +29,38 @@ public class BookOneLineRVCommand implements Command {
 		UserDTO user = (UserDTO) request.getSession().getAttribute("user");
 		double starScore = Double.parseDouble(request.getParameter("starScore"));
 		String oneLineRV = request.getParameter("oneLineRV");
+		//book테이블에 저장하기 위한 변수
+		String title = request.getParameter("title");
+		String author = request.getParameter("author");
 		String isbn13 = request.getParameter("isbn13");
+		int price = Integer.parseInt(request.getParameter("priceStandard"));
+		String publisher = request.getParameter("publisher");
 		List<OneLineReviewDTO> list = null;
 		
 		DAO dao = DAO.getInstance();
 		
+		//book 테이블에 없는 책일 경우 DB에 등록
+		boolean isIsbnExist = dao.isIsbnExist(isbn13);
+		
+		if(!isIsbnExist) {
+			//책 테이블에 기록
+			int result = dao.insertBook(title, author, isbn13, price, publisher);
+			
+			if(result > 0) {
+				System.out.println("도서정보 등록 성공!");
+			}
+			else {
+				System.out.println("도서정보 등록 실패!");
+			}
+		}
+		
+		//한 줄 리뷰 테이블에 등록
 		int result = dao.insertOneLineRV(user.getUserId(), starScore, oneLineRV, isbn13);
 		
 		if(result > 0) {
 			System.out.println("한 줄 리뷰 등록 성공");
-			list = dao.selectAllOneLineRV();
+			//현재 보고 있는 책에 대해서 작성된 한 줄 리뷰 전부를 받아옴
+			list = dao.selectAllOneLineRV(isbn13);
 			
 		}else {
 			System.out.println("한 줄 리뷰 등록 실패");

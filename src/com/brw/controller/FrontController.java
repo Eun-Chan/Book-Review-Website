@@ -25,6 +25,7 @@ import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
+import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
@@ -286,7 +287,7 @@ public class FrontController extends HttpServlet {
 
 		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
 	    else if(command.equals("/review/reviewWriteImage.do")) {
-	    	com = new ReviewWriteImage();
+	    	com = new ReviewWriteImageCommand();
 	    	com.execute(req, res);
 	    }
 		/*28. 한 줄 리뷰 등록: 김민우*/
