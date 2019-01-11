@@ -377,7 +377,7 @@ public class DAO {
 		ReviewBoardViewDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard where del_flag = 'N' and rb_no = ?";
+		String query = "select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N'  and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);

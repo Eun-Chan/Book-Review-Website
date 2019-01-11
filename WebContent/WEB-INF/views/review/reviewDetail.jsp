@@ -62,7 +62,7 @@
 			</div>
 			 
 		</div>
-			<span>작성자 : <img src="<%=request.getContextPath() %>/imags/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" /><%=review.getUserNickName() %></span>
+			<span>작성자 : <img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
 		</div>
 		<hr id="bs_hr">
 		<div id ="reviewDetail-Content">

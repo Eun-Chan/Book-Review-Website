@@ -10,6 +10,7 @@ import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardViewDTO;
 
 /*
  * 작성자 : 장선웅
@@ -31,7 +32,7 @@ public class GetReviewSelectOneCommand implements Command{
 		
 		//조회수 +1 해주기
 		int updateReadCount = dao.updateReadCnt(rbNo);
-		ReviewBoardDTO review = null;
+		ReviewBoardViewDTO review = null;
 		//셀렉트 원해서 하나 가져오기
 		if(updateReadCount>0) {
 			review = dao.getReviewSelectOne(rbNo);			
