@@ -6,14 +6,21 @@
 	text-align : center;
 }
 table.table {
-	width : 800px;
+	width : 1000px;
 	margin : 0 auto;
 }
 table.table th {
 	text-align : center;
 	background : #f1f1f1;
 }
+#allButton {
+}
 #deleteButton {
-	float : right;
-	margin-right :50px;
+}
+#button {
+	margin : 0px auto;
+	text-align : center;
+}
+#totalBasket {
+	text-align : center;
 }

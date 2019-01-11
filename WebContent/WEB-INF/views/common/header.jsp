@@ -39,29 +39,131 @@
 </script>
 </head>
 <body>
-<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navMenu">
+<!DOCTYPE html>
+
+<Html>
+
+<head>
+
+<meta charset='utf-8'>
+
+<title>[bootstrap] 부트스트랩 – 내비게이션 메뉴바 [냅바(navbar)] - 전체 너비로 확장</title>
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<style>body {
+
+  min-height: 2000px;
+
+  padding-top: 70px;
+
+}</style>
+
+<script></script>
+
+</head>
+
+<body>
+
+    <!-- Fixed navbar -->
+
+    <nav class="navbar navbar-default navbar-fixed-top" id="navbar-menuBar">
+      <div class="container" id="menuBar-Container">
+        <div class="navbar-header"> 
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+ 
+            <span class="icon-bar"></span>
+
+          </button>  
+		<a id="home-img-Container" class="navbar-brand" href="<%=request.getContextPath()%>/index.jsp"><img id="home_img" src="<%=request.getContextPath()%>/images/logoMenu.png" alt="" /></a>
+
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+          <ul class="nav navbar-nav">
+          
+          	<li><a href="#about">홈으로</a></li>
+	
+            <li class="active"><a href="#">공지사항</a></li>
+
+            <li><a href="#about">자유게시판</a></li>
+
+            <li><a href="#contact">리뷰게시판</a></li>
+            
+            <li><a href="#contact">즐겨찾기</a></li>
+            
+            
+            
+ 
+          </ul>  
+          
+          <ul class="nav navbar-nav" id="login-Container">
+          <li class="nav-item">
+		   	<% if(user == null) { %>  
+		     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
+		    	<% } 
+		    	else {%>  
+		    	<li><a href="#">채팅</a></li>
+		    	<li class="dropdown">
+		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+		    		<ul class="dropdown-menu" role="menu">
+		    			<li><a href="#">내 정보보기</a></li>
+		    			<li class="divider"></li>
+		          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+		    		</ul>
+		    	</li>
+		    	<%}%>
+		    </li>
+          </ul>
+
+        </div><!--/.nav-collapse -->
+        
+        
+
+      </div>
+      
+      
+
+    </nav>
+
+
+
+<!-- 광준 -->
+<!-- <nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> -->
  
  
 
-  <ul  class="navbar-nav">
-  	<!-- 로고 -->
-  	<li>
-		<a href="<%=request.getContextPath()%>/index.jsp"><img src="<%=request.getContextPath()%>/images/logoMenu.png" alt="" /></a>
-	</li>
-  </ul> 
+  
     
   <!-- 검색 -->
   <!--  <form id="frm"> -->
+<!--     <input type="hidden" id="hiddenInput-search"/>
 			<select id="searchType">
 				<option value="title">제목</option> 
 				<option value="author">저자</option>
-			</select>
+			</select> 
+	</input>   
 	   <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="search" id="search">
-	   <input type="button" class="search-btn" id="btn-search" value="검색"></input>
-  <!-- </form> -->
-
-  <ul  class="navbar-nav" id="navbar-menu">
+	   <input class="btn btn-default" type="button" id="btn-search" value="검색"></button> -->
+   
+	   <!-- <input type="button" class="search-btn" id="btn-search" value="검색"></input> -->
+  <!-- </form> -->  
+    
+<!--   <ul  class="navbar-nav" id="navbar-menu"> -->
   <!-- 메뉴 -->
+  	<%-- <li class="nav-item">
+  		<a class="navbar-brand" href="#">공지사항</a>
+	</li>
     <li  class="nav-item"> 
       <a  class="navbar-brand"  href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a> 
     </li> 
@@ -73,31 +175,47 @@
     </li>
     <li class="nav-item"> 
       <a class="navbar-brand" href="#">채팅</a> 
-    </li>
-    <!-- 로그인 -->
-    <li class="nav-item">
-    <p class="navbar-brand">         </p>
-    </li>
-  <li class="nav-item">
-   	<% if(user == null) { %>
+    </li> --%>
+
+ 	 <%-- <li class="nav-item">
+  	 	<% if(user == null) { %>  
      	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
     	<% } 
-    	else {%>
+    	else {%>  
     	<li><a href="#">채팅</a></li>
     	<li class="dropdown">
     		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
     		<ul class="dropdown-menu" role="menu">
     			<li><a href="#">내 정보보기</a></li>
+    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
     			<li class="divider"></li>
           	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
     		</ul>
     	</li>
     	<%}%>
-    </li>
-   </ul>
+    </li> --%>
+<!--    </ul>
   
   
-</nav>  
+</nav>   -->
+<!-- Collect the nav links, forms, and other content for toggling -->
+    <%-- <div class="collapse navbar-collapse" id="topHeader">
+      <ul class="nav navbar-nav">
+        <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
+        <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul> --%>
 
 
 <%-- <nav class="navbar navbar-default">
@@ -107,15 +225,15 @@
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
         <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+        <span class="icon-bar">테</span>
+        <span class="icon-bar">스</span>
+        <span class="icon-bar">트</span>
       </button>
       <a class="navbar-brand" href="#"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
-    </div>
+    </div> --%>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="topHeader">
+    <%-- <div class="collapse navbar-collapse" id="topHeader">
       <ul class="nav navbar-nav">
         <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
         <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
@@ -150,7 +268,7 @@
 			<input type="button" value="검색" id="btn-search"/>
 		</form> -->
       <!-- header 오른쪽 구석탱이 -->
-      <%-- <ul class="nav navbar-nav navbar-right">
+     <%-- <ul class="nav navbar-nav navbar-right">
      	<% if(user == null) { %>
        	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
       	<% } 
@@ -160,6 +278,7 @@
       		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">
       			<li><a href="#">내 정보보기</a></li>
+      			<li><a href="<%=request.getContextPath()%>/book/showbasket.do">즐겨찾기</a></li>
       			<li class="divider"></li>
             	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
       		</ul>

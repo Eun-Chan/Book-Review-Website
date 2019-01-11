@@ -1706,9 +1706,9 @@ public class DAO {
 	}
 	/*
 	 * 40. 작성자 : 박세준
-	 * 내용 : 즐겨찾기 추가
+	 * 내용 : 즐겨찾기 보여주는 결과
 	 */
-	public List<BookBasketDTO> bookBasket(String userId) {
+	public List<BookBasketDTO> showBookBasket(String userId) {
 		List<BookBasketDTO> list = new ArrayList();
 		Connection conn = null;
 		PreparedStatement pstmt = null;

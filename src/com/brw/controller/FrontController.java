@@ -256,13 +256,13 @@ public class FrontController extends HttpServlet {
 	    	com = new DeleteReviewBoardComment();
 	    	com.execute(req, res);
 	    }
-		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
-	    else if(command.equals("/book/bookbasket.do")) {
+		/*22. 즐겨찾기 보여주는 결과*/
+	    else if(command.equals("/book/showBookBasket.do")) {
 	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
-	    else if(command.equals("/book/showbasket.do")) {	    	
+	    else if(command.equals("/book/goBasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
