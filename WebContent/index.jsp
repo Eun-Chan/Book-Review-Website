@@ -15,6 +15,67 @@
 	<!-- Header -->
 	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 	
+	
+	<!-- 광준 -->
+<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> 
+  <!-- 검색 -->
+  <!--  <form id="frm"> -->
+<!--   <div id="search-Container"> -->
+    <input type="hidden" id="hiddenInput-search"/>
+			<select id="searchType">
+				<option value="title">제목</option> 
+				<option value="author">저자</option>
+			</select>   
+	   <input type="text" class="form-control" placeholder="도서를 검색해주세요." name="search" id="search">
+	   <input class="btn btn-default" type="button" id="btn-search" value="검색">
+   <!-- </div> -->
+   
+	   <!-- <input type="button" class="search-btn" id="btn-search" value="검색"></input> -->
+  <!-- </form> -->  
+  <ul  class="navbar-nav" id="navbar-menu">
+  <!-- 메뉴 -->
+  	<%-- <li class="nav-item">
+  		<a class="navbar-brand" href="#">공지사항</a>
+	</li>
+    <li  class="nav-item"> 
+      <a  class="navbar-brand"  href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a> 
+    </li> 
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a> 
+    </li> 
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="#">즐겨찾기</a> 
+    </li>
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="#">채팅</a> 
+    </li> --%>
+
+ 	 <%-- <li class="nav-item">
+  	 	<% if(user == null) { %>  
+     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
+    	<% } 
+    	else {%>  
+    	<li><a href="#">채팅</a></li>
+    	<li class="dropdown">
+    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+    		<ul class="dropdown-menu" role="menu">
+    			<li><a href="#">내 정보보기</a></li>
+    			<li class="divider"></li>
+          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+    		</ul>
+    	</li>
+    	<%}%>
+    </li> --%>
+   </ul>
+</nav>  
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- Body -->
 	<%-- <a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
 	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
