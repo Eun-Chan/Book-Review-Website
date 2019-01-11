@@ -415,7 +415,7 @@ public class DAO {
 	public int insertComment(ReviewBoardComment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,default,?,?,null,default,default,?)";
 		int result = 0;
 		try {
 			conn = dataSource.getConnection();
@@ -423,6 +423,7 @@ public class DAO {
 			pstmt.setString(1, comment.getRbCommentWriter());
 			pstmt.setString(2, comment.getRbCommentContent());
 			pstmt.setInt(3, comment.getRbRef());
+			pstmt.setString(4, comment.getRbCommentWriterNickName());
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {

@@ -6,7 +6,6 @@
    // FrontController에서 보낸 list 받기
    List<ReviewBoardDTO> list = (List<ReviewBoardDTO>)request.getAttribute("list");
    String pageBar = (String)request.getAttribute("pageBar");
-   
    String searchType = request.getParameter("searchType");
    String searchKeyword = request.getParameter("searchKeyword");
 %>

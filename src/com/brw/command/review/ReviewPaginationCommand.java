@@ -35,10 +35,17 @@ public class ReviewPaginationCommand implements Command {
 		// 페이징용 리뷰리스트 가져오기
 		list = dao.reivewPagination(cPage, numPerPage);
 
+		Integer maxLike = 0;
 		// 각 게시글에 대한 댓글 개수 가져오기
+		// 각 게시글에 대한 총 좋아요 갯수 가져오기
 		for(int i=0; i<list.size(); i++) {
 			int commentCnt = dao.getComment(list.get(i).getRbNo());
+			maxLike = dao.selectLikeCount(list.get(i).getRbNo());
+			if(maxLike==null){
+				list.get(i).setRbRecommend(0);
+			}
 			list.get(i).setCommentCnt(commentCnt);
+			list.get(i).setRbRecommend(maxLike);
 		}
 		
 		// 페이지바 작업
@@ -87,7 +94,6 @@ public class ReviewPaginationCommand implements Command {
 	
 		
 		pageBar += "</ul>";
-		
 		
 		
 		

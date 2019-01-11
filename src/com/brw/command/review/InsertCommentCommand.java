@@ -32,9 +32,10 @@ public class InsertCommentCommand implements Command{
 		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
 		String rbCommentContent = request.getParameter("rbCommentContent");
 		String rbCommentWriter = request.getParameter("rbCommentWriter");
+		String rbCommentWriterNickName = request.getParameter("rbCommentWriterNickName");
 		System.out.println(rbNo+","+rbCommentContent+","+rbCommentWriter);
 		
-		ReviewBoardComment comment = new ReviewBoardComment(rbCommentWriter, rbCommentContent, rbNo);
+		ReviewBoardComment comment = new ReviewBoardComment(rbCommentWriter, rbCommentContent, rbNo,rbCommentWriterNickName);
 		
 		DAO dao = DAO.getInstance();
 		int result = dao.insertComment(comment);
