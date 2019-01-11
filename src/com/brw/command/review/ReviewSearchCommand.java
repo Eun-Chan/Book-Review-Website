@@ -1,5 +1,6 @@
 package com.brw.command.review;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
+import com.brw.dto.NoticeDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 
 /*
@@ -32,9 +34,14 @@ public class ReviewSearchCommand implements Command {
 		
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 10;
+
 		
+		// 공지사항 가져오기 (allowview = Y 인 것만)
+		List<NoticeDTO> ntcList = dao.noticeList();
 		// 페이징용 리뷰리스트 가져오기
 		List<ReviewBoardViewDTO> list = dao.reivewSearch(searchType, searchKeyword, cPage, numPerPage);
+		
+		
 		// 각 게시글에 대한 댓글 개수 가져오기
 		for(int i=0; i<list.size(); i++) {
 			int commentCnt = dao.getComment(list.get(i).getRbNo());
@@ -95,6 +102,7 @@ public class ReviewSearchCommand implements Command {
 		
 		
 		
+		request.setAttribute("ntcList", ntcList);
 		request.setAttribute("list", list);
 		request.setAttribute("pageBar", pageBar);
 	}
