@@ -30,7 +30,7 @@ public class CheckedBasketCommand implements Command {
 		int result = dao.checkeddelete(user, isbn);
 		
 		if(result > 0) {
-			List<BookBasketDTO> list=dao.bookBasket(user.getUserId());
+			List<BookBasketDTO> list=dao.showBookBasket(user.getUserId());
 			try {
 				new Gson().toJson(list,response.getWriter());
 			} catch (JsonIOException e) {

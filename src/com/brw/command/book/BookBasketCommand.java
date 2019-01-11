@@ -27,7 +27,7 @@ public class BookBasketCommand implements Command {
 		String userId = request.getParameter("userId");
 		System.out.println(userId);
 		DAO dao  = DAO.getInstance();
-		List<BookBasketDTO> list = dao.bookBasket(userId);
+		List<BookBasketDTO> list = dao.showBookBasket(userId);
 				
 		
 		System.out.println("listbasket="+list);

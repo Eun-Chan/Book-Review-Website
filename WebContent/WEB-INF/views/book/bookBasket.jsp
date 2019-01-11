@@ -24,11 +24,11 @@
 	<div id="totalBasket"></div>
 	<br />
 <script>
-
 var userId = "<%=user.getUserId()%>";
 console.log(userId)
+/*즐겨찾기 보여주는 결과*/
 $.ajax({
-	url : "<%=request.getContextPath()%>/book/bookbasket.do",
+	url : "<%=request.getContextPath()%>/book/showBookBasket.do",
 	dataType:"json",
 	data: "userId="+userId,
 	success:function(data){
