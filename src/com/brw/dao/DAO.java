@@ -1874,7 +1874,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from onelinereview where isbn = ? and delflag = 'N'";
+		String query = "select * from onelinereview where isbn = ? and delflag = 'N' order by now desc";
 
 		try {
 			conn = dataSource.getConnection();
