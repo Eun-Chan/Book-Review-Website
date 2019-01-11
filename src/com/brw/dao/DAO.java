@@ -1956,6 +1956,44 @@ public class DAO {
 		}
 		return result;
 	}
+	/* 
+	 * 46. 한 줄 리뷰 삭제: 김민우
+	 * */
+	public int deleteOneLineReview(String userId, int oneLineNo) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from onelinereview where userId = ? and no = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, oneLineNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 1) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+				
+				
+		return result;
+	}
 	
 }
 
