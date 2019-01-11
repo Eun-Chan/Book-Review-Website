@@ -24,7 +24,7 @@
 			<div id="bookInfo-category"></div>
 			<div id="bookInfo-desc"></div>
 			<div id="review-rate">
-				<div id="start-Container" style="left:0">
+				<div id="start-Container1" style="left:0">
 			       <div class="starRev0">
 					  <span class="starR1" id="star0">별1_왼쪽</span>
 					  <span class="starR2" id="star1">별1_오른쪽</span>
@@ -36,7 +36,7 @@
 					  <span class="starR2" id="star7">별4_오른쪽</span>
 					  <span class="starR1" id="star8">별5_왼쪽</span>
 					  <span class="starR2" id="star9">별5_오른쪽</span>
-					  <span id="starScoreAvg" style="color:red; font-size:20px;"></span>
+					  <span id="starScoreAvg1" style="color:red; font-size:20px;"></span>
 					</div>
 				</div>
 			</div>
@@ -53,6 +53,7 @@
 	<div id="start-Container2" style="left:0">
 	
 	<span>한 줄 리뷰 평점: </span><span id="oneLineSSAVG"></span>
+	<span id="oneLineSSShowScore"></span>
 	<h3 id="oneLineReviewTab">한 줄 리뷰☆</h3>
 	<div id="oneLineWrite">
        <div class="starRev0">
@@ -83,7 +84,7 @@
 							double starScore = oneLineList.get(i).getStarScore();
 							
 							if(starScore%1 > 0 && starScore >1){//소수점이 있고 1보다 큰 점수
-								starScore = Math.ceil(starScore);
+								starScore = Math.ceil(starScore*2)/2;
 								for(int k = 0; k < starScore-1; k++){
 									%><i class='fas fa-star'></i><%
 								}
@@ -135,9 +136,13 @@
 	<div id="command-info"></div>
 	
 <script>
+
 var totalStarScore;//리뷰 총평점 평균
+
 //한 줄 리뷰 총 평점
 var oneLinetotalStar = <%=oneLineStar%>;
+
+$("#oneLineSSShowScore").text((Math.ceil(oneLinetotalStar*100)/100)+" /5");
 
 oneLinetotalStar = Math.ceil(oneLinetotalStar*2)/2;
 
@@ -151,6 +156,8 @@ if(oneLinetotalStar%1 > 0 && oneLinetotalStar >1){//소수점이 있고 1보다 
 	for(var i = 0; i < oneLinetotalStar; i++){
 		$("#oneLineSSAVG").append("<i class='fas fa-star'></i>");
 	}
+}else if(isNaN(oneLinetotalStar)){
+	$("#oneLineSSAVG").append("<span>등록된 한 줄 리뷰가 없어요!</span>");
 }else{//0.5점만 준 경우
 	$("#oneLineSSAVG").append("<i class='fas fa-star-half-alt'></i>");
 }
@@ -229,11 +236,10 @@ function insert_oneLineRV(){
 
 //새로운 한 줄 리뷰 작성 시 별 평점 새로 바꾸기
 function showOneLineSS(oneLineSS){
-	console.log("oneLineSS11",oneLineSS)
+	
+	$("#oneLineSSShowScore").text(Math.ceil(oneLineSS*100)/100+" /5");
 	oneLineSS = Math.ceil(oneLineSS*2)/2;
-	
-	console.log("oneLineSS",oneLineSS);//3.5
-	
+
 	$("#oneLineSSAVG").html("");
 	
 	if(oneLineSS%1 > 0 && oneLineSS >1){//소수점이 있고 1보다 큰 점수
@@ -284,6 +290,8 @@ function bookDisplay(success, data){
 };
 
 
+
+
 //책 상세보기에서 이 책으로 작성된 리뷰를 들고오기 위한 ajax
 $.ajax({
 	url: "<%=request.getContextPath()%>/book/bookreviewInfo.do",
@@ -318,15 +326,18 @@ $.ajax({
 				//리뷰 평점이 있는 경우 별 표시!
 		
 				totalStarScore = scoreRound(sumStarScore/cnt);
-				console.log("totalStarScore", totalStarScore);
 	           	var selectStarScore = totalStarScore / 0.5;
-	           	console.log("selectStarScore", selectStarScore);
+	           	
+	         	
 	          //리뷰에 별점을 계산해 표시하기 위한 식
 	           	for(var j=0; j<selectStarScore; j++){
 	           		$("div#start-Container3 span#star"+j).addClass('on');
 	       		}
-	           	$("#starScoreAvg3").text("("+totalStarScore+ "/5.0)");
-			
+	           	$("#starScoreAvg3").text(totalStarScore+ " /5.0");
+	           	
+	           	//리뷰와 한 줄 리뷰의 별점을 모아 표시하기 위한 함수 호출
+	          	showBookSumStarScore(totalStarScore);
+	          	
 		}
 		
 		$("#command-info").html(table);
@@ -336,9 +347,31 @@ $.ajax({
 	}
 });
 
+
 function scoreRound(score){
 	return Math.ceil(score *2 ) / 2;
+	//리뷰게시판의 별점 평균을 받아옴
+   	totalStarScore = score;
 }
+
+//한 줄 리뷰와 리뷰게시판의 평점 평균을 받아와 합쳐 책의 별점으로 표시하게 만들기
+function showBookSumStarScore(score){
+
+	var starScoreOneLineAvg = $("#oneLineSSShowScore").text().split(" ");
+	starScoreOneLineAvg = parseFloat(starScoreOneLineAvg[0]);//한 줄 리뷰 총 평점
+	console.log("starScoreOneLineAvg",parseFloat(starScoreOneLineAvg));
+	var starScoreReviewAvg = score;//리뷰 게시판 총 평점
+	console.log("starScoreReviewAvg", starScoreReviewAvg);
+	
+	var total = Math.ceil((starScoreOneLineAvg+starScoreReviewAvg)/2*100)/100;
+	console.log("total", total);
+	for(var j=0; j<total*2; j++){
+   		$("div#start-Container1 span#star"+j).addClass('on');
+		}
+   	$("#starScoreAvg1").text(total+ " /5.0");
+		
+}
+
 
 //즐겨찾기 버튼 누르면 사용되는 함수
 function basket(){
