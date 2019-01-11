@@ -218,6 +218,7 @@
     <!-- 인기도서 출력 End -->
     
     <!-- 최근 리뷰 Start -->
+
     <div id="recent-Review">
 	    <h3 class="subTitle"><strong>최근 리뷰</strong></h3>
 	    <!-- <hr class="title-line" /> -->
@@ -290,6 +291,7 @@
 	   </div> <!-- end of #table-container -->
    </div> <!-- 최근 리뷰 End -->
    <!-- 인기 리뷰 Start -->
+   
    <div id="bestReview">
    	<h3 class="subTitle"><strong>인기 리뷰</strong></h3>
 	    <!-- <hr class="title-line" /> -->

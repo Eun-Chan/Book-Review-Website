@@ -1,3 +1,7 @@
+body
+{
+	min-height: 0px !important;
+}
 /*검색*/
 div#search-Container
 {
@@ -116,7 +120,7 @@ hr.my-hr2
 
 #recent-Review
 {
-	margin-left: 15%;
+	margin-left: 5%;
 	float: left;
 }
 #bestReview
