@@ -29,16 +29,79 @@
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
 <title>책 읽는 사람들</title>
-<link rel="shortcut icon" type="image/x-icon" href="https://img.icons8.com/windows/32/000000/literature.png" />
+<link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon_book.ico" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/header.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
 <script>
 	
 </script>
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navMenu">
+ 
+ 
+
+  <ul  class="navbar-nav">
+  	<!-- 로고 -->
+  	<li>
+		<a href="<%=request.getContextPath()%>/index.jsp"><img src="<%=request.getContextPath()%>/images/logoMenu.png" alt="" /></a>
+	</li>
+  </ul> 
+    
+  <!-- 검색 -->
+  <!--  <form id="frm"> -->
+			<select id="searchType">
+				<option value="title">제목</option> 
+				<option value="author">저자</option>
+			</select>
+	   <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="search" id="search">
+	   <input type="button" class="search-btn" id="btn-search" value="검색"></input>
+  <!-- </form> -->
+
+  <ul  class="navbar-nav" id="navbar-menu">
+  <!-- 메뉴 -->
+    <li  class="nav-item"> 
+      <a  class="navbar-brand"  href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a> 
+    </li> 
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a> 
+    </li> 
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="#">즐겨찾기</a> 
+    </li>
+    <li class="nav-item"> 
+      <a class="navbar-brand" href="#">채팅</a> 
+    </li>
+    <!-- 로그인 -->
+    <li class="nav-item">
+    <p class="navbar-brand">         </p>
+    </li>
+  <li class="nav-item">
+   	<% if(user == null) { %>
+     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
+    	<% } 
+    	else {%>
+    	<li><a href="#">채팅</a></li>
+    	<li class="dropdown">
+    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+    		<ul class="dropdown-menu" role="menu">
+    			<li><a href="#">내 정보보기</a></li>
+    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
+    			<li class="divider"></li>
+          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+    		</ul>
+    	</li>
+    	<%}%>
+    </li>
+   </ul>
+  
+  
+</nav>  
+
+
+<%-- <nav class="navbar navbar-default">
 	<!-- 너비가 768px 이하가 될 시 data-target을 통해 해당 네비바를 toggle형태로 압축 -->
 	<div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -69,7 +132,7 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
-      </ul>
+      </ul> --%>
       <!-- <form action="" class="navbar-form navbar-left" role="search" id="search-Book-Form">
         <div class="form-group">
           <input type="text" class="form-control" id="search-Book" placeholder="도서 & 리뷰 검색">
@@ -77,18 +140,18 @@
         span은 bootstrap 전용 이미지 사용 하기 위해
         <button type="submit" class="btn btn-default" id="search-Book-Button"><span class="glyphicon glyphicon-search"></span></button>
       </form> -->
-      <form id="frm">
+      <!-- <form id="frm">
 			검색타입 :
 			<select id="searchType">
 				<option value="title">제목</option>
 				<option value="author">저자</option>
 			</select>		
-			<!-- 검색 input태그 -->
+			검색 input태그
 			<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요."/>
 			<input type="button" value="검색" id="btn-search"/>
-		</form>
+		</form> -->
       <!-- header 오른쪽 구석탱이 -->
-      <ul class="nav navbar-nav navbar-right">
+      <%-- <ul class="nav navbar-nav navbar-right">
      	<% if(user == null) { %>
        	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
       	<% } 
@@ -98,15 +161,16 @@
       		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">
       			<li><a href="#">내 정보보기</a></li>
+      			<li><a href="<%=request.getContextPath()%>/book/showbasket.do">즐겨찾기</a></li>
       			<li class="divider"></li>
             	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
       		</ul>
       	</li>
       	<%}%>
-      </ul>
-    </div><!-- /.navbar-collapse -->
+      </ul> --%>
+<!--     </div>/.navbar-collapse
     </div>
-</nav>
+</nav> -->
 	
 <!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">
@@ -154,6 +218,7 @@
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
 	<script>
+	
 	function enterkey(){
 		if(window.event.keyCode == 13)
 			loginCheck();
@@ -195,6 +260,7 @@
 	 var searchType = $("#searchType").val();
 	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
  });
+ 
  <%-- $("#search").keydown(function(key) {
 	console.log(key);
 	 if (key.keyCode == 13)//enter를 클릭했다면 
@@ -206,15 +272,25 @@
 	 }
 
  }); --%>
- $("#frm").on("submit", function(event){
-	 event.preventDefault();
-	 var searchval = $("#search").val();
-	 var searchType = $("#searchType").val();
-	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
-	 
- });
- 
+ /**
+ * @광준 - form 대신 데이터 전송을 위한 구조 변경
+ */
+/* $(document).one('click','#btn-search',function(){
+	dataSend();
+}); */
+$("#btn-search").click(function(){
+	dataSend();
+});
+$("#search").keydown(function(){
+	if(event.keyCode == 13) dataSend();
+});
 
+function dataSend()
+{
+	var searchval = $("#search").val();
+	var searchType = $("#searchType").val();
+	location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+}
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
-import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardViewDTO;
 
 /*
  * 작성자 : 정명훈
@@ -34,7 +34,7 @@ public class ReviewSearchCommand implements Command {
 		int numPerPage = 10;
 		
 		// 페이징용 리뷰리스트 가져오기
-		List<ReviewBoardDTO> list = dao.reivewSearch(searchType, searchKeyword, cPage, numPerPage);
+		List<ReviewBoardViewDTO> list = dao.reivewSearch(searchType, searchKeyword, cPage, numPerPage);
 		// 각 게시글에 대한 댓글 개수 가져오기
 		for(int i=0; i<list.size(); i++) {
 			int commentCnt = dao.getComment(list.get(i).getRbNo());
@@ -61,8 +61,9 @@ public class ReviewSearchCommand implements Command {
 			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 		}
 		else {
-			pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + (pageNo-1)
-						+ "'>이전</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='" 
+						+ request.getContextPath() + "/review/reviewSearch.do?cPage=" + (pageNo-1) + "&searchType=" + searchType
+						+ "&searchKeyword=" + searchKeyword + "'>이전</a></li>";
 		}
 		
 		// 페이지 숫자 영역
@@ -71,8 +72,9 @@ public class ReviewSearchCommand implements Command {
 				pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + pageNo
-						+ "'>" + pageNo + "</a></li>";
+				pageBar += "<li class='page-item'><a class='page-link' href='" 
+						+ request.getContextPath() + "/review/reviewSearch.do?cPage=" + pageNo + "&searchType=" + searchType
+						+ "&searchKeyword=" + searchKeyword + "'>" + pageNo + "</a></li>";
 			}
 			pageNo++;
 		}
@@ -82,8 +84,9 @@ public class ReviewSearchCommand implements Command {
 			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
 		}
 		else {
-			pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" 
-						+ pageNo + "'>다음</a>";
+			pageBar += "<li class='page-item'><a class='page-link' href='" 
+						+ request.getContextPath() + "/review/reviewSearch.do?cPage=" + pageNo + "&searchType=" + searchType
+						+ "&searchKeyword=" + searchKeyword + "'>다음</a>";
 		}
 		
 		pageBar += "</ul>";

@@ -6,7 +6,7 @@
 <%
 	
 	//해당 글번호에 맞는 selectOne
- 	ReviewBoardDTO review = (ReviewBoardDTO)request.getAttribute("review");
+ 	ReviewBoardViewDTO review = (ReviewBoardViewDTO)request.getAttribute("review");
 
 	//해당 글번호에 맞는 댓글리스트
 	List<ReviewBoardComment> reviewComment = (List<ReviewBoardComment>)request.getAttribute("reviewComment");
@@ -62,10 +62,9 @@
 			</div>
 			 
 		</div>
-			
-			<span>작성자 : <%=review.getRbWriter() %></span>
+			<span>작성자 : <img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
 		</div>
-		<hr / id="bs_hr">
+		<hr id="bs_hr">
 		<div id ="reviewDetail-Content">
 			<p>
 			<span>
@@ -112,7 +111,7 @@
 					<li>
 						<div id="comment-html">
 							<div id="comment-header">
-								<span class="comment-writer<%=rbc.getRbCommentNo()%>"><%=rbc.getRbCommentWriter() %></span>
+								<span class="comment-writer<%=rbc.getRbCommentNo()%>"><%=rbc.getRbCommentWriterNickName() %></span>
 								<input type="hidden" class="comment-writerval" value=<%=rbc.getRbCommentNo()%>>
 								<span style="font-size:0.7em;">(<%=rbc.getRbCommentDate() %>)</span>
 							</div>
@@ -157,7 +156,7 @@
 							<li>
 								<div id="recomment-html">
 									<div id="recomment-header">
-										<span><%=rbrc.getRbCommentWriter() %></span>
+										<span><%=rbrc.getRbCommentWriterNickName() %></span>
 										<span style="font-size:0.7em;">(<%=rbrc.getRbCommentDate() %>)</span>
 									</div>
 									<div id="recomment-body">
@@ -238,7 +237,7 @@
 				<%if(user!=null){%>
 				var textAreaVal = $("#comment-area").val();
 					$.ajax({
-						url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriter=<%=user.getUserId()%>",
+						url:"<%=request.getContextPath()%>/insertComment.do?rbNo=<%=review.getRbNo()%>&rbCommentContent="+textAreaVal+"&rbCommentWriterNickName=<%=user.getUserNickName()%>&rbCommentWriter=<%=user.getUserId()%>",
 						async:false,
 						timeout: 1000,
 						success:function(data){
@@ -295,7 +294,7 @@
 				var reCommendArea = $("#recomment-area").val();
 				<%if(user!=null){%>
 				$.ajax({
-					url:"<%=request.getContextPath()%>/insertReComment.do?rbCommentNo="+$(this).val()+"&rbCommentContent="+reCommendArea+"&rbCommentWriter=<%=user.getUserId()%>&rbNo=<%=review.getRbNo()%>",
+					url:"<%=request.getContextPath()%>/insertReComment.do?rbCommentNo="+$(this).val()+"&rbCommentContent="+reCommendArea+"&rbCommentWriterNickName=<%=user.getUserNickName()%>&rbNo=<%=review.getRbNo()%>&rbCommentWriter=<%=user.getUserId()%>",
 					async:false,
 					timeout: 1000,
 					success:function(data){

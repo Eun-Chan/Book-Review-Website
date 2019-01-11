@@ -25,6 +25,7 @@ import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
+import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
@@ -254,13 +255,13 @@ public class FrontController extends HttpServlet {
 	    	com = new DeleteReviewBoardComment();
 	    	com.execute(req, res);
 	    }
-		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
-	    else if(command.equals("/book/bookbasket.do")) {
+		/*22. 즐겨찾기 보여주는 결과*/
+	    else if(command.equals("/book/showBookBasket.do")) {
 	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
-	    else if(command.equals("/book/showbasket.do")) {	    	
+	    else if(command.equals("/book/goBasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
@@ -286,7 +287,7 @@ public class FrontController extends HttpServlet {
 
 		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
 	    else if(command.equals("/review/reviewWriteImage.do")) {
-	    	com = new ReviewWriteImage();
+	    	com = new ReviewWriteImageCommand();
 	    	com.execute(req, res);
 	    }
 		/*28. 한 줄 리뷰 등록: 김민우*/

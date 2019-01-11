@@ -1,4 +1,4 @@
-package com.brw.controller;
+package com.brw.command.review;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.oreilly.servlet.MultipartRequest;
 
-public class ReviewWriteImage implements Command  {
+public class ReviewWriteImageCommand implements Command  {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

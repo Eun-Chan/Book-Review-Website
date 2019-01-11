@@ -7,6 +7,7 @@ import java.sql.Date;
  * 
  * @author mhjung
  *	리뷰게시판 dto
+ *  insert, update용으로 쓸 것
  */
 public class ReviewBoardDTO implements Serializable{
 	/**
@@ -24,21 +25,25 @@ public class ReviewBoardDTO implements Serializable{
 	private double rbStarscore;
 	private int rbReadCnt;
 	private int rbRecommend;
-	private String rbOriginalFilename;
-	private String rbRenamedFilename;
 	private int rbReport;
 	private String delFlag;
-	private String rbWriterNickName;
 	
-	// 새로운 글인지 아닌지 db에서 계산한 값 입력
-	private boolean isDateNew;
-	// 댓글 개수용
-	private int commentCnt;
 	
 	public ReviewBoardDTO() {}
 
+	// insert용 생성자
+	public ReviewBoardDTO(String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent,
+			double rbStarscore) {
+		this.rbTitle = rbTitle;
+		this.rbWriter = rbWriter;
+		this.rbBookTitle = rbBookTitle;
+		this.rbIsbn = rbIsbn;
+		this.rbContent = rbContent;
+		this.rbStarscore = rbStarscore;
+	}
+
 	public ReviewBoardDTO(int rbNo, String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent, String rbDate,
-			double rbStarscore, int rbReadCnt, int rbRecommend, String rbOriginalFilename, String rbRenamedFilename, int rbReport, String delFlag, String rbWriterNickName) {
+			double rbStarscore, int rbReadCnt, int rbRecommend, int rbReport, String delFlag) {
 		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
 		this.rbWriter = rbWriter;
@@ -49,11 +54,8 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbStarscore = rbStarscore;
 		this.rbReadCnt = rbReadCnt;
 		this.rbRecommend = rbRecommend;
-		this.rbOriginalFilename = rbOriginalFilename;
-		this.rbRenamedFilename = rbRenamedFilename;
 		this.rbReport = rbReport;
 		this.delFlag = delFlag;
-		this.rbWriterNickName = rbWriterNickName;
 	}
 
 	public int getRbNo() {
@@ -136,22 +138,6 @@ public class ReviewBoardDTO implements Serializable{
 		this.rbRecommend = rbRecommend;
 	}
 
-	public String getRbOriginalFilename() {
-		return rbOriginalFilename;
-	}
-
-	public void setRbOriginalFilename(String rbOriginalFilename) {
-		this.rbOriginalFilename = rbOriginalFilename;
-	}
-
-	public String getRbRenamedFilename() {
-		return rbRenamedFilename;
-	}
-
-	public void setRbRenamedFilename(String rbRenamedFilename) {
-		this.rbRenamedFilename = rbRenamedFilename;
-	}
-
 	public int getRbReport() {
 		return rbReport;
 	}
@@ -168,36 +154,11 @@ public class ReviewBoardDTO implements Serializable{
 		this.delFlag = delFlag;
 	}
 
-	public boolean getIsDateNew() {
-		return isDateNew;
-	}
-	
-	public void setIsDateNew(boolean isDateNew) {
-		this.isDateNew = isDateNew;
-	}
-	
-	public int getCommentCnt() {
-		return commentCnt;
-	}
-
-	public void setCommentCnt(int commentCnt) {
-		this.commentCnt = commentCnt;
-	}
-
-	public String getRbWriterNickName() {
-		return rbWriterNickName;
-	}
-
-	public void setRbWriterNickName(String rbWriterNickName) {
-		this.rbWriterNickName = rbWriterNickName;
-	}
-
 	@Override
 	public String toString() {
 		return "ReviewBoardDTO [rbNo=" + rbNo + ", rbTitle=" + rbTitle + ", rbWriter=" + rbWriter + ", rbBookTitle=" + rbBookTitle + ", rbIsbn=" + rbIsbn
 				+ ", rbContent=" + rbContent + ", rbDate=" + rbDate + ", rbStarscore=" + rbStarscore + ", rbReadCnt="
-				+ rbReadCnt + ", rbRecommend=" + rbRecommend + ", rbOriginalFilename=" + rbOriginalFilename
-				+ ", rbRenamedFilename=" + rbRenamedFilename + ", rbReport=" + rbReport + ", delFlag=" + delFlag + ", rbWriterNickName=" + rbWriterNickName + "]";
+				+ rbReadCnt + ", rbRecommend=" + rbRecommend + ", rbReport=" + rbReport + ", delFlag=" + delFlag + "]";
 	}
 	
 	
