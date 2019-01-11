@@ -11,12 +11,17 @@
 		<h2><%=user.getUserName()%>님의 즐겨찾기입니다.</h2>
 	</div>
 	<br />
-	<input type="button" value="삭제" class="btn btn-info" id="deleteButton"/>
 	<br />
+	<div id="basketTotal">
+		<div id="button">
+			<input type="button" value="전체선택" class="btn btn-primary" id="allButton"/>
+			<input type="button" value="삭제" class="btn btn-info" id="deleteButton"/>
+			<br /><br />	
+		</div>
+		<div id="basketList"></div>
+	</div>
 	<br />
-	<br />
-	<div id="basketList"></div>
-	<div id="totalbasket"></div>
+	<div id="totalBasket"></div>
 	<br />
 <script>
 
@@ -39,8 +44,16 @@ $.ajax({
 			table.append(html);
 		}
 		var cnt = parseInt(i)+1;
+		if(isNaN(cnt) == true) {
+			var cntHtml = "<p><h4>"+"총 0권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";	
+		}
+		else {		
+			var cntHtml = "<p><h4>"+"총 "+cnt+"권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";		
+		}
+		
 		console.log("cnt",cnt);
 		$("#basketList").html(table);
+		$("#totalBasket").html(cntHtml);
 		
 	},
 	error : function() {
@@ -75,7 +88,18 @@ $("#deleteButton").click(function() {
 		});
 	});
 });
-	
+//전체선택 옵션 구상중..
+var clickCount = 0;
+$("#allButton").click(function() {
+	clickCount++;
+	console.log(clickCount);
+	if(clickCount%2 == 0) {
+		$("input[name=chk]:checkbox").prop("checked",false);	
+	}
+	else {
+		$("input[name=chk]:checkbox").prop("checked",true);	
+	}
+});
 </script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
