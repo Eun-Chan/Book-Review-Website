@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
  <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" />
- <link rel="shortcut icon" type="image/x-icon" href="https://img.icons8.com/windows/32/000000/literature.png" />
+ <link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon_book.ico" />
 <title>책 읽는 사람들</title>
 </head>
 <body>
@@ -16,16 +16,16 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 	
 	<!-- Body -->
-	<a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
+	<%-- <a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
 	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
 	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
 	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
-	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a>
+	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a> --%>
 	
 	<!-- 인기도서 출력 Start -->
 	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
 	<div class="masthead">
-       <h3 class="text-muted">책 읽는 사람들</h3>
+       <!-- <h3 class="text-muted">책 읽는 사람들</h3> -->
        <nav>
          <ul class="nav nav-justified">
            <li class="active"><a href="#" id="select-AllBook">통합</a></li>
@@ -254,7 +254,7 @@
 	           	 	<td id="best-writer0" class="writer"></td>
 	           	 	<td id="best-readCnt0" class="readCnt"></td>
 	           	 	<td id="best-recommendCnt0" class="recommendCnt"></td>
-	           	 	<input type="hidden" id="rbNo0" />
+	           	 	<input type="hidden" id="best-rbNo0" />
 	            </tr>
 	            <!-- 두번째 -->
 	            <tr class="recent_comment">
@@ -264,7 +264,7 @@
 	           	 	<td id="best-writer1" class="writer"></td>
 	           	 	<td id="best-readCnt1" class="readCnt"></td>
 	           	 	<td id="best-recommendCnt1" class="recommendCnt"></td>
-	           	 	<input type="hidden" id="rbNo1" />
+	           	 	<input type="hidden" id="best-rbNo1" />
 	            </tr>
 	            <!-- 세번째 -->
 	            <tr class="recent_comment">
@@ -274,7 +274,7 @@
 	           	 	<td id="best-writer2" class="writer"></td>
 	           	 	<td id="best-readCnt2" class="readCnt"></td>
 	           	 	<td id="best-recommendCnt2" class="recommendCnt"></td>
-	           	 	<input type="hidden" id="rbNo2" />
+	           	 	<input type="hidden" id="best-rbNo2" />
 	            </tr>
 	            <!-- 네번째 -->
 	            <tr class="recent_comment">
@@ -284,7 +284,7 @@
 	           	 	<td id="best-writer3" class="writer"></td>
 	           	 	<td id="best-readCnt3" class="readCnt"></td>
 	           	 	<td id="best-recommendCnt3" class="recommendCnt"></td>
-	           	 	<input type="hidden" id="rbNo3" />
+	           	 	<input type="hidden" id="best-rbNo3" />
 	            </tr>
 	            <!-- 다섯번째 -->
 	            <tr class="recent_comment">
@@ -294,7 +294,7 @@
 	           	 	<td id="best-writer4" class="writer"></td>
 	           	 	<td id="best-readCnt4" class="readCnt"></td>
 	           	 	<td id="best-recommendCnt4" class="recommendCnt"></td>
-	           	 	<input type="hidden" id="rbNo4" />
+	           	 	<input type="hidden" id="best-rbNo4" />
 	            </tr>
 	         </tbody>
 	      </table>
@@ -431,11 +431,11 @@ $('#indexForm').ready(function(){
 		            $("td#best-writer"+i).text(data[2][i].rbWriter);
 		            $("td#best-rbTitle"+i).text(data[2][i].rbTitle);
 		           	$("td#best-readCnt"+i).text(data[2][i].rb_readCnt);
-		           	$("td#best-recommendCnt"+i).text(data[2][i].rb_recommend); 	
+		           	$("td#best-recommendCnt"+i).text(data[2][i].rb_recommend);
+		           	$("input#best-rbNo"+i).text(data[2][i].rbNo);
            		}
            	}    
             /* 베스트셀러 별점처리 */
-            
             for(var j=0; i<data[1].length; j++)
             {
 	            var totalStarScore = scoreRound(data[1][j].starScoreBook);
@@ -451,9 +451,6 @@ $('#indexForm').ready(function(){
         	console.log("index.jsp_최근리뷰 View, 별점정보를 읽기_광준@ajax처리에 실패했습니다.");
         }
    });
-   
-
-
     return false; //<- 이 문장으로 새로고침(reload)이 방지됨
 });
 }; //startPage End
