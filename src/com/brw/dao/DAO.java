@@ -753,35 +753,52 @@ public class DAO {
 	 * 작성자 : 박세준
 	 * 내용 : bookreview갖고오기
 	 */
-	public List<ReviewBoardDTO> getbookreview(String iSBN13) {
-		List<ReviewBoardDTO> list = new ArrayList<>();
+	public List<ReviewBoardViewDTO> getbookreview(String iSBN13) {
+		List<ReviewBoardViewDTO> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from reviewboard where rb_isbn = ? order by rb_no desc";
+		//String query = "select * from reviewboard where rb_isbn = ? order by rb_no desc";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and Rb_isbn = ? order by rb_no desc) r) r";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, iSBN13);
+
+			
 			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
 			while(rset.next()) {
-				ReviewBoardDTO rb = new ReviewBoardDTO();
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbContent(rset.getString("rb_content"));
-				rb.setRbDate(rset.getString("rb_date"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbReadCnt(rset.getInt("rb_readcnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-//				rb.setRbOriginalFilename(rset.getString("rb_original_filename"));
-//				rb.setRbRenamedFilename(rset.getString("rb_renamed_filename"));
-				rb.setRbReport(rset.getInt("rb_report"));
+				ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
 				
-				list.add(rb);
+				// 리뷰보드DTO에 있는 것들
+				rbv.setRbNo(rset.getInt("rb_no"));
+				rbv.setRbTitle(rset.getString("rb_title"));
+				rbv.setRbWriter(rset.getString("rb_writer"));
+				rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+				rbv.setRbContent(rset.getString("rb_content"));
+				rbv.setRbStarscore(rset.getInt("rb_starscore"));
+				rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+				rbv.setRbRecommend(rset.getInt("rb_recommend"));
+				rbv.setRbReport(rset.getInt("rb_report"));
+				
+				// 리뷰보드뷰DTO에 있는 것들
+				boolean dateNew = false;
+				int passingTime = rset.getInt("passingtime");
+				if(passingTime <= 1) {
+					dateNew = true;
+					rbv.setRbDate(rset.getString("datenew"));
+				}
+				else {
+					rbv.setRbDate(rset.getString("strdate"));
+				}
+				rbv.setDateNew(dateNew);
+				rbv.setUserNickName(rset.getString("usernickname"));
+				rbv.setUserGrade(rset.getInt("usergrade"));
+				
+				list.add(rbv);
 			}
-			System.out.println("DaoList@="+list);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
