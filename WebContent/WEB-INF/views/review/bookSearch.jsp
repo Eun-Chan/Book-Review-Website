@@ -5,9 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>도서 검색</title>
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
+<%-- <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" /> --%>
 <script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
-<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
+<%-- <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script> --%>
 <style>
 /* input타입 inline-block으로 변경 */
 div.myformgroup{
@@ -21,9 +21,10 @@ table#mytable thead tr{
 }
 
 /* 검색 input태그 width 지정 */
-input#search{
+/*@광준 css제거했습니다.*/
+/* input#search{
 	width: 300px;
-}
+} */
 body{
 	text-align: center;
 }

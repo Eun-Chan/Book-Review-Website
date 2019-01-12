@@ -10,12 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.admin.NoticeDetailViewCommand;
+import com.brw.command.admin.NoticeListCommand;
+import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.book.BasketInsertCommand;
-import com.brw.command.book.BookInfomationCommand;
-import com.brw.command.book.BookOneLineRVCommand;
-import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.BookBasketCommand;
+import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.OneLineInsertCommand;
+import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.CheckedBasketCommand;
+import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -292,7 +296,7 @@ public class FrontController extends HttpServlet {
 	    }
 		/*28. 한 줄 리뷰 등록: 김민우*/
 	    else if(command.equals("/book/oneLineRV.do")) {
-	    	com = new BookOneLineRVCommand();
+	    	com = new OneLineInsertCommand();
 	    	com.execute(req, res);
 	    }
 		/*29 . 회원가입시 닉네임 체크*/
@@ -300,7 +304,30 @@ public class FrontController extends HttpServlet {
 			com = new nickNameCheckCommand();
 			com.execute(req, res);
 		}
-
+		/*30. 명훈 : 공지사항 상세보기*/
+		else if(command.equals("/admin/noticeDetail.do")) {
+			com = new NoticeDetailViewCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
+		}
+		/*31. 한 줄 리뷰 삭제 버튼 구현 : 김민우*/
+		else if(command.equals("/book/oneLineDel.do")) {
+			com = new OneLineDeleteCommand();
+			com.execute(req, res);
+		}
+		/*32. 명훈 : 공지사항 관리 페이지*/
+		else if(command.equals("/admin/noticeList.do")) {
+			com = new NoticeListCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
+		}
+		/*33. 명훈 : 공지사항 관리 페이지*/
+		else if(command.equals("/admin/noticeSearch.do")) {
+			com = new NoticeSearchCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeSearch.jsp";
+		}
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
