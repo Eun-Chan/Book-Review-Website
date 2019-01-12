@@ -30,6 +30,11 @@
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
+<style>
+img{
+	max-width: 780px;
+}
+</style>
 	<div id ="reviewDetail">
 		<div id ="reviewDetail-Header">
 			<span id="date"><%=review.getRbDate() %></span>
@@ -71,6 +76,7 @@
 				<%=review.getRbContent() %>
 			</span>
 			</p>
+		</div>
 			<div id="like-Wapper" >
 				<div id ="like">
 					<br />
@@ -85,7 +91,6 @@
 					<img src="<%=request.getContextPath() %>/images/heart.png" alt="" style="width: 15px;height: 12px;margin-top: 10px;margin-right:2px"/>
 				</div>
 			</div>
-		</div>
 		<div id="side-menu">
 			<ul id="left-menu">
 				<li><a href="#" class="btn-gradient green" id="prevpage">이전글</a></li>

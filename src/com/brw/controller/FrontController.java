@@ -11,13 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.admin.NoticeDetailViewCommand;
+import com.brw.command.admin.NoticeListCommand;
+import com.brw.command.admin.NoticeSearchCommand;
+import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
-import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
+import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -263,7 +266,7 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
-	    else if(command.equals("/book/goBasket.do")) {	    	
+	    else if(command.equals("/book/goBasket.do")) {
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
@@ -304,7 +307,6 @@ public class FrontController extends HttpServlet {
 		}
 		/*30. 명훈 : 공지사항 상세보기*/
 		else if(command.equals("/admin/noticeDetail.do")) {
-			//해당 게시물 가져오는 쿼리
 			com = new NoticeDetailViewCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
@@ -314,6 +316,24 @@ public class FrontController extends HttpServlet {
 			com = new OneLineDeleteCommand();
 			com.execute(req, res);
 		}
+		/*32. 명훈 : 공지사항 리스트 페이지*/
+		else if(command.equals("/admin/noticeList.do")) {
+			com = new NoticeListCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
+		}
+		/*33. 명훈 : 공지사항 검색 리스트 페이지*/
+		else if(command.equals("/admin/noticeSearch.do")) {
+			com = new NoticeSearchCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeSearch.jsp";
+		}
+		/*34. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
+		else if(command.equals("/admin/noticeUpdateAllowView.do")) {
+			com = new NoticeUpdateAllowViewCommand();
+			com.execute(req, res);
+		}
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

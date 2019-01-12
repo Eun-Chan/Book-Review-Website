@@ -17,12 +17,12 @@ public class BookBasketDTO implements Serializable {
 	private int price;
 	private int quantity;
 	private int totalPrice;
-	private Date pickDate;
+	private String pickDate;
 	
 	public BookBasketDTO() {}
 
 	public BookBasketDTO(int basketNo, String userId, String userName, String iSBN, String bookTitle, int price,
-			int quantity, int totalPrice, Date pickDate) {
+			int quantity, int totalPrice, String pickDate) {
 		super();
 		this.basketNo = basketNo;
 		this.userId = userId;
@@ -99,11 +99,11 @@ public class BookBasketDTO implements Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	public Date getPickDate() {
+	public String getPickDate() {
 		return pickDate;
 	}
 
-	public void setPickDate(Date pickDate) {
+	public void setPickDate(String pickDate) {
 		this.pickDate = pickDate;
 	}
 

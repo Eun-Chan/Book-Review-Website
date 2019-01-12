@@ -157,7 +157,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -184,12 +184,21 @@ public class DAO {
 				rbv.setRbRecommend(rset.getInt("rb_recommend"));
 				rbv.setRbReport(rset.getInt("rb_report"));
 				
-				// 리뷰보드뷰DTO에 있는 것들
+				// new : 작성한지 만 하루가 지나지 않은 것들
+				// 현재일(day)과 같은 날에 쓴 글은 작성일에 시간만 띄우기 (HH24:MI)
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String rbDay = rset.getString("rbday");
+				
 				if(passingTime <= 1) {
 					dateNew = true;
-					rbv.setRbDate(rset.getString("datenew"));
+					if(rbDay.equals(sysDay)) {
+						rbv.setRbDate(rset.getString("todaytime"));
+					}
+					else {
+						rbv.setRbDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					rbv.setRbDate(rset.getString("strdate"));
@@ -266,7 +275,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -296,9 +305,17 @@ public class DAO {
 				
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String rbDay = rset.getString("rbday");
+				
 				if(passingTime <= 1) {
 					dateNew = true;
-					rbv.setRbDate(rset.getString("datenew"));
+					if(rbDay.equals(sysDay)) {
+						rbv.setRbDate(rset.getString("todaytime"));
+					}
+					else {
+						rbv.setRbDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					rbv.setRbDate(rset.getString("strdate"));
@@ -1725,17 +1742,20 @@ public class DAO {
 	 * 40. 작성자 : 박세준
 	 * 내용 : 즐겨찾기 보여주는 결과
 	 */
-	public List<BookBasketDTO> showBookBasket(String userId) {
+	public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
 		List<BookBasketDTO> list = new ArrayList();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from basket where userId = ?";
-		
+		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 			try {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, userId);
+				pstmt.setInt(2, startRnum);
+				pstmt.setInt(3, endRnum);
 				rset = pstmt.executeQuery();
 				
 				while(rset.next()) {
@@ -1748,7 +1768,7 @@ public class DAO {
 					bb.setPrice(rset.getInt("price"));
 					bb.setQuantity(rset.getInt("quantity"));
 					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getDate("pickdate"));
+					bb.setPickDate(rset.getString("pickdate"));
 				
 					list.add(bb);
 				}
@@ -1975,22 +1995,28 @@ public class DAO {
 		}
 		return result;
 	}
-
+	
 	/*
 	 * 46. 작성자 : 정명훈
-	 * 내용 : db에서 공지사항 리스트 가져오기 (삭제되지 않았고 ntc_allowview = Y 인 것들만) 
+	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
 	 */
-	public List<NoticeDTO> noticeList() {
+	public List<NoticeDTO> noticeList(int cPage, int numPerPage) {
 		List<NoticeDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(ntc_date, 'HH24:MI') datenew, (sysdate - ntc_date) passingtime from notice n where ntc_allowview = 'Y' and ntc_delflag = 'N'";
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from (select rownum rnum, n.* from (select * from notice n where ntc_delflag = 'N' order by ntc_no desc) n) n where rnum between ? and ?";
+		
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
 			rset = pstmt.executeQuery();
 			
 			list = new ArrayList<>();
@@ -2001,12 +2027,21 @@ public class DAO {
 				n.setNtcTitle(rset.getString("ntc_title"));
 				n.setNtcContent(rset.getString("ntc_content"));
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				n.setNtcAllowview(rset.getString("ntc_allowview"));
 				
-				int passingtime = rset.getInt("passingtime");
 				boolean dateNew = false;
-				if(passingtime <= 0) {
-					n.setNtcDate(rset.getString("datenew"));
+				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1) {
 					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					n.setNtcDate(rset.getString("strdate"));
@@ -2119,7 +2154,6 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String query = "delete from onelinereview where userId = ? and no = ?";
-
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -2148,6 +2182,174 @@ public class DAO {
 		return result;
 
 	}
+	/*
+	 * 50. 작성자 : 정명훈
+	 * 내용 : 공지사항 총 개수 구하기
+	 */
+	public int countNoticeAll() {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from notice where ntc_delflag = 'N' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 51. 작성자 : 정명훈
+	 * 내용 : 각 게시판에 보여줄 공지사항 가져오기 (allowview = Y 인 것만 가져오기) 
+	 */
+	public List<NoticeDTO> noticeListAllow() {
+		List<NoticeDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from notice n where ntc_allowview = 'Y' and ntc_delflag = 'N' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				NoticeDTO n = new NoticeDTO();
+				
+				n.setNtcNo(rset.getInt("ntc_no"));
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				
+				boolean dateNew = false;
+				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1) {
+					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
+				}
+				else {
+					n.setNtcDate(rset.getString("strdate"));
+				}
+				
+				n.setDateNew(dateNew);
+				
+				list.add(n);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	/*52. 작성자 : 박세준
+	 * 내용 : 즐겨찾기한 개수 찾기*/
+	public int countBasketAll(String userId) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from basket where userId = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 	
+	/*
+	 * 53. 작성자 : 정명훈
+	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
+	 */
+	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update notice set ntc_allowview = ? where ntc_no = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, ntcAllowView);
+			pstmt.setInt(2, ntcNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		return result;	
+	}
 }
 

@@ -34,15 +34,15 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/header.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <script>
 	
 </script>
+
 </head>
 <body>
-<!DOCTYPE html>
 
  
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
  -->
@@ -73,13 +73,13 @@
           
           	<li><a href="<%=request.getContextPath()%>/index.jsp">홈으로</a></li>
 	
-            <li class="active"><a href="#">공지사항</a></li>
+            <li class="active"><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
-            <li><a href="#contact">즐겨찾기</a></li>
+
             
             
             
@@ -93,16 +93,41 @@
 		    	<% } 
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
+ 	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
 		    	<li class="dropdown">
-		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
+		    			<!-- 유저 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="#">내 정보보기</a></li>
+		    			<% } %>
+		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
+		    			<li><a href="">회원 관리</a></li>
+		    			<% } %>
+		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
+		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
+		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
+		    			<% } %>
 		    			<li class="divider"></li>
-		          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
 		    		</ul>
 		    	</li>
 		    	<%}%>
-		    </li>
           </ul>
 
         </div><!--/.nav-collapse -->
@@ -266,7 +291,51 @@
       </ul> --%>
 <!--     </div>/.navbar-collapse
     </div>
-</nav> -->
+</nav> --> 
+<!-- 채팅 -->
+<div class="container" id="chat-Container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="panel panel-primary" id="chat-Box">
+                <div class="panel-heading" id="accordion">
+                    <span class="glyphicon glyphicon-comment"></span> Chat
+                    <div class="btn-group pull-right">
+                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </div>
+                </div>
+            <div class="panel-collapse collapse" id="collapseOne">
+                <div class="panel-body">
+                    <ul class="chat">
+                      
+                      <!-- 은찬 : 채팅 내용 영역 -->  
+                      
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 	
 <!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">
