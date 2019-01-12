@@ -4,18 +4,20 @@
 }
 #basketList {
 	text-align : center;
+	width : 1220px;
+	margin : 0 auto;
 }
 table.table {
-	width : 1000px;
+	width : 1200px;
 	margin : 0 auto;
 }
 table.table th {
 	text-align : center;
 	background : #f1f1f1;
 }
-#allButton {
-}
-#deleteButton {
+table.table td:nth-child(1) {
+	text-align : left;
+	text-indent : 5px;
 }
 #button {
 	margin : 0px auto;

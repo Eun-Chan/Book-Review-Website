@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %> 
-
 <script src = "<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookBasket.css" />
@@ -21,23 +20,26 @@
 		<div id="basketList"></div>
 	</div>
 	<br />
+	<div id="pagebar-container" class="text-center"></div>
 	<div id="totalBasket"></div>
 	<br />
 <script>
 var userId = "<%=user.getUserId()%>";
+var cPage = <%=request.getParameter("cPage")%>;
 console.log(userId)
 /*즐겨찾기 보여주는 결과*/
 $.ajax({
 	url : "<%=request.getContextPath()%>/book/showBookBasket.do",
 	dataType:"json",
-	data: "userId="+userId,
+	data: "userId="+userId+"&cPage="+cPage,
 	success:function(data){
-		var table = $("<table class='table'><th>"+"책제목"+"</th><th>"+"ISBN"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
-		for(var i in data) {
-			var basket = data[i];
+		console.log(data);
+		console.log("list",data.list);
+		var table = $("<table class='table'><th>"+"책제목"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
+		for(var i in data.list) {
+			var basket = data.list[i];
 			var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+basket.ISBN+"'>"+basket.bookTitle+"</a></td>";   
-			html += "<td>"+basket.ISBN+"</td>";
-			html += "<td>"+basket.price+"</td>";
+			html += "<td>"+basket.price+"원"+"</td>";
 			html += "<td>"+basket.pickDate+"</td>";
 			html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
 			
@@ -45,13 +47,15 @@ $.ajax({
 		}
 		var cnt = parseInt(i)+1;
 		if(isNaN(cnt) == true) {
-			var cntHtml = "<p><h4>"+"총 0권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";	
+			var cntHtml = "<p><h4>"+"총 0권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";
+			location.href = "<%=request.getContextPath()%>/book/goBasket.do?cPage=1";
 		}
 		else {		
-			var cntHtml = "<p><h4>"+"총 "+cnt+"권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";		
+			var cntHtml = "<p><h4>"+"총 "+data.totalContents+"권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";		
 		}
-		
+		var paging = data.pageBar;
 		console.log("cnt",cnt);
+		$("#pagebar-container").html(paging);
 		$("#basketList").html(table);
 		$("#totalBasket").html(cntHtml);
 		
@@ -67,20 +71,18 @@ $("#deleteButton").click(function() {
 			url : "<%=request.getContextPath()%>/book/checkedBasket.do?ISBN="+ISBN+"&userId=<%=user.getUserId()%>",
 			success : function(data) {
 				console.log(data);
-				var table = $("<table><th>"+"책제목"+"</th><th>"+"ISBN"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
+				var table = $("<table><th>"+"책제목"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
 				for(var i in data) {
 					var basket = data[i];
 					var html = "<tr><td>"+basket.bookTitle+"</td>";
-					html += "<td>"+basket.ISBN+"</td>";
 					html += "<td>"+basket.price+"</td>";
 					html += "<td>"+basket.pickDate+"</td>";
 					html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>"
 					
 					table.append(html);
 				}
+				location.reload();				
 				$("#basketList").html(table);
-				location.reload();
-				
 			},
 			error : function() {
 				console.log("응안돼");
