@@ -93,6 +93,21 @@
 		    	<% } 
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
+ 	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
 		    		<ul class="dropdown-menu" role="menu">
@@ -266,7 +281,6 @@
       </ul> --%>
 <!--     </div>/.navbar-collapse
     </div>
-<<<<<<< HEAD
     <fieldset id="chatting_TextArea" style="display:none ">
         <textarea id="messageWindow" rows="10" cols="50" readonly="true"></textarea>
         <br/>
@@ -276,6 +290,42 @@
 </nav>
 =======
 </nav> -->
+<!-- 채팅 -->
+<div class="container" id="chat-Container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="panel panel-primary" id="chat-Box">
+                <div class="panel-heading" id="accordion">
+                    <span class="glyphicon glyphicon-comment"></span> Chat
+                    <div class="btn-group pull-right">
+                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </div>
+                </div>
+            <div class="panel-collapse collapse" id="collapseOne">
+                <div class="panel-body">
+                    <ul class="chat">
+                      
+                      <!-- 은찬 : 채팅 내용 영역 -->  
+                      
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 	
 <!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">

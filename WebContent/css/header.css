@@ -1,3 +1,16 @@
+
+#chat-Container
+{
+	z-index: 99999;
+	width: 300px;
+	position: fixed !important;
+	margin-left: 57%;
+	margin-top: 0%;
+}
+#navSearch
+{
+	z-index: -9999;
+}
 /*@광준: 로그인팝업창 호출 시 어둡게 처리가 맨 앞으로 나와 순서를 조정함*/
 .modal-dialog
 {
