@@ -2007,6 +2007,7 @@ public class DAO {
 				n.setNtcTitle(rset.getString("ntc_title"));
 				n.setNtcContent(rset.getString("ntc_content"));
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				n.setNtcAllowview(rset.getString("ntc_allowview"));
 				
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
@@ -2260,6 +2261,44 @@ public class DAO {
 			}
 		}
 		return list;
+	}
+	/*
+	 * 52. 작성자 : 정명훈
+	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
+	 */
+	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update notice set ntc_allowview = ? where ntc_no = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, ntcAllowView);
+			pstmt.setInt(2, ntcNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 }
