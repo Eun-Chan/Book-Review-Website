@@ -1886,7 +1886,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from onelinereview where isbn = ? and delflag = 'N'";
+		String query = "select * from onelinereview where isbn = ? and delflag = 'N' order by now desc";
 
 		try {
 			conn = dataSource.getConnection();
@@ -1958,6 +1958,7 @@ public class DAO {
 		}
 		return result;
 	}
+
 	/*
 	 * 46. 작성자 : 정명훈
 	 * 내용 : db에서 공지사항 리스트 가져오기 (삭제되지 않았고 ntc_allowview = Y 인 것들만) 
@@ -2025,6 +2026,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+
 			pstmt.setInt(1, ntcNo);
 			
 			result = pstmt.executeUpdate();
@@ -2090,6 +2092,44 @@ public class DAO {
 		
 		
 		return n;
+	}
+	
+	/* 
+	 * 49. 한 줄 리뷰 삭제: 김민우
+	 * */
+	public int deleteOneLineReview(String userId, int oneLineNo) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from onelinereview where userId = ? and no = ?";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, oneLineNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 1) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+
 	}
 	
 }

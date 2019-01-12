@@ -14,9 +14,10 @@ import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
-import com.brw.command.book.BookOneLineRVCommand;
+import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.book.BookReviewCommand;
 import com.brw.command.book.CheckedBasketCommand;
+import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -293,7 +294,7 @@ public class FrontController extends HttpServlet {
 	    }
 		/*28. 한 줄 리뷰 등록: 김민우*/
 	    else if(command.equals("/book/oneLineRV.do")) {
-	    	com = new BookOneLineRVCommand();
+	    	com = new OneLineInsertCommand();
 	    	com.execute(req, res);
 	    }
 		/*29 . 회원가입시 닉네임 체크*/
@@ -308,7 +309,11 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
 		}
-
+		/*31. 한 줄 리뷰 삭제 버튼 구현 : 김민우*/
+		else if(command.equals("/book/oneLineDel.do")) {
+			com = new OneLineDeleteCommand();
+			com.execute(req, res);
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
