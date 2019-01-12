@@ -37,6 +37,7 @@ import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
+import com.brw.command.user.OldPwdChangeOrLaterCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
 import com.brw.command.user.nickNameCheckCommand;
 
@@ -333,11 +334,23 @@ public class FrontController extends HttpServlet {
 			com = new NoticeUpdateAllowViewCommand();
 			com.execute(req, res);
 		}
+		/*35. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 변경페이지로 보내보리기 */
+	    else if(command.equals("/sign/OldPwdChangeOrLater.do")) {
+	    	viewPage = "/WEB-INF/views/sign/OldPwdChangeOrLater.jsp";
+	    }
+		/*36. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 비밀번호 변경시켜보리기 */
+	    else if(command.equals("/sign/OldPwdChangeOrLaterUpdate.do")) {
+	    	com = new OldPwdChangeOrLaterCommand();
+	    	com.execute(req, res);
+	    	viewPage = "/index.jsp";
+	    }
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
 		}
+		
+		
 		
 	}
 }
