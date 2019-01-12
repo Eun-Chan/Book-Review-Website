@@ -14,7 +14,7 @@ import com.brw.dto.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class CheckedBasketCommand implements Command {
+public class checkedBasketCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

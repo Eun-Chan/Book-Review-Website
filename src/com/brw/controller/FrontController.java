@@ -15,10 +15,10 @@ import com.brw.command.admin.NoticeListCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.book.BasketInsertCommand;
-//import com.brw.command.book.BookBasketCommand;
+import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.CheckedBasketCommand;
+import com.brw.command.book.checkedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
@@ -266,10 +266,10 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req, res);
 	    }
 		/*22. 즐겨찾기 보여주는 결과*/
-//	    else if(command.equals("/book/showBookBasket.do")) {
-//	    	com = new BookBasketCommand();
-//	    	com.execute(req, res);
-//	    }
+	    else if(command.equals("/book/showBookBasket.do")) {
+	    	com = new BookBasketCommand();
+	    	com.execute(req, res);
+	    }
 		/*23. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/goBasket.do")) {
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
@@ -291,7 +291,7 @@ public class FrontController extends HttpServlet {
 		 * 26.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
-	    	com = new CheckedBasketCommand();
+	    	com = new checkedBasketCommand();
 	    	com.execute(req, res);
 	    }
 
