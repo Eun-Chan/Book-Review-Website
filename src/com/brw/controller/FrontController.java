@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.book.BasketInsertCommand;
+import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
+import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.bookBasketCommand;
-import com.brw.command.book.checkedBasketCommand;
+import com.brw.command.book.CheckedBasketCommand;
+import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.index.IndexCommand;
 import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -24,6 +27,7 @@ import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
+import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
@@ -34,6 +38,7 @@ import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
 import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
+import com.brw.command.user.nickNameCheckCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -122,20 +127,20 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*
-		 * 5. index.jsp 최근 리뷰 & 인기 도서
+		 * 7. index.jsp 최근 리뷰 & 인기 도서
 		 */
 		else if(command.equals("/index.do")) {
 			com = new IndexCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 6. 알라딘 API
+		 * 8. 알라딘 API
 		 */
 		else if(command.equals("/book/bookList.do")) {
 	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
 		/*
-		 * 7. 알라딘 API에서 Book List 중에서 Book 클릭 시 상세 내용
+		 * 9. 알라딘 API에서 Book List 중에서 Book 클릭 시 상세 내용
 		 */
 		else if(command.equals("/book/bookInfo.do")) {
 			com = new BookInfomationCommand();
@@ -143,7 +148,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/book/bookInfo.jsp";
 		}
 		/*
-		 * 8. (7.) 상세 내용 밑에 댓글 내용 출력
+		 * 10. (9.) 상세 내용 밑에 댓글 내용 출력
 		 */
 		else if(command.equals("/book/bookreviewInfo.do")) {
 			System.out.println("front성공");
@@ -151,7 +156,7 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*
-		 * 9. 리뷰 리스트 (리뷰 게시판)
+		 * 11. 리뷰 리스트 (리뷰 게시판)
 		 */
 		else if(command.equals("/review/reviewList.do")) {
 			com = new ReviewPaginationCommand();
@@ -159,7 +164,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewList.jsp";
 		}
 		/*
-		 * 10. 리뷰 게시판 안에서 검색 결과
+		 * 12. 리뷰 게시판 안에서 검색 결과
 		 */
 		else if(command.equals("/review/reviewSearch.do")) {
 			com = new ReviewSearchCommand();
@@ -167,7 +172,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
 		/*
-		 * 11. 리뷰 게시판에서 리뷰 클릭 시 상세내용 
+		 * 13. 리뷰 게시판에서 리뷰 클릭 시 상세내용 
 		 */
 		else if(command.equals("/review/reviewDetail.do")) {
 			//해당 게시물 가져오는 쿼리
@@ -177,27 +182,27 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
 		/*
-		 * 12. 리뷰 상세 보기에서의 댓글
+		 * 14. 리뷰 상세 보기에서의 댓글
 		 */
 		else if(command.equals("/insertComment.do")) {
 			com = new InsertCommentCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 13. 리뷰 상세 보기에서의 댓글의 댓글
+		 * 15. 리뷰 상세 보기에서의 댓글의 댓글
 		 */
 		else if(command.equals("/insertReComment.do")) {
 			com = new InsertReCommentCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 14. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
+		 * 16. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
 		 */
 		else if(command.equals("/review/reviewWrite.do")) {
 			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
 		}
 		/*
-		 * 15. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
+		 * 17. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
 		 */
 	    else if(command.equals("/review/reviewWriteEnd.do")) {
 	    	com = new ReviewWriteEndCommand();
@@ -212,26 +217,26 @@ public class FrontController extends HttpServlet {
 			}
 	    }
 		/*
-		 * 16. BookList에서 책 검색 시 결과
+		 * 18. BookList에서 책 검색 시 결과
 		 */
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 	    }
 		/*
-		 * 17. 아이디 혹은 비밀번호 찾기 페이지 이동
+		 * 19. 아이디 혹은 비밀번호 찾기 페이지 이동
 		 */
 	    else if(command.equals("/idAndPwdSearch.do")) {
 	    	viewPage = "/WEB-INF/views/sign/idAndPwdSearch.jsp";
 	    }
 		/*
-		 * 18. 아이디 찾기 시 이메일이 존재하는지 확인
+		 * 20. 아이디 찾기 시 이메일이 존재하는지 확인
 		 */
 	    else if(command.equals("/emailCheck.do")) {
 	    	com = new FindEmailCheckCommand();
 	    	com.execute(req, res);
 	    }
 		/**
-		 * 19. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 * 21. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
 		 */
 	    else if(command.equals("/book/basket.do")) {
 	    	com = new BasketInsertCommand();
@@ -242,51 +247,51 @@ public class FrontController extends HttpServlet {
 	    }
 		
 		/*
-		 * 20. 좋아요 버튼 클릭시 처리 ajax 
+		 * 22. 좋아요 버튼 클릭시 처리 ajax 
 		 */
 	    else if(command.equals("/review/reviewLike.do")){
 	    	com = new ReviewBoardLikeCommend();
 	    	com.execute(req,res);
 	    }
 		/*
-		 * 21. 댓글 삭제 쿼리  
+		 * 23. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
 	    	com = new DeleteReviewBoardComment();
 	    	com.execute(req, res);
 	    }
-		/*22. bookInfo에서 즐겨찾기 누를시 결과*/
-	    else if(command.equals("/book/bookbasket.do")) {
-	    	com = new bookBasketCommand();
+		/*24. 즐겨찾기 보여주는 결과*/
+	    else if(command.equals("/book/showBookBasket.do")) {
+	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*23. 즐겨찾기로 가버렷*/
-	    else if(command.equals("/book/showbasket.do")) {	    	
+		/*25. 즐겨찾기로 가버렷*/
+	    else if(command.equals("/book/goBasket.do")) {	    	
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
-		 * 24. 이메일을 통해 아이디 찾아보리기
+		 * 26. 이메일을 통해 아이디 찾아보리기
 		 */
 	    else if(command.equals("/sign/searchIdForEmail.do")) {
 	    	com = new SearchIdForEmailCommand();
 	    	com.execute(req, res);
 	    }
 		/*
-		 * 25. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
+		 * 27. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
 		 */
 	    else if(command.equals("/sign/idSearchEnd.do")) {
 	    	System.out.println("여기 컨트롤러 idSearchEnd.do");
 	    	viewPage = "/WEB-INF/views/sign/IdSearchEnd.jsp";
 	    }
 		/*
-		 * 26.check된 책 없애기
+		 * 28.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
-	    	com = new checkedBasketCommand();
+	    	com = new CheckedBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/**
-		 * 27
+		 * 29
 		 * 작성자 : 김은찬
 		 * 내용 : 아이디를 통해 이메일을 찾고, 메일로 인증번호 보내기
 		 */
@@ -295,7 +300,7 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req, res);
 	    }
 		/**
-		 * 28
+		 * 30
 		 * 작성자 : 김은찬
 		 * 내용 : 비밀번호 찾기 시 비밀번호 변경
 		 */
@@ -305,7 +310,7 @@ public class FrontController extends HttpServlet {
 	    	viewPage = "/index.jsp";
 	    }
 		/**
-		 * 29
+		 * 31
 		 * 작성자 : 김은찬
 		 * 내용 : 비밀번호 변경 페이지로 이동
 		 */
@@ -316,7 +321,7 @@ public class FrontController extends HttpServlet {
 	    	viewPage = "/WEB-INF/views/sign/changePwd.jsp";
 	    }
 		/**
-		 * 30
+		 * 32
 		 * 작성자 : 김은찬
 		 * 내용 : 카카오톡 유저 회원가입 (카카오톡 유저 로그인 기능도 담당)
 		 */
@@ -324,7 +329,35 @@ public class FrontController extends HttpServlet {
 	    	com = new KakaoCreateUserCommand();
 	    	com.execute(req, res);
 	    }
-		
+
+		/*33. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
+	    else if(command.equals("/review/reviewWriteImage.do")) {
+	    	com = new ReviewWriteImageCommand();
+	    	com.execute(req, res);
+	    }
+		/*34. 한 줄 리뷰 등록: 김민우*/
+	    else if(command.equals("/book/oneLineRV.do")) {
+	    	com = new OneLineInsertCommand();
+	    	com.execute(req, res);
+	    }
+		/*35 . 회원가입시 닉네임 체크*/
+		else if(command.equals("/nickNameCheck.do")) {
+			com = new nickNameCheckCommand();
+			com.execute(req, res);
+		}
+		/*36. 명훈 : 공지사항 상세보기*/
+		else if(command.equals("/admin/noticeDetail.do")) {
+			//해당 게시물 가져오는 쿼리
+			com = new NoticeDetailViewCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
+		}
+		/*37. 한 줄 리뷰 삭제 버튼 구현 : 김민우*/
+		else if(command.equals("/book/oneLineDel.do")) {
+			com = new OneLineDeleteCommand();
+			com.execute(req, res);
+		}
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

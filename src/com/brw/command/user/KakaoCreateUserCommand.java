@@ -65,7 +65,7 @@ public class KakaoCreateUserCommand implements Command {
 		}
 		
 		try {
-			result = DAO.getInstance().kakaoCreateUser(new UserDTO(userId,userPassword,userNickName,userEmail));
+			result = DAO.getInstance().kakaoCreateUser(new UserDTO(userId,userPassword,userNickName,userEmail,userId));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

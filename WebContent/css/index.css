@@ -1,4 +1,64 @@
+body
+{
+	min-width: 950px !important;
+}
+/*검색*/
+#hiddenInput-search, select#searchType, #search, #btn-search
+{
+	margin-top: 0%;
+	margin-bottom: 1%;
+}
+/*검색end*/
+div#Review-Container
+{
+	margin-left:15%;
+	display: inline-block;
+	width: 65%;
+}
+div#bestReview
+{
+	margin-left:15%;
+	display: inline-block;
+	width: 65%;
+}
+/*검색*/
+div#search-Container
+{
+	width: 100%;
+	vertical-align: middle;
+}
+#search-ContainerOut
+{
+	width: 100%;
+	display: table-cell;
+}
+nav#navSearch
+{
+	margin-top: 0%;
+}
+#searchType
+{
+	margin: 0;
+	margin-right: 0;
+	color: black;
+	height: 35px;
+	margin-left: 75px;
+}
+#searchType>option
+{
+	font-size: 15px;
+}
+input#search
+{
+	margin-left: 0.5%;
+	margin-right: 0.5%;
+}
 /* 인기도서 Start*/
+div#search-Container
+{
+	width: 1000px;
+	margin: 0 auto;
+}
 /* 이미지 */
 img#bookImage0, img#bookImage1, img#bookImage2, img#bookImage3
 {	
@@ -29,6 +89,7 @@ div.span-center
 {
 	text-align: center;
 }
+
 img.img-thumbnail
 {
 	min-height: 180px;
@@ -91,6 +152,16 @@ hr.my-hr2
     background: #ccc;
 }
 /* 최근 리뷰 */
+#recent-Review
+{
+	margin-left: 5%;
+	float: left;
+}
+#bestReview
+{
+	margin-left: 5%;
+	display: inline-block;
+}
 span.bookName
 {
 	font-size: 20px;
@@ -99,7 +170,6 @@ h3.subTitle
 {
 	margin-top: 2%;
 	margin-bottom: 2%;
-	margin-left: 10%;
 }
 hr.title-line
 {

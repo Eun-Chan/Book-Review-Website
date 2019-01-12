@@ -7,67 +7,90 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" />
-<link rel="shortcut icon" type="image/x-icon" href="https://img.icons8.com/windows/32/000000/literature.png" />
+<!-- CSS 추가 -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" />
+<!-- Favicon 추가 - Header에도 Favicon이 있지만 적용되지 않아 다시한번 등록함 -->
+<link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon_book.ico" />
 <title>책 읽는 사람들</title>
-</head>
+</head> 
 <body>
-	<!-- Header -->
-	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
+
+<!-- Header 추가 -->
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
+
 	
-	<!-- Body -->
-	<a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
-	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
-	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
-	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
-	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a>
+<!-- ======= 1. 검색 Part START ======= -->
 	
-	<!-- 인기도서 출력 Start -->
-	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
-	<div class="masthead">
-       <h3 class="text-muted">책 읽는 사람들</h3>
-       <nav>
-         <ul class="nav nav-justified">
-           <li class="active"><a href="#" id="select-AllBook">통합</a></li>
-           <li><a href="#" id="select-NewBook">신간</a></li>
-           <li><a href="#" id="select-ForeginBook">외국</a></li>
-           <li><a href="#" id="select-eBook">e북</a></li>
-         </ul>
-       </nav>
-     </div>
-      
-     <div class="container">
-      
+<!-- @광준 : 검색 Container -->
+<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> 
+	<!-- 전송을 위해 form 태그에 담았으나, 담는순간 CSS가 먹히지 않는 오류가 있어 jquery click함수를 통해 수동으로 전송함 -->
+	<!-- select의 margin CSS가 먹히지 않아 hidden타입으로 input을 하나 끼워넣고 margin을 통해 거리를 벌림 -->
+	<input type="hidden" id="hiddenInput-search"/>
+	<!-- 검색방법을 선택 - 제목/저자 -->
+	<select id="searchType">
+		<option value="title">제목</option> 
+		<option value="author">저자</option>
+	</select>
+	<!-- 검색바 -->
+	<input type="text" class="form-control" placeholder="도서를 검색해주세요." name="search" id="search">
+	<!-- 검색버튼 - 클릭 시 jquery로 검색에 필요한 데이터를 전송한다. -->
+	<input class="btn btn-default" type="button" id="btn-search" value="검색">
+</nav>  
+	
+<!-- ======= 1. 검색 Part END ======= -->
+
+
+<!-- ======= 2. 도서정보 출력 Part START ======= -->
+<!-- 도서정보 장르 메뉴 영역 -->
+<div class="masthead">
+	<nav>
+		<!-- 도서정보 장르 메뉴 -->
+		<ul class="nav nav-justified">
+			<li><a id="select-AllBook">통합</a></li>
+			<li><a id="select-NewBook">신간</a></li>
+			<li><a id="select-ForeginBook">외국</a></li>
+			<li><a id="select-eBook">e북</a></li>
+		</ul>
+	</nav>
+</div>
+
+<!-- 도서 하나에 대한 컨테이너 -->
+<div class="container">     
 	<!-- 첫번째 -->
-    <div class="row">
-	  <div class="col-sm-6 col-md-3">
-	   <div class="thumbnail">
-	   	 <img class="img-thumbnail" id="bookImage0">
-	     <div class="caption">
-	       <div class="span-center"><span id="book0" class="bestseller-title"></span></div>
-	       <p id="book-Author0" class="book-Author"> </p>
-	       <!-- 별점 -->
-	       <div id="start-Container">
-	       <div class="starRev0">
-			  <span class="starR1" id="star0-0">별1_왼쪽</span>
-			  <span class="starR2" id="star0-1">별1_오른쪽</span>
-			  <span class="starR1" id="star0-2">별2_왼쪽</span>
-			  <span class="starR2" id="star0-3">별2_오른쪽</span>
-			  <span class="starR1" id="star0-4">별3_왼쪽</span>
-			  <span class="starR2" id="star0-5">별3_오른쪽</span>
-			  <span class="starR1" id="star0-6">별4_왼쪽</span>
-			  <span class="starR2" id="star0-7">별4_오른쪽</span>
-			  <span class="starR1" id="star0-8">별5_왼쪽</span>
-			  <span class="starR2" id="star0-9">별5_오른쪽</span>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<div class="thumbnail">
+				<img class="img-thumbnail" id="bookImage0">
+				<div class="caption">
+					<div class="span-center">
+						<span id="book0" class="bestseller-title"></span>
+					</div>
+					<p id="book-Author0" class="book-Author"> </p>
+					<!-- 별점 -->
+					<div id="start-Container">
+						<div class="starRev0">
+							<span class="starR1" id="star0-0">별1_왼쪽</span>
+							<span class="starR2" id="star0-1">별1_오른쪽</span>
+							<span class="starR1" id="star0-2">별2_왼쪽</span>
+							<span class="starR2" id="star0-3">별2_오른쪽</span>
+							<span class="starR1" id="star0-4">별3_왼쪽</span>
+							<span class="starR2" id="star0-5">별3_오른쪽</span>
+							<span class="starR1" id="star0-6">별4_왼쪽</span>
+							<span class="starR2" id="star0-7">별4_오른쪽</span>
+							<span class="starR1" id="star0-8">별5_왼쪽</span>
+							<span class="starR2" id="star0-9">별5_오른쪽</span>
+						</div>
+					</div>
+					<br /><br />
+					<div id="button-Container">
+						<p>
+							<a href="#" class="btn btn-primary" role="button">구매하기</a>
+							<a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a>
+						</p>
+					</div>
+				</div>
 			</div>
-			</div>
-			<br /><br />
-			<div id="button-Container">
-	       		<p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a></p>
-	        </div>
-	     </div>
-	   </div>
-	 </div>
+	</div>
 	 
 	<!-- 두번째 -->
 	<div class="col-sm-6 col-md-3">
@@ -155,59 +178,158 @@
 	 </div> <!-- rowEnd -->
     </div> <!-- /container -->
     <!-- 인기도서 출력 End -->
-    
+    <div id="Review-Container">
     <!-- 최근 리뷰 Start -->
-    <h3 class="subTitle"><strong>최근 리뷰</strong></h3>
-    <hr class="title-line" />
-    <br />
+
     
-    <!-- 리뷰 -->
-    <div class="recent_comment">
-    	<span id="bookName0" class="bookName"></span> &nbsp;
-    	<span id="nickName0" class="nickName"></span>
-    	<span id="writer-Time0" class="writer-Time"></span>
-    	<br /><br />
-    	<span id="rbTitle0" class="rbTitle"></span>
-    	<br /><br />
-    	<hr />	
-    </div>
-    <div class="recent_comment">
-    	<span id="bookName1" class="bookName"></span> &nbsp;
-    	<span id="nickName1" class="nickName"></span>
-    	<span id="writer-Time1" class="writer-Time"></span>
-    	<br /><br />
-    	<span id="rbTitle1" class="rbTitle"></span>
-    	<br /><br />
-    	<hr />	
-    </div>
-    <div class="recent_comment">
-    	<span id="bookName2" class="bookName"></span> &nbsp;
-    	<span id="nickName2" class="nickName"></span>
-    	<span id="writer-Time2" class="writer-Time"></span>
-    	<br /><br />
-    	<span id="rbTitle2" class="rbTitle"></span>
-    	<br /><br />
-    	<hr />	
-    </div>
-    <div class="recent_comment">
-    	<span id="bookName3" class="bookName"></span> &nbsp;
-    	<span id="nickName3" class="nickName"></span>
-    	<span id="writer-Time3" class="writer-Time"></span>
-    	<br /><br />
-    	<span id="rbTitle3" class="rbTitle"></span>
-    	<br /><br />
-    	<hr />	
-    </div>
-    <div class="recent_comment">
-    	<span id="bookName4" class="bookName"></span> &nbsp;
-    	<span id="nickName4" class="nickName"></span>
-    	<span id="writer-Time4" class="writer-Time"></span>
-    	<br /><br />
-    	<span id="rbTitle4" class="rbTitle"></span>
-    	<br /><br />
-    	<hr />	
-    </div>
+	    <h3 class="subTitle"><strong>최근 리뷰</strong></h3>
+	    <!-- <hr class="title-line" /> -->
+	    
+	    <!-- 새로운 리뷰 -->
+	    <div id="table-container-index">
+	      <table class="table table-hover table-info table-responsive" id="review-list-table">
+	         <thead>
+	            <tr>
+	               <th class="col-sm-3">도서명</th>
+	               <th class="col-sm-3">제목</th>
+	               <th>작성자</th>
+	               <th>조회수</th>
+	               <th>추천수</th>
+	            </tr>
+	         </thead>
+	         <tbody>
+	         	<!-- 첫번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="bookName0" class="bookName"></td>
+	           	 	<td id="rbTitle0" class="rbTitle"></td>
+	           	 	<td id="writer0" class="writer"></td>
+	           	 	<td id="readCnt0" class="readCnt"></td>
+	           	 	<td id="recommendCnt0" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="rbNo0" />
+	            </tr>
+	            <!-- 두번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="bookName1" class="bookName"></td>
+	           	 	<td id="rbTitle1" class="rbTitle"></td>
+	           	 	<td id="writer1" class="writer"></td>
+	           	 	<td id="readCnt1" class="readCnt"></td>
+	           	 	<td id="recommendCnt1" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="rbNo1" />
+	            </tr>
+	            <!-- 세번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="bookName2" class="bookName"></td>
+	           	 	<td id="rbTitle2" class="rbTitle"></td>
+	           	 	<td id="writer2" class="writer"></td>
+	           	 	<td id="readCnt2" class="readCnt"></td>
+	           	 	<td id="recommendCnt2" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="rbNo2" />
+	            </tr>
+	            <!-- 네번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="bookName3" class="bookName"></td>
+	           	 	<td id="rbTitle3" class="rbTitle"></td>
+	           	 	<td id="writer3" class="writer"></td>
+	           	 	<td id="readCnt3" class="readCnt"></td>
+	           	 	<td id="recommendCnt3" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="rbNo3" />
+	            </tr>
+	            <!-- 다섯번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="bookName4" class="bookName"></td>
+	           	 	<td id="rbTitle4" class="rbTitle"></td>
+	           	 	<td id="writer4" class="writer"></td>
+	           	 	<td id="readCnt4" class="readCnt"></td>
+	           	 	<td id="recommendCnt4" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="rbNo4" />
+	            </tr>
+	         </tbody>
+	      </table>
+	   </div> <!-- end of #table-container -->
+   </div> <!-- 최근 리뷰 End -->
+   <!-- 인기 리뷰 Start -->
+   
+   <div id="bestReview">
+   	<h3 class="subTitle"><strong>인기 리뷰</strong></h3>
+	    <!-- <hr class="title-line" /> -->
+	    
+	    <!-- 새로운 리뷰 -->
+	    <div id="table-container-index2">
+	      <table class="table table-hover table-info table-responsive" id="review-list-table">
+	         <thead>
+	            <tr>
+	               <th class="col-sm-3">도서명</th>
+	               <th class="col-sm-3">제목</th>
+	               <th>작성자</th>
+	               <th>조회수</th>
+	               <th>추천수</th>
+	            </tr>
+	         </thead>
+	         <tbody>
+	         	<!-- 첫번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="best-bookName0" class="bookName"></td>
+	           	 	<td id="best-rbTitle0" class="rbTitle"></td>
+	           	 	<td id="best-writer0" class="writer"></td>
+	           	 	<td id="best-readCnt0" class="readCnt"></td>
+	           	 	<td id="best-recommendCnt0" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="best-rbNo0" />
+	            </tr>
+	            <!-- 두번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="best-bookName1" class="bookName"></td>
+	           	 	<td id="best-rbTitle1" class="rbTitle"></td>
+	           	 	<td id="best-writer1" class="writer"></td>
+	           	 	<td id="best-readCnt1" class="readCnt"></td>
+	           	 	<td id="best-recommendCnt1" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="best-rbNo1" />
+	            </tr>
+	            <!-- 세번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="best-bookName2" class="bookName"></td>
+	           	 	<td id="best-rbTitle2" class="rbTitle"></td>
+	           	 	<td id="best-writer2" class="writer"></td>
+	           	 	<td id="best-readCnt2" class="readCnt"></td>
+	           	 	<td id="best-recommendCnt2" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="best-rbNo2" />
+	            </tr>
+	            <!-- 네번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="best-bookName3" class="bookName"></td>
+	           	 	<td id="best-rbTitle3" class="rbTitle"></td>
+	           	 	<td id="best-writer3" class="writer"></td>
+	           	 	<td id="best-readCnt3" class="readCnt"></td>
+	           	 	<td id="best-recommendCnt3" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="best-rbNo3" />
+	            </tr>
+	            <!-- 다섯번째 -->
+	            <tr class="recent_comment">
+	             	<!-- Content -->
+	           	 	<td id="best-bookName4" class="bookName"></td>
+	           	 	<td id="best-rbTitle4" class="rbTitle"></td>
+	           	 	<td id="best-writer4" class="writer"></td>
+	           	 	<td id="best-readCnt4" class="readCnt"></td>
+	           	 	<td id="best-recommendCnt4" class="recommendCnt"></td>
+	           	 	<input type="hidden" id="best-rbNo4" />
+	            </tr>
+	         </tbody>
+	      </table>
+	   </div> <!-- end of #table-container -->
+   </div>
+    
+   
+   <br><br />
 <script>
+
 /**
  * @광준 : 책정렬 메뉴를 선택했을 시
  */
@@ -236,6 +358,7 @@ function reloadBookInfo(searchUrl){
 	    dataType: "jsonp",
 	    success:function(data)
 	    {	
+	    	console.log(data);
 	    	/* 책 정보 파싱 >> 리스트 */
 	    	var bookList = [];
 	    	
@@ -249,13 +372,13 @@ function reloadBookInfo(searchUrl){
 	   			var adult = book.adult; //성인등급 확인(true:ㅎㅎ/false:없음)
 	   			
 	   			//성인등급이 false일 경우에만 추가
-	   			if(!adult) bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
+	   			if(!adult && isbn13 != "") bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
 	   		}
+	    	
 	    	
 	    	//난수생성
 			var ranNum = new Array();
 	    	
-	    	console.log("bookList.length: " + bookList.length);
 	    	for(var i=0; i<bookList.length; i++)
 	   		{
 	   			ranNum[i] = Math.floor(Math.random()*(bookList.length));
@@ -322,14 +445,23 @@ $('#indexForm').ready(function(){
            	{
             	if(data[0][i] != null && !(isEmpty(data[0][i]))) //isEmpty함수가 없기 때문에, 직접 정의한다.(하단에 변수참고)
            		{
-	            	$("span#bookName"+i).text(data[0][i].rbBookTitle);
-		            $("span#nickName"+i).text(data[0][i].rbWriter + " | ");
-		            $("span#rbTitle"+i).text(data[0][i].rbTitle);
-		           	$("span#writer-Time"+i).text(data[0][i].rbDate);
+	            	$("td#bookName"+i).text((data[0][i].rbBookTitle).length > 10?(data[0][i].rbBookTitle).substr(0,10)+"…":(data[0][i].rbBookTitle));
+		            $("td#writer"+i).text(data[0][i].rbWriter);
+		            $("td#rbTitle"+i).text(data[0][i].rbTitle);
+		           	$("td#readCnt"+i).text(data[0][i].rb_readCnt);
+		           	$("td#recommendCnt"+i).text(data[0][i].rb_recommend); 	           
+		           	$("input#rbNo"+i).text(data[0][i].rbNo);
+		           	
+		           	/* 인기 리뷰 */
+		           	$("td#best-bookName"+i).text((data[2][i].rbBookTitle).length > 10?(data[2][i].rbBookTitle).substr(0,10)+"…":(data[2][i].rbBookTitle));
+		            $("td#best-writer"+i).text(data[2][i].rbWriter);
+		            $("td#best-rbTitle"+i).text(data[2][i].rbTitle);
+		           	$("td#best-readCnt"+i).text(data[2][i].rb_readCnt);
+		           	$("td#best-recommendCnt"+i).text(data[2][i].rb_recommend);
+		           	$("input#best-rbNo"+i).text(data[2][i].rbNo);
            		}
            	}    
             /* 베스트셀러 별점처리 */
-            
             for(var j=0; i<data[1].length; j++)
             {
 	            var totalStarScore = scoreRound(data[1][j].starScoreBook);
@@ -345,12 +477,17 @@ $('#indexForm').ready(function(){
         	console.log("index.jsp_최근리뷰 View, 별점정보를 읽기_광준@ajax처리에 실패했습니다.");
         }
    });
-   
-
-
     return false; //<- 이 문장으로 새로고침(reload)이 방지됨
 });
 }; //startPage End
+
+/**
+ * @광준 : 최근리뷰 view 링크 연결
+ */
+$(".recent_comment").click(function(){
+	var rbNo_parameter = ($(this).find("input")).text();
+	location.href = "<%=request.getContextPath()%>/review/reviewDetail.do?rbNo="+rbNo_parameter;
+});
 	
 $('.starRev span').click(function(){
   $(this).parent().children('span').removeClass('on');
@@ -370,6 +507,34 @@ var isEmpty = function(value){
 /*처음 웹페이지 실행 시 강제로 클릭한다.*/
 $("#select-AllBook").trigger("click");
 
+/**
+ * @광준 - 도서검색 기능
+ */
+ $("#btn-search").click(function(){
+	 var searchval = $("#search").val();
+	 var searchType = $("#searchType").val();
+	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+ });
+
+ /**
+ * @광준 - form 대신 데이터 전송을 위한 구조 변경
+ */
+/* $(document).one('click','#btn-search',function(){
+	dataSend();
+}); */
+$("#btn-search").click(function(){
+	dataSend();
+});
+$("#search").keydown(function(){
+	if(event.keyCode == 13) dataSend();
+});
+
+function dataSend()
+{
+	var searchval = $("#search").val();
+	var searchType = $("#searchType").val();
+	location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+}
 
  
  //0.5반올림

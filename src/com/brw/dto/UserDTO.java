@@ -12,15 +12,19 @@ public class UserDTO implements Serializable {
 	private String userPassword;
 	private String userName;
 	private String userEmail;
+	private String userNickName;
+	private int userGrade;
+	private int userPoint;
 	
 	public UserDTO() {}
 	
-	public UserDTO(String userId, String userPassword, String userName, String userEmail) {
+	public UserDTO(String userId, String userPassword, String userName, String userEmail,String userNickName) {
 		super();
 		this.userId = userId;
 		this.userPassword = userPassword;
 		this.userName = userName;
 		this.userEmail = userEmail;
+		this.userNickName = userNickName;
 	}
 
 	public String getUserId() {
@@ -55,11 +59,39 @@ public class UserDTO implements Serializable {
 		this.userEmail = userEmail;
 	}
 
+	
+	public String getUserNickName() {
+		return userNickName;
+	}
+
+	public void setUserNickName(String userNickName) {
+		this.userNickName = userNickName;
+	}
+
+	public int getUserGrade() {
+		return userGrade;
+	}
+
+	public void setUserGrade(int userGrade) {
+		this.userGrade = userGrade;
+	}
+
+	public int getUserPoint() {
+		return userPoint;
+	}
+
+	public void setUserPoint(int userPoint) {
+		this.userPoint = userPoint;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", userPassword=" + userPassword + ", userName=" + userName
-				+ ", userEmail=" + userEmail + "]";
+				+ ", userEmail=" + userEmail + ", userNickName=" + userNickName + ", userGrade=" + userGrade
+				+ ", userPoint=" + userPoint + "]";
+
 	}
+
 	
 	
 }
