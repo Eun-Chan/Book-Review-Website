@@ -902,6 +902,7 @@ public class DAO {
 				userDTO.setUserName(rset.getString("userName"));
 				userDTO.setUserEmail(rset.getString("userEmail"));
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1803,5 +1804,80 @@ public class DAO {
 		}		
 		return rbList;
 	}
+	/**
+	 * @지수
+	 * ??.로그인한 유저의 날짜계산
+	 */
+	public int checkDate(String userId) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select substr((sysdate - changedate),1,3) as datelater from tempusertable where userid = ? ";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+//			System.out.println(userId);
+//			System.out.println(rset.getString("userId"));
+			if(rset.next()) {
+				result = rset.getInt("datelater");
+				System.out.println(rset.getInt("datelater"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(rset);
+		return result;
+	}
+	/**
+	 * 43
+	 * 작성자 : 정지수...?라쓰고 김은찬이라 쓴다
+	 * 내용 : 비밀번호 변경 90일 지난 사람들 비밀번호 변경 후에 변경날짜 오늘 날짜로 갱신하기
+	 */
+	public int passwordAndSysdateUpdate(String userId, String userPassword) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		System.out.println("passwordUpdate$userId = "+userId);
+		System.out.println("passwordUpdate$userPassword = "+userPassword);
+		String query = "update tempusertable set userPassword = ? , changeDate = sysdate where userId = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userPassword);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate(); 
+			conn.commit();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 }
 
