@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bookBasket.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<br />
 	<div id="basketInfo">
 		<h2><%=user.getUserName()%>님의 즐겨찾기입니다.</h2>

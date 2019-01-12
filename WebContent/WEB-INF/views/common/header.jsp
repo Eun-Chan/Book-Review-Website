@@ -79,7 +79,7 @@
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
-            <li><a href="#contact">즐겨찾기</a></li>
+
             
             
             
