@@ -62,7 +62,7 @@
 			</div>
 			 
 		</div>
-			<span>작성자 : <img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
+			<span id="reviewBoard-Writer" class="reviewBoard-Writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
 		</div>
 		<hr id="bs_hr">
 		<div id ="reviewDetail-Content">
@@ -89,11 +89,11 @@
 		<div id="side-menu">
 			<ul id="left-menu">
 				<li><a href="#" class="btn-gradient green" id="prevpage">이전글</a></li>
-				<li><a href="<%=request.getContextPath() %>/review/reviewList.do" class="btn-gradient green">목록 </a></li>
+				<li><a href="<%=request.getContextPath() %>/review/reviewList.do" class="btn-gradient green" id="report-button">목록 </a></li>
 				<li><a href="#" class="btn-gradient green" id="nextpage">다음글</a></li>
 			</ul>
 			<ul id="right-menu">
-				<li><a href="#" class="btn-gradient red">신고하기</a></li>
+				<li><button class="btn-gradient red">신고하기</button></li>
 			</ul>
 		</div>
 		<div id ="comment-Content">
@@ -111,7 +111,7 @@
 					<li>
 						<div id="comment-html">
 							<div id="comment-header">
-								<span class="comment-writer<%=rbc.getRbCommentNo()%>"><%=rbc.getRbCommentWriterNickName() %></span>
+								<span class="comment-writer<%=rbc.getRbCommentNo()%>" id="comment-writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=rbc.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=rbc.getRbCommentWriterNickName() %></span>
 								<input type="hidden" class="comment-writerval" value=<%=rbc.getRbCommentNo()%>>
 								<span style="font-size:0.7em;">(<%=rbc.getRbCommentDate() %>)</span>
 							</div>
@@ -136,6 +136,7 @@
 					</li>
 				</ul>
 				<script>
+					//작성자 영역을 제외한곳 클릭시 해당 div 숨기기
 					$(".comment-writer<%=rbc.getRbCommentNo()%>").click(function(e){
 						var x = $(this).position().top+20;
 						var y = $(this).position().left+25;
@@ -143,7 +144,25 @@
 						$("#hide-div").css("visibility","visible");
 						$("#hide-div").css("top",x).css("left",y);
 						$("#hide-div").append("<input type='hidden' id='Writer'value='<%=rbc.getRbCommentWriter()%>'>");
-					})
+					});	
+					$("#reviewBoard-Writer").click(function(event){
+						var x = $(this).position().top+20;
+						var y = $(this).position().left+25;
+						console.log(x,y);
+						$("#hide-div").css("visibility","visible");
+						$("#hide-div").css("top",x).css("left",y);
+						$("#hide-div").append("<input type='hidden' id='Writer'value='<%=rbc.getRbCommentWriter()%>'>");
+					});
+					$('html').on('click', function(e){
+					    var $tgPoint = $(e.target);
+					    var $popCallBtn = $tgPoint.hasClass('comment-writer<%=rbc.getRbCommentNo()%>');
+					    var $popCallBtn2 = $tgPoint.hasClass('reviewBoard-Writer');
+					    var $popArea = $tgPoint.hasClass('hide-div');
+					 
+					    if (!$popCallBtn && !$popArea && !$popCallBtn2) {
+					    	$("#hide-div").css("visibility","hidden");
+					    }
+					});
 				</script>
 		<%if(reviewReComment!=null) {%>
 			<%for(ReviewBoardComment rbrc : reviewReComment) {%>
@@ -156,7 +175,7 @@
 							<li>
 								<div id="recomment-html">
 									<div id="recomment-header">
-										<span><%=rbrc.getRbCommentWriterNickName() %></span>
+										<span><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=rbrc.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=rbrc.getRbCommentWriterNickName() %></span>	
 										<span style="font-size:0.7em;">(<%=rbrc.getRbCommentDate() %>)</span>
 									</div>
 									<div id="recomment-body">
@@ -187,12 +206,12 @@
 				</tr>
 			</table>
 		</div>
-		<div id="hide-div">
+		<div id="hide-div" class="hide-div">
 			<ul>
 				<li>
 					<a href="#" id="nameSearch">이름으로 검색하기</a>
 				</li>
-				<li>
+				<li id="hide-divClose">
 					<span>닫기</span>
 				</li>
 			</ul>
@@ -200,6 +219,21 @@
 	</div>
 
 	<script>
+		$("#hide-divClose").click(function(){
+			$("#hide-div").css("visibility","hidden");
+		});	
+		//신고 하기 버튼 클릭시 user값이 없으면 리턴 있으면 신고 페이지 띄워주기
+		$(".btn-gradient.red").click(function(){
+			<%if(user==null){%>
+				alert("로그인 후 이용해 주세요.");
+				return;
+			<%}else{%>
+				console.log("아아");
+				var url = "<%=request.getContextPath()%>/review/reviewReport.do?rbReportNo=<%=review.getRbNo()%>&rbReportTitle=<%=review.getRbTitle()%>&rbReportSuspect=<%=review.getUserNickName()%>&rbReportWriter=<%=user.getUserNickName()%>&rbWriter=<%=review.getRbWriter()%>&userId=<%=user.getUserId()%>";
+				window.open(url,"_blank" ,"width=500px,height=400px",resizable="no");			
+			<%}%>
+		});
+		
 		//이름으로 검색하기 클릭시 처리
 		$("#nameSearch").click(function(){
 			var rbCommentWriter = $("#Writer").val();
@@ -241,11 +275,12 @@
 						async:false,
 						timeout: 1000,
 						success:function(data){
+							console.log(data);
 							$("#comment-area").val("");
 							var div =$("<div id='comment-list' class='comment-list"+data.rbCommentNo+"'></div>");
 							var html ="";
 							if(data!=null){
-								html+= "<ul><li><div id='comment-html'><div id='comment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
+								html+= "<ul><li><div id='comment-html'><div id='comment-header'><span class='comment-writer"+data.rbCommentNo+"' id='comment-writer'><img src='<%=request.getContextPath() %>/images/userGradeImage/<%=user.getUserGrade() %>.svg' width='25px' height='25px'/>"+data.rbCommentWriterNickName+"</span> <span style='font-size:0.7em;''>"+(data.rbCommentDate)+"</span></div>";
 								html+= "<div id='comment-body'><span id='review-con'>"+data.rbCommentContent+"</span></div>";
 								html+= "<button class='comment-delete' value="+data.rbCommentNo+">[삭제]</button>";
 								html+= "<button class='comment-recomment' value="+data.rbCommentNo+">[답글]</button></div></li></ul>";
@@ -303,7 +338,7 @@
 						var htmls ="";
 						var imgs = $("<div id='comment-enter'><img src='<%=request.getContextPath()%>/images/enter.png'/></div>");
 						if(data!=null){
-							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span>"+data.rbCommentWriter+"</span> <span>"+data.rbCommentDate+"</span></div>";
+							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span><img src='<%=request.getContextPath() %>/images/userGradeImage/<%=user.getUserGrade() %>.svg'  width='25px' height='25px'/>"+data.rbCommentWriterNickName+"</span><span>"+data.rbCommentDate+"</span></div>";
 							htmls+= "<div id='recomment-body'><span>"+data.rbCommentContent+"</span></div></div></li></ul>";
 						}
 						divs.append(htmls);

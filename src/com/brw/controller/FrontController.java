@@ -21,11 +21,13 @@ import com.brw.command.review.DeleteReviewBoardComment;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
+import com.brw.command.review.InsertReviewBoardReport;
 import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
+import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
@@ -33,7 +35,9 @@ import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
-import com.brw.command.user.nickNameCheckCommand;
+import com.brw.command.user.SelectOneUserInfo;
+import com.brw.command.user.UpdateUserCommand;
+import com.brw.command.user.NickNameCheckCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -297,10 +301,43 @@ public class FrontController extends HttpServlet {
 	    }
 		/*29 . 회원가입시 닉네임 체크*/
 		else if(command.equals("/nickNameCheck.do")) {
-			com = new nickNameCheckCommand();
+			com = new NickNameCheckCommand();
 			com.execute(req, res);
 		}
+		/*30 . 신고 페이지 고고띵*/
+		else if(command.equals("/review/reviewReport.do")) {
+			viewPage="/WEB-INF/views/review/reviewReport.jsp";
+		}
 
+		/*31 . 신고 페이지 insert 및 리뷰보드 업데이트, 메일발송까지*/
+		else if(command.equals("/review/insertReviewBoardReport.do")) {
+			com = new InsertReviewBoardReport();
+			com.execute(req, res);
+		}
+		
+		/*32. 내정보 보기 창*/
+		else if(command.equals("/sign/userPrivacy.do")) {
+			com = new SelectOneUserInfo();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/sign/userInfo.jsp";
+			
+		}
+		/*33. 내정보보기 클릭시 보여주는 jsp*/
+		else if(command.equals("/sign/userPasswordCheck.do")) {
+			viewPage="/WEB-INF/views/sign/userInfoPasswordChecked.jsp";
+		}
+		
+		/*34. 33에서 비밀번호 데이터를 넘겻을때 user테이블과 값 비교 ajax*/
+		else if(command.equals("/sign/checkedPassword.do")) {
+			com = new CheckedPasswordCommand();
+			com.execute(req, res);
+		}
+		/*35. @광준 : 최종 유저정보 업데이트 */
+		else if(command.equals("/sign/updateUser.do")) {
+			com = new UpdateUserCommand();
+			com.execute(req, res);
+			//아작스라 뷰페이지가 없어유
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

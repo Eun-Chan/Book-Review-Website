@@ -256,6 +256,9 @@ li{
     height: auto;
     margin-bottom: 5px;
 }
+#comment-writer{
+	cursor: pointer;
+}
 #comment-body{
 	display: inline-block;
 	max-width:600px;

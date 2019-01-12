@@ -10,7 +10,7 @@ import com.brw.command.Command;
 import com.brw.dao.DAO;
 
 
-public class nickNameCheckCommand implements Command{
+public class NickNameCheckCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

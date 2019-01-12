@@ -95,9 +95,9 @@
       	else {%>
       	<li><a href="#">채팅</a></li>
       	<li class="dropdown">
-      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%>님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">
-      			<li><a href="#">내 정보보기</a></li>
+      			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
       			<li class="divider"></li>
             	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
       		</ul>

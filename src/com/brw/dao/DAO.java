@@ -17,6 +17,7 @@ import com.brw.dto.OneLineReviewDTO;
 import com.brw.dto.ReviewBoardComment;
 import com.brw.dto.ReviewBoardDTO;
 import com.brw.dto.ReviewBoardLikeDTO;
+import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 import com.brw.dto.UserDTO;
 
@@ -462,8 +463,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select rb_comment_no,rb_comment_writer,rb_comment_content,rb_ref,TO_CHAR(rb_comment_date, 'YYYY-MM-DD hh:mm:ss')rb_comment_date,rb_comment_delflag\r\n" + 
-				"from reviewboard_comment where rb_ref=? and rb_comment_level =1 order by rb_comment_no";
+		String query = "select a.*, b.* ,to_char(a.rb_comment_date,'YYYY-MM-DD HH24:MI')as rdate from reviewboard_comment a join tempusertable b on a.rb_comment_writer = b.userid where rb_ref = ? and rb_comment_level=1 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
@@ -482,6 +482,9 @@ public class DAO {
 				comment.setRbRef(res.getInt("rb_ref"));
 				comment.setRbCommentDate(res.getString("rb_comment_date"));
 				comment.setRbCommentDelflag(res.getString("rb_comment_delflag"));
+				comment.setRbCommentWriterNickName(res.getString("rb_commentwriter_nickname"));
+				comment.setUserGrade(res.getInt("usergrade"));
+				comment.setUserPoint(res.getInt("userpoint"));
 				reviewComment.add(comment);
 			}
 			
@@ -654,6 +657,7 @@ public class DAO {
 				lastComment.setRbCommentContent(res.getString("rb_comment_content"));
 				lastComment.setRbRef(res.getInt("rb_ref"));
 				lastComment.setRbCommentDate(res.getString("rb_comment_date"));
+				lastComment.setRbCommentWriterNickName(res.getString("rb_commentwriter_nickName"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -676,12 +680,13 @@ public class DAO {
 	 * 15
 	 * 작성자 : 장선웅
 	 * 내용 : 리댓글 인서트 
+	 * @param rbCommentWriterNickName 
 	 */
-	public int insertReComment(int rbCommentNo, String rbCommentContent, String rbCommentWriter, int rbNo) {
+	public int insertReComment(int rbCommentNo, String rbCommentContent, String rbCommentWriter, int rbNo, String rbCommentWriterNickName) {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
 		int result = 0;
-		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,2,?,?,?,default,default)";
+		String query = "insert into reviewboard_comment values(seq_rb_comment_no.nextval,?,2,?,?,?,default,default,?)";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -690,6 +695,7 @@ public class DAO {
 			pstmt.setString(2, rbCommentContent);
 			pstmt.setInt(3, rbNo);
 			pstmt.setInt(4, rbCommentNo);
+			pstmt.setString(5, rbCommentWriterNickName);
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -802,7 +808,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardReCommentList(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select * from reviewboard_comment where rb_ref = ? and rb_comment_level =2 order by rb_comment_no";
+		String query = "select * from reviewboard_comment a join tempusertable b on a.rb_comment_writer = b.userid where a.rb_ref = ? and a.rb_comment_level =2 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewReComment = null;
 		
@@ -824,6 +830,9 @@ public class DAO {
 				reComment.setRbRef(res.getInt("rb_ref"));
 				reComment.setRbCommentRef(res.getInt("rb_comment_ref"));
 				reComment.setRbCommentDate(res.getString("rb_comment_date"));
+				reComment.setRbCommentWriterNickName(res.getString("rb_commentwriter_nickname"));
+				reComment.setUserPoint(res.getInt("userpoint"));
+				reComment.setUserGrade(res.getInt("usergrade"));
 				
 				reviewReComment.add(reComment);
 			}
@@ -870,6 +879,7 @@ public class DAO {
 				lastReComment.setRbRef(res.getInt("rb_ref"));
 				lastReComment.setRbCommentRef(res.getInt("rb_comment_ref"));
 				lastReComment.setRbCommentDate(res.getString("rb_comment_date"));
+				lastReComment.setRbCommentWriterNickName(res.getString("rb_commentwriter_nickname"));
 				
 			}
 		} catch (SQLException e) {
@@ -1955,6 +1965,113 @@ public class DAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
+	}
+	
+	/*장선웅 : 46.신고테이블에 인서트 조지기*/
+	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?)";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, report.getRbReportRbNo());
+			pstmt.setString(2, report.getRbReportTitle());
+			pstmt.setString(3, report.getRbReportSuspect());
+			pstmt.setString(4, report.getRbReportWriter());
+			pstmt.setString(5, report.getRbReportContent());
+			pstmt.setString(6, report.getRbReportClasses());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	/*장선웅 : 47. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
+	public int updateReviewBoardReport(int rbReportNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update reviewboard set rb_report = rb_report+1 where rb_no= ?";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbReportNo);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	/*
+	 * 48.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
+	 */
+	public UserDTO checkedUserPassword(String userId, String userPassword) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query ="select * from tempusertable where userid = ? and userpassword=?";
+		UserDTO user = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, userPassword);
+			res= pstmt.executeQuery();
+			user = new UserDTO();
+			while(res.next()) {
+				user.setUserId(res.getString("userId"));
+				user.setUserName(res.getString("userName"));
+				user.setUserEmail(res.getString("userEmail"));
+				user.setUserNickName(res.getString("userNickName"));
+				user.setUserGrade(res.getInt("usergrade"));
+				user.setUserPoint(res.getInt("userpoint"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return user;
+	}
+
+	public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		int result = 0;
+		String query ="UPDATE  tempusertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
+		System.out.println("userId" + userId);
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userPassword);
+			pstmt.setString(2, userEmail);
+			pstmt.setString(3, userNickName);
+			pstmt.setString(4, userId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return result;
 	}
 	
