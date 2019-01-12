@@ -200,12 +200,20 @@ function showReviewBoard(){
 
 
 
-var totalStarScore;//리뷰 총평점 평균
+var totalStarScore = 0.0;//리뷰 총평점 평균
 
-//한 줄 리뷰 총 평점
+//화면 로드 시한 줄 리뷰 총 평점
 var oneLinetotalStar = <%=oneLineStar%>;
-
-$("#oneLineSSShowScore").text((Math.ceil(oneLinetotalStar*100)/100)+" /5");
+function showLoadOneLineSS(){
+	console.log("oneLinetotalStar", oneLinetotalStar);
+	
+	if(oneLinetotalStar == "NaN"){
+		oneLinetotalStar = 0.0;
+	}
+	
+	$("#oneLineSSShowScore").text((Math.ceil(oneLinetotalStar*100)/100)+" /5");	
+}
+showLoadOneLineSS();
 
 oneLinetotalStar = Math.ceil(oneLinetotalStar*2)/2;
 //소수점이 있고 1보다 큰 점수
@@ -244,6 +252,14 @@ function insert_oneLineRV(){
 	
 	var oneLineRV = $("#oneLineRV").val();
 	//DB에 미등록 되어있는 책일 시 등록하기 위해 필요한 변수
+	if(oneLineRV == 0){
+		alert("리뷰를 작성하세요!");
+		return;
+	}else if(oneLineRV > 50){
+		alert("50자 이내로 작성 가능합니다!");
+		return;
+	}
+	
 	var title = $("#bookInfo-title h3").text();
 	var author = $("#bookInfo-author").text();
 	var isbn13 = $("#hiddenInfo span:nth(0)").text();
@@ -373,14 +389,15 @@ $.ajax({
 		console.log("reviewboard",data)
 		var table = $("<table class='table'><th>"+"제목"+"</th><th>"+"내용"+"</th><th>"+"작성자"+"</th><th>"+"작성일자"+"</th></table>")
 		
+		var sumStarScore = 0;
+		var cnt = 0;
+		
 		if(!data.length > 0 ){
 			var html = "<tr><td colspan='4'>해당 데이터가 없습니다.</td></tr>";
 			table.append(html);
 			$("#starScoreAvg3").text("첫 평가자가 되어주세요:D");
 		}else{
 			
-			var sumStarScore = 0;
-			var cnt = 0;
 			
 			for(var i in data) {
 				
@@ -394,9 +411,12 @@ $.ajax({
 	    		sumStarScore += command.rbStarscore;
 	    		cnt = parseInt(i)+1;
 			}
-				
+		}	
 				//리뷰 평점이 있는 경우 별 표시!
 		
+				if(cnt == 0){
+					cnt = 1;
+				}
 				totalStarScore = scoreRound(sumStarScore/cnt);
 	           	var selectStarScore = totalStarScore / 0.5;
 	           	
@@ -410,7 +430,7 @@ $.ajax({
 	           	//리뷰와 한 줄 리뷰의 별점을 모아 표시하기 위한 함수 호출
 	          	showBookSumStarScore(totalStarScore);
 	          	
-		}
+		
 		
 		$("#command-info").append(table);
 		showReviewBoard();
@@ -431,12 +451,26 @@ function scoreRound(score){
 function showBookSumStarScore(score){
 
 	var starScoreOneLineAvg = $("#oneLineSSShowScore").text().split(" ");
-	starScoreOneLineAvg = parseFloat(starScoreOneLineAvg[0]);//한 줄 리뷰 총 평점
-	console.log("starScoreOneLineAvg",parseFloat(starScoreOneLineAvg));
+	if(starScoreOneLineAvg[0] == "NaN"){
+		starScoreOneLineAvg = 0.0;
+	}else{
+		starScoreOneLineAvg = parseFloat(starScoreOneLineAvg[0]);//한 줄 리뷰 총 평점	
+	}
+	console.log("starScoreOneLineAvg",starScoreOneLineAvg);
+	if(score == "NaN"){
+		score = 0.0;
+	}
 	var starScoreReviewAvg = score;//리뷰 게시판 총 평점
 	console.log("starScoreReviewAvg", starScoreReviewAvg);
+	var total = 0.0;
 	
-	var total = Math.ceil((starScoreOneLineAvg+starScoreReviewAvg)/2*100)/100;
+	if(starScoreOneLineAvg != 0 && starScoreReviewAvg != 0){
+		total = Math.ceil((starScoreOneLineAvg+starScoreReviewAvg)/2*100)/100;		
+	}else if(starScoreOneLineAvg == 0){
+		total = starScoreReviewAvg;
+	}else if(starScoreReviewAvg == 0){
+		total = starScoreOneLineAvg;
+	}
 	console.log("total", total);
 	for(var j=0; j<total*2; j++){
    		$("div#start-Container1 span#star"+j).addClass('on');
