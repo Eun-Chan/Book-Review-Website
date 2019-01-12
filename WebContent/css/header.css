@@ -50,6 +50,10 @@ ul#navbar-menu
 	float: right;
 	margin-bottom: 1%;
 }
+nav#navbar-menuBar
+{
+	position: static;
+}
 ul.nav navbar-nav navbar-right
 {
 	margin: 0 auto;

@@ -41,34 +41,13 @@
 <body>
 <!DOCTYPE html>
 
-<Html>
-
-<head>
-
-<meta charset='utf-8'>
-
-<title>[bootstrap] 부트스트랩 – 내비게이션 메뉴바 [냅바(navbar)] - 전체 너비로 확장</title>
-
+ 
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-<style>body {
-
-  min-height: 2000px;
-
-  padding-top: 70px;
-
-}</style>
-
-<script></script>
-
-</head>
-
-<body>
-
+<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+ -->
+<!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+  
     <!-- Fixed navbar -->
 
     <nav class="navbar navbar-default navbar-fixed-top" id="navbar-menuBar">
@@ -92,13 +71,13 @@
 
           <ul class="nav navbar-nav">
           
-          	<li><a href="#about">홈으로</a></li>
+          	<li><a href="<%=request.getContextPath()%>/index.jsp">홈으로</a></li>
 	
             <li class="active"><a href="#">공지사항</a></li>
 
-            <li><a href="#about">자유게시판</a></li>
+            <li><a href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a></li>
 
-            <li><a href="#contact">리뷰게시판</a></li>
+            <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
             <li><a href="#contact">즐겨찾기</a></li>
             
@@ -369,45 +348,6 @@
 		});
 	}
 	
-/**
- * @광준 - 도서검색 기능
- */
- $("#btn-search").click(function(){
-	 var searchval = $("#search").val();
-	 var searchType = $("#searchType").val();
-	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
- });
- 
- <%-- $("#search").keydown(function(key) {
-	console.log(key);
-	 if (key.keyCode == 13)//enter를 클릭했다면 
-	 {
-		 var searchval = $("#search").val();
-		 var searchType = $("#searchType").val();
-		 console.log("처리됨");
-		 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
-	 }
-
- }); --%>
- /**
- * @광준 - form 대신 데이터 전송을 위한 구조 변경
- */
-/* $(document).one('click','#btn-search',function(){
-	dataSend();
-}); */
-$("#btn-search").click(function(){
-	dataSend();
-});
-$("#search").keydown(function(){
-	if(event.keyCode == 13) dataSend();
-});
-
-function dataSend()
-{
-	var searchval = $("#search").val();
-	var searchType = $("#searchType").val();
-	location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
-}
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->
