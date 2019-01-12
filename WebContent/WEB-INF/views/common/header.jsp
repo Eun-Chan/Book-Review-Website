@@ -173,6 +173,7 @@
 		$.ajax({
 			url : "<%=request.getContextPath()%>/login.do",
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
+			type : "POST",
 			success : function(data){
 				if(data == "true"){
 					location.reload();
@@ -182,6 +183,12 @@
 				else if(data == "false"){
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
 					$("#login-help").addClass("text-danger");
+				}
+				else if(data == "oldpwdchangeorlater"){
+					console.log("여기 들어오냐");
+					location.href ="<%=request.getContextPath()%>/sign/OldPwdChangeOrLater.do?userId="+userId;
+					alert("비밀번호 변경한지 90일이 지났습니다. 변경페이지로 이동합니다.");
+					console.log(userId);
 				}
 			}
 		});
