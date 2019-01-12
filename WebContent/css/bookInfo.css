@@ -12,6 +12,12 @@
 	margin:30px auto;
 
 }
+
+#oneLineReview-container{
+	width:1000px;
+	margin:30px auto;
+}
+
 #rbcontent {
    max-height : 36.8px;
    width: 400px;
@@ -40,7 +46,6 @@
 	/* 수정함 */
 	width:1000px;
 	margin:0 auto;
-    text-align : center;
 }
 
 
