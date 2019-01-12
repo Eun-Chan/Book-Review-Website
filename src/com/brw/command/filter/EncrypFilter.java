@@ -18,6 +18,7 @@ import com.brw.command.filter.EncryptWrapper;
  */
 
 @WebFilter({"/createUser.do", "/login.do" ,"/sign/checkedPassword.do", "/sign/updateUser.do","/sign/OldPwdChangeOrLaterUpdate.do"})
+
 public class EncrypFilter implements Filter {
 
     /**

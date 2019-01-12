@@ -310,7 +310,6 @@ public class FrontController extends HttpServlet {
 			com = new NickNameCheckCommand();
 			com.execute(req, res);
 		}
-	
 		/*30. 명훈 : 공지사항 상세보기*/
 		else if(command.equals("/admin/noticeDetail.do")) {
 			com = new NoticeDetailViewCommand();
@@ -349,7 +348,6 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req, res);
 	    	viewPage = "/index.jsp";
 	    }
-		
 		/*37 . 선웅 : 신고 페이지 고고띵*/
 		else if(command.equals("/review/reviewReport.do")) {
 			viewPage="/WEB-INF/views/review/reviewReport.jsp";
@@ -384,6 +382,7 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			//아작스라 뷰페이지가 없어유
 		}
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

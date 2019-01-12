@@ -4,7 +4,9 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
    // FrontController에서 보낸 list 받기
+
    List<ReviewBoardViewDTO> list = (List<ReviewBoardViewDTO>)request.getAttribute("list");
+
    String pageBar = (String)request.getAttribute("pageBar");
    
    String searchType = request.getParameter("searchType");
@@ -109,6 +111,7 @@ $(function(){
             </tr>
          </thead>
          <tbody>
+
          <% for(ReviewBoardViewDTO rb : list) { %>
             <tr>
                <td><%=rb.getRbNo() %></td>

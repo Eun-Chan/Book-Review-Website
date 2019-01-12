@@ -281,12 +281,9 @@
       	<li class="dropdown">
       		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%>님<span class="caret"/></a>
       		<ul class="dropdown-menu" role="menu">
-<<<<<<< HEAD
       			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
-=======
-      			<li><a href="#">내 정보보기</a></li>
       			<li><a href="<%=request.getContextPath()%>/book/showbasket.do">즐겨찾기</a></li>
->>>>>>> 73dbaba938ebfb3d26adbde898789f81c2d207e3
+
       			<li class="divider"></li>
             	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
       		</ul>

@@ -2008,9 +2008,6 @@ public class DAO {
 		return result;
 	}
 	
-	
-
-		
 	/*
 	 * 46. 작성자 : 정명훈
 	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
@@ -2118,7 +2115,6 @@ public class DAO {
 		
 		return result;
 	}
-
 	/*
 	 * 48. 작성자 : 정명훈
 	 * 내용 : 공지사항 번호로 공지사항 하나 가져오기
@@ -2161,7 +2157,7 @@ public class DAO {
 		
 		return n;
 	}
-
+	
 	/* 
 	 * 49. 한 줄 리뷰 삭제: 김민우
 	 * */
@@ -2233,10 +2229,6 @@ public class DAO {
 		
 		return result;
 	}
-
-
-
-
 	/*
 	 * 51. 작성자 : 정명훈
 	 * 내용 : 각 게시판에 보여줄 공지사항 가져오기 (allowview = Y 인 것만 가져오기) 
@@ -2300,7 +2292,6 @@ public class DAO {
 		}
 		return list;
 	}
-
 	/*52. 작성자 : 박세준
 	 * 내용 : 즐겨찾기한 개수 찾기*/
 	public int countBasketAll(String userId) {
@@ -2333,8 +2324,6 @@ public class DAO {
 		
 		return result;
 	}
-	
-
 	
 	/*
 	 * 53. 작성자 : 정명훈
@@ -2374,81 +2363,8 @@ public class DAO {
 		
 		return result;	
 	}
-	/**
-	 * @지수
-	 * 54.로그인한 유저의 날짜계산
-	 */
-	public int checkDate(String userId) {
 	
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		int result = 0;
-		String query = "select substr((sysdate - changedate),1,3) as datelater from tempusertable where userid = ? ";
-	
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			rset = pstmt.executeQuery();
-//			System.out.println(userId);
-//			System.out.println(rset.getString("userId"));
-			if(rset.next()) {
-				result = rset.getInt("datelater");
-				System.out.println(rset.getInt("datelater"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println(rset);
-		return result;
-}
-	/**
-	 * 55
-	 * 작성자 : 정지수...?라쓰고 김은찬이라 쓴다
-	 * 내용 : 비밀번호 변경 90일 지난 사람들 비밀번호 변경 후에 변경날짜 오늘 날짜로 갱신하기
-	 */
-	public int passwordAndSysdateUpdate(String userId, String userPassword) {
-		int result = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		System.out.println("passwordUpdate$userId = "+userId);
-		System.out.println("passwordUpdate$userPassword = "+userPassword);
-		String query = "update tempusertable set userPassword = ? , changeDate = sysdate where userId = ?";
-					
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userPassword);
-			pstmt.setString(2, userId);
-				
-			result = pstmt.executeUpdate(); 
-			conn.commit();
-				
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-
-	/*장선웅 : 56.신고테이블에 인서트*/
+	/*장선웅 : 46.신고테이블에 인서트*/
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2485,7 +2401,7 @@ public class DAO {
 		return result;
 	}
 
-	/*장선웅 : 57. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
+	/*장선웅 : 47. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
 	public int updateReviewBoardReport(int rbReportNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2516,7 +2432,7 @@ public class DAO {
 
 
 	/*
-	 * 58.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
+	 * 48.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
 	 */
 	public UserDTO checkedUserPassword(String userId, String userPassword) {
 		Connection conn = null;
@@ -2549,7 +2465,6 @@ public class DAO {
 	}
 
 	
-	//59 . 박광준 : 유저테이블 수정 쿼리 
 	public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
@@ -2573,8 +2488,5 @@ public class DAO {
 		
 		return result;
 	}
-	
-	
-	
 }
 
