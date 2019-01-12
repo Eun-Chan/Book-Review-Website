@@ -1725,17 +1725,20 @@ public class DAO {
 	 * 40. 작성자 : 박세준
 	 * 내용 : 즐겨찾기 보여주는 결과
 	 */
-	public List<BookBasketDTO> showBookBasket(String userId) {
+	public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
 		List<BookBasketDTO> list = new ArrayList();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from basket where userId = ?";
-		
+		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 			try {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, userId);
+				pstmt.setInt(2, startRnum);
+				pstmt.setInt(3, endRnum);
 				rset = pstmt.executeQuery();
 				
 				while(rset.next()) {
@@ -1748,7 +1751,7 @@ public class DAO {
 					bb.setPrice(rset.getInt("price"));
 					bb.setQuantity(rset.getInt("quantity"));
 					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getDate("pickdate"));
+					bb.setPickDate(rset.getString("pickdate"));
 				
 					list.add(bb);
 				}
@@ -1975,7 +1978,7 @@ public class DAO {
 		}
 		return result;
 	}
-
+	
 	/*
 	 * 46. 작성자 : 정명훈
 	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
@@ -2134,7 +2137,6 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String query = "delete from onelinereview where userId = ? and no = ?";
-
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -2178,7 +2180,6 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-			
 			rset = pstmt.executeQuery();
 			
 			if(rset.next()) {
@@ -2262,8 +2263,41 @@ public class DAO {
 		}
 		return list;
 	}
+	/*52. 작성자 : 박세준
+	 * 내용 : 즐겨찾기한 개수 찾기*/
+	public int countBasketAll(String userId) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from basket where userId = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
 	/*
-	 * 52. 작성자 : 정명훈
+	 * 53. 작성자 : 정명훈
 	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
 	 */
 	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
@@ -2296,10 +2330,9 @@ public class DAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+		}	
 		
-		return result;
+		return result;	
 	}
-	
 }
 

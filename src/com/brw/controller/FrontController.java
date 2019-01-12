@@ -266,7 +266,7 @@ public class FrontController extends HttpServlet {
 	    	com.execute(req, res);
 	    }
 		/*23. 즐겨찾기로 가버렷*/
-	    else if(command.equals("/book/goBasket.do")) {	    	
+	    else if(command.equals("/book/goBasket.do")) {
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
