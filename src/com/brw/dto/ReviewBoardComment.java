@@ -15,6 +15,7 @@ public class ReviewBoardComment implements Serializable{
 	private String rbCommentDate; //댓글 작성날짜
 	private int rbCommentRef; //대댓글이 참조할 댓글 번호
 	private String rbCommentDelflag; //댓글 삭제 여부 default = 'N'
+	private String rbCommentWriterNickName; //댓글 작성자 닉네임
 	
 	
 	public String getRbCommentDelflag() {
@@ -39,10 +40,11 @@ public class ReviewBoardComment implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ReviewBoardComment(String rbCommentWriter, String rbCommentContent, int rbRef) {
+	public ReviewBoardComment(String rbCommentWriter, String rbCommentContent, int rbRef, String rbCommentWriterNickName) {
 		super();
 		this.rbCommentWriter = rbCommentWriter;
 		this.rbCommentContent = rbCommentContent;
+		this.rbCommentWriterNickName = rbCommentWriterNickName;
 		this.rbRef = rbRef;
 	}
 	public String getRbCommentWriter() {
@@ -71,6 +73,13 @@ public class ReviewBoardComment implements Serializable{
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	public String getRbCommentWriterNickName() {
+		return rbCommentWriterNickName;
+	}
+	public void setRbCommentWriterNickName(String rbCommentWriterNickName) {
+		this.rbCommentWriterNickName = rbCommentWriterNickName;
 	}
 	@Override
 	public String toString() {

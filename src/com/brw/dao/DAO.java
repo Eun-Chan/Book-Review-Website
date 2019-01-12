@@ -1726,17 +1726,20 @@ public class DAO {
 	 * 40. 작성자 : 박세준
 	 * 내용 : 즐겨찾기 보여주는 결과
 	 */
-	public List<BookBasketDTO> showBookBasket(String userId) {
+	public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
 		List<BookBasketDTO> list = new ArrayList();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from basket where userId = ?";
-		
+		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 			try {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, userId);
+				pstmt.setInt(2, startRnum);
+				pstmt.setInt(3, endRnum);
 				rset = pstmt.executeQuery();
 				
 				while(rset.next()) {
@@ -1749,7 +1752,7 @@ public class DAO {
 					bb.setPrice(rset.getInt("price"));
 					bb.setQuantity(rset.getInt("quantity"));
 					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getDate("pickdate"));
+					bb.setPickDate(rset.getString("pickdate"));
 				
 					list.add(bb);
 				}
@@ -1977,7 +1980,7 @@ public class DAO {
 		}
 		return result;
 	}
-
+	
 	/*
 	 * 46. 작성자 : 정명훈
 	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
@@ -2009,6 +2012,7 @@ public class DAO {
 				n.setNtcTitle(rset.getString("ntc_title"));
 				n.setNtcContent(rset.getString("ntc_content"));
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				n.setNtcAllowview(rset.getString("ntc_allowview"));
 				
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
@@ -2135,7 +2139,6 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String query = "delete from onelinereview where userId = ? and no = ?";
-
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -2179,8 +2182,6 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-
-			
 			rset = pstmt.executeQuery();
 			
 			if(rset.next()) {
@@ -2265,24 +2266,94 @@ public class DAO {
 		return list;
 	}
 
-	/**
-	* @지수
-	* 52.로그인한 유저의 날짜계산
-	*/
-	public int checkDate(String userId) {
-		
+	/*52. 작성자 : 박세준
+	 * 내용 : 즐겨찾기한 개수 찾기*/
+	public int countBasketAll(String userId) {
+		int result = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		int result = 0;
-		String query = "select substr((sysdate - changedate),1,3) as datelater from tempusertable where userid = ? ";
-		
+		String query = "select count(*) from basket where userId = ?";
+
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, userId);
 			rset = pstmt.executeQuery();
-							
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/*
+	 * 53. 작성자 : 정명훈
+	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
+	 */
+	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update notice set ntc_allowview = ? where ntc_no = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, ntcAllowView);
+			pstmt.setInt(2, ntcNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		return result;	
+	}
+	/**
+	 * @지수
+	 * 54.로그인한 유저의 날짜계산
+	 */
+	public int checkDate(String userId) {
+	
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select substr((sysdate - changedate),1,3) as datelater from tempusertable where userid = ? ";
+	
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
 //			System.out.println(userId);
 //			System.out.println(rset.getString("userId"));
 			if(rset.next()) {
@@ -2302,9 +2373,9 @@ public class DAO {
 		}
 		System.out.println(rset);
 		return result;
-	}
+}
 	/**
-	 * 53
+	 * 55
 	 * 작성자 : 정지수...?라쓰고 김은찬이라 쓴다
 	 * 내용 : 비밀번호 변경 90일 지난 사람들 비밀번호 변경 후에 변경날짜 오늘 날짜로 갱신하기
 	 */
@@ -2315,18 +2386,18 @@ public class DAO {
 		System.out.println("passwordUpdate$userId = "+userId);
 		System.out.println("passwordUpdate$userPassword = "+userPassword);
 		String query = "update tempusertable set userPassword = ? , changeDate = sysdate where userId = ?";
-							
+					
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, userPassword);
 			pstmt.setString(2, userId);
-						
+				
 			result = pstmt.executeUpdate(); 
-				conn.commit();
-						
+			conn.commit();
+				
 		} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -2339,6 +2410,6 @@ public class DAO {
 		}
 		return result;
 	}
-						
+
 }
 

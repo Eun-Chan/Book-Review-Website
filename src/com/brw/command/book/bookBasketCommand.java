@@ -13,7 +13,7 @@ import com.brw.dto.BookBasketDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class bookBasketCommand implements Command {
+public class BookBasketCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
@@ -27,7 +27,7 @@ public class bookBasketCommand implements Command {
 		String userId = request.getParameter("userId");
 		System.out.println(userId);
 		DAO dao  = DAO.getInstance();
-		List<BookBasketDTO> list = dao.bookBasket(userId);
+		List<BookBasketDTO> list = dao.showBookBasket(userId);
 				
 		
 		System.out.println("listbasket="+list);

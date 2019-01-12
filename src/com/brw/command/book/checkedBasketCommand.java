@@ -14,7 +14,7 @@ import com.brw.dto.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class checkedBasketCommand implements Command {
+public class CheckedBasketCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
@@ -30,7 +30,7 @@ public class checkedBasketCommand implements Command {
 		int result = dao.checkeddelete(user, isbn);
 		
 		if(result > 0) {
-			List<BookBasketDTO> list=dao.bookBasket(user.getUserId());
+			List<BookBasketDTO> list=dao.showBookBasket(user.getUserId());
 			try {
 				new Gson().toJson(list,response.getWriter());
 			} catch (JsonIOException e) {

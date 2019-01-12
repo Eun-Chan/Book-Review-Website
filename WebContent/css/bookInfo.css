@@ -6,9 +6,11 @@
 
 /* 책 오른쪽으로 밀기 */
 #bookInfo-container {
-   /* 수정함 */
-   width:1000px;
-   margin:30px auto;
+
+	/* 수정함 */
+	width:1000px;
+	margin:30px auto;
+
 }
 #rbcontent {
    max-height : 36.8px;
@@ -34,9 +36,10 @@
    background : #f1f1f1;
 }
 #command-info { 
-   /* 수정함 */
-   width:1000px;
-   margin:0 auto;
+
+	/* 수정함 */
+	width:1000px;
+	margin:0 auto;
     text-align : center;
 }
 
@@ -69,7 +72,9 @@
 
 /*버튼 태그의 스타일*/
 .btn-info{
-   float:right;
+
+	float:right;
+
 }
 
 /******* 추가 ******/

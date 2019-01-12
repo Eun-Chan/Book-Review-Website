@@ -49,6 +49,16 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label for="userNickName" class="col-sm-2 control-label">별명</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="userNickName" name="userNickName" placeholder="별명을 입력하세요"/>
+					<span><p id="nickName-help"></p></span>
+				</div>
+				<div class="col-sm-1">
+					<button type="button" class="btn btn-default" id="nickNameCheck">중복 확인</button>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="userEmail" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-4">
 					<input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="이메일"/>
@@ -91,6 +101,8 @@
 	var USEREMAIL_OK = 0;
 	/* 이메일 인증번호 통과 확인 변수 */
 	var AUTH_OK = 0;
+	/* 별명 유효성 통과 확인 변수*/
+	var NICKNAME_OK = 0;
 	/* 인증번호 저장 변수 */
 	var authNum;
 	
@@ -277,15 +289,59 @@
 	}
 	/* 인증번호 맞는지 확인하는 함수 완료 */
 	
+	/* 회원가입 - 닉네임중복확인 버튼 시작 */
+	$("#nickNameCheck").on("click", function(){
+		
+		var regNickName = /^[\wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
+		var nickName = $("#userNickName").val().trim();
+		/* 아이디 유효성 검사 */
+		if(!regNickName.test(nickName)){
+			$("#nickName-help").text("별명은 특수문자를 제외한 2 ~ 20 글자로 입력해 주세요.");
+			$("#nickName-help").removeClass("text-success");
+			$('#nickName-help').addClass('text-danger');
+			NICKNAME_OK = 0;
+			return;
+		}
+		console.log("기모띵");
+		console.log(nickName);
+		$.ajax({
+			url: "<%=request.getContextPath()%>/nickNameCheck.do",
+			data: {nickName:nickName},
+			success: function(data){
+				console.log(data);
+				
+				/* 아이디 생성 가능 상태 */
+				if(data == "true"){
+					$("#nickName-help").text("멋진 별명이네요!");
+					$("#nickName-help").removeClass("text-danger");
+					$("#nickName-help").addClass("text-success");
+					NICKNAME_OK = 1;
+				}
+				else if(data == "false"){
+					$("#nickName-help").text("이미 사용중인 별명입니다.");
+					$("#nickName-help").removeClass("text-success");
+					$("#nickName-help").addClass("text-danger");
+					NICKNAME_OK = 0;
+				}
+			}
+		});
+	});
+	
+	/* 회원가입 - 닉네임중복확인 버튼 완료 */
+	
+	
 	/* form onsubmit 처리 함수 시작 */
 	function createUserSubmit(){
 		console.log(ID_OK , USERPASSWORD_OK , USEREMAIL_OK , AUTH_OK);
-		if(ID_OK == 1 && USERPASSWORD_OK == 1 && USEREMAIL_OK == 1 && AUTH_OK == 1){
+		if(ID_OK == 1 && USERPASSWORD_OK == 1 && USEREMAIL_OK == 1 && AUTH_OK == 1 && NICKNAME_OK == 1){
 			return true;
 		}
 		alert("모든 입력사항을 제대로 입력 하십시오.");
 		return false;
 	}
+	
+
+	/* 회원가입 - 중복확인 버튼 완료 */
 </script>
 
 </body>
