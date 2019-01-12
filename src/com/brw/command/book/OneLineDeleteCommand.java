@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
-import com.brw.dto.BookBasketDTO;
+import com.brw.dto.OneLineReviewDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class BookBasketCommand implements Command {
+public class OneLineDeleteCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
@@ -21,26 +21,33 @@ public class BookBasketCommand implements Command {
 			request.setCharacterEncoding("utf-8");
 			response.setContentType("application/json; charset=utf-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String userId = request.getParameter("userId");
-		System.out.println(userId);
-		DAO dao  = DAO.getInstance();
-		List<BookBasketDTO> list = dao.showBookBasket(userId);
-				
 		
-		System.out.println("listbasket="+list);
+		int oneLineNo = Integer.parseInt(request.getParameter("oneLineNo"));
+		String userId = request.getParameter("userId");
+		String isbn13 = request.getParameter("isbn13");
+		List<OneLineReviewDTO> list = null;
+		
+		DAO dao = DAO.getInstance();
+		
+		int result = dao.deleteOneLineReview(userId, oneLineNo);
+		
+		if(result > 0) {
+			System.out.println("한 줄 리뷰 삭제 성공");
+			list = dao.selectAllOneLineRV(isbn13);
+		}else {
+			System.out.println("한 줄 리뷰 삭제 실패");
+		}
+		
+		
 		try {
-			new Gson().toJson(list,response.getWriter());
+			new Gson().toJson(list, response.getWriter());
 		} catch (JsonIOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 }
