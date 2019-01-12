@@ -37,14 +37,6 @@
 <script>
 	
 </script>
-</head>
-<body>
-<!DOCTYPE html>
-
-<Html>
-
-<head>
-
 <meta charset='utf-8'>
 
 <title>[bootstrap] 부트스트랩 – 내비게이션 메뉴바 [냅바(navbar)] - 전체 너비로 확장</title>
@@ -64,8 +56,8 @@
 }</style>
 
 <script></script>
-
 </head>
+
 
 <body>
 
@@ -94,11 +86,11 @@
           
           	<li><a href="#about">홈으로</a></li>
 	
-            <li class="active"><a href="#">공지사항</a></li>
+            <li class="active"><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
 
             <li><a href="#about">자유게시판</a></li>
 
-            <li><a href="#contact">리뷰게시판</a></li>
+            <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
             <li><a href="#contact">즐겨찾기</a></li>
             
@@ -115,15 +107,21 @@
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
 		    	<li class="dropdown">
-		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
+		    			<!-- 유저 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="#">내 정보보기</a></li>
+		    			<% } %>
+		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
+		    			<li><a href="">회원 관리</a></li>
+		    			<% } %>
 		    			<li class="divider"></li>
-		          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
 		    		</ul>
 		    	</li>
 		    	<%}%>
-		    </li>
           </ul>
 
         </div><!--/.nav-collapse -->
