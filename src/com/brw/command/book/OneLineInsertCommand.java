@@ -14,7 +14,7 @@ import com.brw.dto.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class BookOneLineRVCommand implements Command {
+public class OneLineInsertCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

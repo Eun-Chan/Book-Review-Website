@@ -1903,7 +1903,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from onelinereview where isbn = ? and delflag = 'N'";
+		String query = "select * from onelinereview where isbn = ? and delflag = 'N' order by now desc";
 
 		try {
 			conn = dataSource.getConnection();
@@ -1975,6 +1975,7 @@ public class DAO {
 		}
 		return result;
 	}
+
 	/*
 	 * 46. 작성자 : 정명훈
 	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
@@ -2056,6 +2057,7 @@ public class DAO {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+
 			pstmt.setInt(1, ntcNo);
 			
 			result = pstmt.executeUpdate();
@@ -2121,6 +2123,143 @@ public class DAO {
 		
 		
 		return n;
+	}
+	
+	/* 
+	 * 49. 한 줄 리뷰 삭제: 김민우
+	 * */
+	public int deleteOneLineReview(String userId, int oneLineNo) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "delete from onelinereview where userId = ? and no = ?";
+
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, oneLineNo);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 1) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+
+	}
+	/*
+	 * 50. 작성자 : 정명훈
+	 * 내용 : 공지사항 총 개수 구하기
+	 */
+	public int countNoticeAll() {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from notice where ntc_delflag = 'N' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 51. 작성자 : 정명훈
+	 * 내용 : 각 게시판에 보여줄 공지사항 가져오기 (allowview = Y 인 것만 가져오기) 
+	 */
+	public List<NoticeDTO> noticeListAllow() {
+		List<NoticeDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from notice n where ntc_allowview = 'Y' and ntc_delflag = 'N' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				NoticeDTO n = new NoticeDTO();
+				
+				n.setNtcNo(rset.getInt("ntc_no"));
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				
+				boolean dateNew = false;
+				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1) {
+					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
+				}
+				else {
+					n.setNtcDate(rset.getString("strdate"));
+				}
+				
+				n.setDateNew(dateNew);
+				
+				list.add(n);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
 	}
 	
 }

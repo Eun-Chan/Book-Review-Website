@@ -34,33 +34,20 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/header.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <script>
 	
 </script>
-<meta charset='utf-8'>
 
-<title>[bootstrap] 부트스트랩 – 내비게이션 메뉴바 [냅바(navbar)] - 전체 너비로 확장</title>
-
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-<style>body {
-
-  min-height: 2000px;
-
-  padding-top: 70px;
-
-}</style>
-
-<script></script>
 </head>
-
-
 <body>
 
+ 
+
+<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+ -->
+<!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+  
     <!-- Fixed navbar -->
 
     <nav class="navbar navbar-default navbar-fixed-top" id="navbar-menuBar">
@@ -84,11 +71,11 @@
 
           <ul class="nav navbar-nav">
           
-          	<li><a href="#about">홈으로</a></li>
+          	<li><a href="<%=request.getContextPath()%>/index.jsp">홈으로</a></li>
 	
             <li class="active"><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
 
-            <li><a href="#about">자유게시판</a></li>
+            <li><a href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
@@ -106,6 +93,21 @@
 		    	<% } 
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
+ 	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
@@ -285,7 +287,51 @@
       </ul> --%>
 <!--     </div>/.navbar-collapse
     </div>
-</nav> -->
+</nav> --> 
+<!-- 채팅 -->
+<div class="container" id="chat-Container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="panel panel-primary" id="chat-Box">
+                <div class="panel-heading" id="accordion">
+                    <span class="glyphicon glyphicon-comment"></span> Chat
+                    <div class="btn-group pull-right">
+                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                    </div>
+                </div>
+            <div class="panel-collapse collapse" id="collapseOne">
+                <div class="panel-body">
+                    <ul class="chat">
+                      
+                      <!-- 은찬 : 채팅 내용 영역 -->  
+                      
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 	
 <!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
 <div class="modal fade" id="loginModal">
@@ -367,45 +413,6 @@
 		});
 	}
 	
-/**
- * @광준 - 도서검색 기능
- */
- $("#btn-search").click(function(){
-	 var searchval = $("#search").val();
-	 var searchType = $("#searchType").val();
-	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
- });
- 
- <%-- $("#search").keydown(function(key) {
-	console.log(key);
-	 if (key.keyCode == 13)//enter를 클릭했다면 
-	 {
-		 var searchval = $("#search").val();
-		 var searchType = $("#searchType").val();
-		 console.log("처리됨");
-		 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
-	 }
-
- }); --%>
- /**
- * @광준 - form 대신 데이터 전송을 위한 구조 변경
- */
-/* $(document).one('click','#btn-search',function(){
-	dataSend();
-}); */
-$("#btn-search").click(function(){
-	dataSend();
-});
-$("#search").keydown(function(){
-	if(event.keyCode == 13) dataSend();
-});
-
-function dataSend()
-{
-	var searchval = $("#search").val();
-	var searchType = $("#searchType").val();
-	location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
-}
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

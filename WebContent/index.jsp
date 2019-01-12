@@ -7,128 +7,90 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" />
- <link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon_book.ico" />
+<!-- CSS 추가 -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" />
+<!-- Favicon 추가 - Header에도 Favicon이 있지만 적용되지 않아 다시한번 등록함 -->
+<link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon_book.ico" />
 <title>책 읽는 사람들</title>
-</head>
+</head> 
 <body>
-	<!-- Header -->
-	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-	
-	
-	<!-- 광준 -->
-<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> 
-  <!-- 검색 -->
-  <!--  <form id="frm"> -->
-<!--   <div id="search-Container"> -->
-    <input type="hidden" id="hiddenInput-search"/>
-			<select id="searchType">
-				<option value="title">제목</option> 
-				<option value="author">저자</option>
-			</select>   
-	   <input type="text" class="form-control" placeholder="도서를 검색해주세요." name="search" id="search">
-	   <input class="btn btn-default" type="button" id="btn-search" value="검색">
-   <!-- </div> -->
-   
-	   <!-- <input type="button" class="search-btn" id="btn-search" value="검색"></input> -->
-  <!-- </form> -->  
-  <ul  class="navbar-nav" id="navbar-menu">
-  <!-- 메뉴 -->
-  	<%-- <li class="nav-item">
-  		<a class="navbar-brand" href="#">공지사항</a>
-	</li>
-    <li  class="nav-item"> 
-      <a  class="navbar-brand"  href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a> 
-    </li> 
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a> 
-    </li> 
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="#">즐겨찾기</a> 
-    </li>
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="#">채팅</a> 
-    </li> --%>
 
- 	 <%-- <li class="nav-item">
-  	 	<% if(user == null) { %>  
-     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
-    	<% } 
-    	else {%>  
-    	<li><a href="#">채팅</a></li>
-    	<li class="dropdown">
-    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
-    		<ul class="dropdown-menu" role="menu">
-    			<li><a href="#">내 정보보기</a></li>
-    			<li class="divider"></li>
-          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
-    		</ul>
-    	</li>
-    	<%}%>
-    </li> --%>
-   </ul>
+<!-- Header 추가 -->
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
+
+	
+<!-- ======= 1. 검색 Part START ======= -->
+	
+<!-- @광준 : 검색 Container -->
+<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> 
+	<!-- 전송을 위해 form 태그에 담았으나, 담는순간 CSS가 먹히지 않는 오류가 있어 jquery click함수를 통해 수동으로 전송함 -->
+	<!-- select의 margin CSS가 먹히지 않아 hidden타입으로 input을 하나 끼워넣고 margin을 통해 거리를 벌림 -->
+	<input type="hidden" id="hiddenInput-search"/>
+	<!-- 검색방법을 선택 - 제목/저자 -->
+	<select id="searchType">
+		<option value="title">제목</option> 
+		<option value="author">저자</option>
+	</select>
+	<!-- 검색바 -->
+	<input type="text" class="form-control" placeholder="도서를 검색해주세요." name="search" id="search">
+	<!-- 검색버튼 - 클릭 시 jquery로 검색에 필요한 데이터를 전송한다. -->
+	<input class="btn btn-default" type="button" id="btn-search" value="검색">
 </nav>  
 	
-	
-	
-	
-	
-	
-	
-	
-	<!-- Body -->
-	<%-- <a href="<%=request.getContextPath()%>/reviewList.do">헤헤</a>
-	<a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a>
-	<a href="<%=request.getContextPath()%>/book/bookInfo.do">해리포터상세보기테스트</a>
-	<a href="<%=request.getContextPath()%>/book/bookList.do">도서검색테스트</a>
-	<a href="<%=request.getContextPath()%>/book/showbasket.do">도서즐겨찾기테스트</a> --%>
-	
-	<!-- 인기도서 출력 Start -->
-	<form action="<%=request.getContextPath()%>/index.do"	id="indexForm" method="post"></form>
-	<div class="masthead">
-       <!-- <h3 class="text-muted">책 읽는 사람들</h3> -->
-       <nav>
-         <ul class="nav nav-justified">
-           <li class="active"><a href="#" id="select-AllBook">통합</a></li>
-           <li><a href="#" id="select-NewBook">신간</a></li>
-           <li><a href="#" id="select-ForeginBook">외국</a></li>
-           <li><a href="#" id="select-eBook">e북</a></li>
-         </ul>
-       </nav>
-     </div>
-      
-     <div class="container">
-      
+<!-- ======= 1. 검색 Part END ======= -->
+
+
+<!-- ======= 2. 도서정보 출력 Part START ======= -->
+<!-- 도서정보 장르 메뉴 영역 -->
+<div class="masthead">
+	<nav>
+		<!-- 도서정보 장르 메뉴 -->
+		<ul class="nav nav-justified">
+			<li><a id="select-AllBook">통합</a></li>
+			<li><a id="select-NewBook">신간</a></li>
+			<li><a id="select-ForeginBook">외국</a></li>
+			<li><a id="select-eBook">e북</a></li>
+		</ul>
+	</nav>
+</div>
+
+<!-- 도서 하나에 대한 컨테이너 -->
+<div class="container">     
 	<!-- 첫번째 -->
-    <div class="row">
-	  <div class="col-sm-6 col-md-3">
-	   <div class="thumbnail">
-	   	 <img class="img-thumbnail" id="bookImage0">
-	     <div class="caption">
-	       <div class="span-center"><span id="book0" class="bestseller-title"></span></div>
-	       <p id="book-Author0" class="book-Author"> </p>
-	       <!-- 별점 -->
-	       <div id="start-Container">
-	       <div class="starRev0">
-			  <span class="starR1" id="star0-0">별1_왼쪽</span>
-			  <span class="starR2" id="star0-1">별1_오른쪽</span>
-			  <span class="starR1" id="star0-2">별2_왼쪽</span>
-			  <span class="starR2" id="star0-3">별2_오른쪽</span>
-			  <span class="starR1" id="star0-4">별3_왼쪽</span>
-			  <span class="starR2" id="star0-5">별3_오른쪽</span>
-			  <span class="starR1" id="star0-6">별4_왼쪽</span>
-			  <span class="starR2" id="star0-7">별4_오른쪽</span>
-			  <span class="starR1" id="star0-8">별5_왼쪽</span>
-			  <span class="starR2" id="star0-9">별5_오른쪽</span>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<div class="thumbnail">
+				<img class="img-thumbnail" id="bookImage0">
+				<div class="caption">
+					<div class="span-center">
+						<span id="book0" class="bestseller-title"></span>
+					</div>
+					<p id="book-Author0" class="book-Author"> </p>
+					<!-- 별점 -->
+					<div id="start-Container">
+						<div class="starRev0">
+							<span class="starR1" id="star0-0">별1_왼쪽</span>
+							<span class="starR2" id="star0-1">별1_오른쪽</span>
+							<span class="starR1" id="star0-2">별2_왼쪽</span>
+							<span class="starR2" id="star0-3">별2_오른쪽</span>
+							<span class="starR1" id="star0-4">별3_왼쪽</span>
+							<span class="starR2" id="star0-5">별3_오른쪽</span>
+							<span class="starR1" id="star0-6">별4_왼쪽</span>
+							<span class="starR2" id="star0-7">별4_오른쪽</span>
+							<span class="starR1" id="star0-8">별5_왼쪽</span>
+							<span class="starR2" id="star0-9">별5_오른쪽</span>
+						</div>
+					</div>
+					<br /><br />
+					<div id="button-Container">
+						<p>
+							<a href="#" class="btn btn-primary" role="button">구매하기</a>
+							<a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a>
+						</p>
+					</div>
+				</div>
 			</div>
-			</div>
-			<br /><br />
-			<div id="button-Container">
-	       		<p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a></p>
-	        </div>
-	     </div>
-	   </div>
-	 </div>
+	</div>
 	 
 	<!-- 두번째 -->
 	<div class="col-sm-6 col-md-3">
@@ -216,10 +178,10 @@
 	 </div> <!-- rowEnd -->
     </div> <!-- /container -->
     <!-- 인기도서 출력 End -->
-    
+    <div id="Review-Container">
     <!-- 최근 리뷰 Start -->
 
-    <div id="recent-Review">
+    
 	    <h3 class="subTitle"><strong>최근 리뷰</strong></h3>
 	    <!-- <hr class="title-line" /> -->
 	    
@@ -363,9 +325,10 @@
 	      </table>
 	   </div> <!-- end of #table-container -->
    </div>
+    
+   
    <br><br />
 <script>
-
 
 /**
  * @광준 : 책정렬 메뉴를 선택했을 시
@@ -544,6 +507,34 @@ var isEmpty = function(value){
 /*처음 웹페이지 실행 시 강제로 클릭한다.*/
 $("#select-AllBook").trigger("click");
 
+/**
+ * @광준 - 도서검색 기능
+ */
+ $("#btn-search").click(function(){
+	 var searchval = $("#search").val();
+	 var searchType = $("#searchType").val();
+	 location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+ });
+
+ /**
+ * @광준 - form 대신 데이터 전송을 위한 구조 변경
+ */
+/* $(document).one('click','#btn-search',function(){
+	dataSend();
+}); */
+$("#btn-search").click(function(){
+	dataSend();
+});
+$("#search").keydown(function(){
+	if(event.keyCode == 13) dataSend();
+});
+
+function dataSend()
+{
+	var searchval = $("#search").val();
+	var searchType = $("#searchType").val();
+	location.href = "<%=request.getContextPath()%>/book/bookList.do?searchType=" + searchType + "&searchVal=" + searchval;
+}
 
  
  //0.5반올림
