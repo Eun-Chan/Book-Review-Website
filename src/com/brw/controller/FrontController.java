@@ -27,9 +27,12 @@ import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
+import com.brw.command.user.FindPwdEmailAuthCommand;
 import com.brw.command.user.IdCheckCommand;
+import com.brw.command.user.KakaoCreateUserCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
+import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
 
 /**
@@ -272,6 +275,7 @@ public class FrontController extends HttpServlet {
 		 * 25. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
 		 */
 	    else if(command.equals("/sign/idSearchEnd.do")) {
+	    	System.out.println("여기 컨트롤러 idSearchEnd.do");
 	    	viewPage = "/WEB-INF/views/sign/IdSearchEnd.jsp";
 	    }
 		/*
@@ -281,7 +285,46 @@ public class FrontController extends HttpServlet {
 	    	com = new checkedBasketCommand();
 	    	com.execute(req, res);
 	    }
-
+		/**
+		 * 27
+		 * 작성자 : 김은찬
+		 * 내용 : 아이디를 통해 이메일을 찾고, 메일로 인증번호 보내기
+		 */
+	    else if(command.equals("/sign/findPwdEmailAuth.do")) {
+	    	com = new FindPwdEmailAuthCommand();
+	    	com.execute(req, res);
+	    }
+		/**
+		 * 28
+		 * 작성자 : 김은찬
+		 * 내용 : 비밀번호 찾기 시 비밀번호 변경
+		 */
+	    else if(command.equals("/sign/passwordUpdate.do")) {
+	    	com = new PasswordUpdateCommand();
+	    	com.execute(req, res);
+	    	viewPage = "/index.jsp";
+	    }
+		/**
+		 * 29
+		 * 작성자 : 김은찬
+		 * 내용 : 비밀번호 변경 페이지로 이동
+		 */
+	    else if(command.equals("/sign/changePwd.do")) {
+	    	/* 회원에게 입력받은 아아디를 changePwd.jsp에 옮기는 용도*/
+	    	String userId = req.getParameter("userId");
+	    	req.setAttribute("userId", userId);
+	    	viewPage = "/WEB-INF/views/sign/changePwd.jsp";
+	    }
+		/**
+		 * 30
+		 * 작성자 : 김은찬
+		 * 내용 : 카카오톡 유저 회원가입 (카카오톡 유저 로그인 기능도 담당)
+		 */
+	    else if(command.equals("/sign/kakaoCreateUserCommand.do")) {
+	    	com = new KakaoCreateUserCommand();
+	    	com.execute(req, res);
+	    }
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

@@ -48,7 +48,6 @@ public class DAO {
 	 * 내용 : 회원가입
 	 */
 	public void createUser(UserDTO user) throws SQLException {
-		int result = 0;
 		String query = "insert into tempUserTable(userid,userpassword,username,useremail) values(?,?,?,?)";
 		
 		Connection connection = null;
@@ -66,7 +65,7 @@ public class DAO {
 			pstmt.setString(3, user.getUserName());
 			pstmt.setString(4, user.getUserEmail());
 			
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 			System.out.println("user create commit()");
 			connection.commit();
@@ -1722,8 +1721,9 @@ public class DAO {
 			return list;
 		}
 	/**
+	 * 41
 	 * 작성자 : 김은찬
-	 * 41. 이메일을 통해 아이디 찾아보리기
+	 * 이메일을 통해 아이디 찾아보리기
 	 */
 	public String searchIdForEmail(String userEmail) {
 		String userId = null;
@@ -1755,6 +1755,119 @@ public class DAO {
 			}
 		}
 		return userId;
+	}
+	/**
+	 * 42
+	 * 작성자 : 김은찬
+	 * 내용 : 아이디를 통해 이메일 검색하고 리턴
+	 */
+	public String searchEmailForId(String userId) {
+		String userEmail = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select userEmail from tempusertable where userId = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				userEmail = rset.getString("userEmail");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return userEmail;
+	}
+	/**
+	 * 43
+	 * 작성자 : 김은찬
+	 * 내용 : 비밀번호 찾기를 통한 비밀번호 변경 
+	 */
+	public int passwordUpdate(String userId, String userPassword) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		System.out.println("passwordUpdate$userId = "+userId);
+		System.out.println("passwordUpdate$userPassword = "+userPassword);
+		String query = "update tempusertable set userPassword = ? where userId = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userPassword);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate(); 
+			conn.commit();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	/**
+	 * 44
+	 * 작성자 : 김은찬
+	 * 내용 : 카카오톡 유저 회원가입
+	 */
+	public int kakaoCreateUser(UserDTO userDTO) throws SQLException {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String query = "insert into tempusertable(userId, userPassword, userName , userEmail,userNickName) values (?,?,?,?,?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userDTO.getUserId());
+			pstmt.setString(2, userDTO.getUserPassword());
+			pstmt.setString(3, userDTO.getUserName());
+			pstmt.setString(4, userDTO.getUserEmail());
+			pstmt.setString(5, userDTO.getUserId());
+			
+			result = pstmt.executeUpdate();
+			conn.commit();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			conn.rollback();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }
 
