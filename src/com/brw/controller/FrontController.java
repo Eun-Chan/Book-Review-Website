@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.command.admin.NoticeDetailViewCommand;
+import com.brw.command.admin.NoticeListCommand;
+import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
@@ -303,10 +305,21 @@ public class FrontController extends HttpServlet {
 		}
 		/*30. 명훈 : 공지사항 상세보기*/
 		else if(command.equals("/admin/noticeDetail.do")) {
-			//해당 게시물 가져오는 쿼리
 			com = new NoticeDetailViewCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
+		}
+		/*31. 명훈 : 공지사항 관리 페이지*/
+		else if(command.equals("/admin/noticeList.do")) {
+			com = new NoticeListCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
+		}
+		/*31. 명훈 : 공지사항 관리 페이지*/
+		else if(command.equals("/admin/noticeSearch.do")) {
+			com = new NoticeSearchCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeSearch.jsp";
 		}
 
 		if(viewPage!=null){			

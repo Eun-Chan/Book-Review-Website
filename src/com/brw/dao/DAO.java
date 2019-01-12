@@ -157,7 +157,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -184,12 +184,21 @@ public class DAO {
 				rbv.setRbRecommend(rset.getInt("rb_recommend"));
 				rbv.setRbReport(rset.getInt("rb_report"));
 				
-				// 리뷰보드뷰DTO에 있는 것들
+				// new : 작성한지 만 하루가 지나지 않은 것들
+				// 현재일(day)과 같은 날에 쓴 글은 작성일에 시간만 띄우기 (HH24:MI)
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String rbDay = rset.getString("rbday");
+				
 				if(passingTime <= 1) {
 					dateNew = true;
-					rbv.setRbDate(rset.getString("datenew"));
+					if(rbDay.equals(sysDay)) {
+						rbv.setRbDate(rset.getString("todaytime"));
+					}
+					else {
+						rbv.setRbDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					rbv.setRbDate(rset.getString("strdate"));
@@ -266,7 +275,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -296,9 +305,17 @@ public class DAO {
 				
 				boolean dateNew = false;
 				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String rbDay = rset.getString("rbday");
+				
 				if(passingTime <= 1) {
 					dateNew = true;
-					rbv.setRbDate(rset.getString("datenew"));
+					if(rbDay.equals(sysDay)) {
+						rbv.setRbDate(rset.getString("todaytime"));
+					}
+					else {
+						rbv.setRbDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					rbv.setRbDate(rset.getString("strdate"));
@@ -1960,19 +1977,25 @@ public class DAO {
 	}
 	/*
 	 * 46. 작성자 : 정명훈
-	 * 내용 : db에서 공지사항 리스트 가져오기 (삭제되지 않았고 ntc_allowview = Y 인 것들만) 
+	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
 	 */
-	public List<NoticeDTO> noticeList() {
+	public List<NoticeDTO> noticeList(int cPage, int numPerPage) {
 		List<NoticeDTO> list = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(ntc_date, 'HH24:MI') datenew, (sysdate - ntc_date) passingtime from notice n where ntc_allowview = 'Y' and ntc_delflag = 'N'";
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from (select rownum rnum, n.* from (select * from notice n where ntc_delflag = 'N' order by ntc_no desc) n) n where rnum between ? and ?";
+		
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
 			rset = pstmt.executeQuery();
 			
 			list = new ArrayList<>();
@@ -1984,11 +2007,19 @@ public class DAO {
 				n.setNtcContent(rset.getString("ntc_content"));
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
 				
-				int passingtime = rset.getInt("passingtime");
 				boolean dateNew = false;
-				if(passingtime <= 0) {
-					n.setNtcDate(rset.getString("datenew"));
+				int passingTime = rset.getInt("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1) {
 					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
 				}
 				else {
 					n.setNtcDate(rset.getString("strdate"));

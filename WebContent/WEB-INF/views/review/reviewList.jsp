@@ -23,6 +23,7 @@ div#search-rb_booktitle, div#search-rb_writer, div#search-userNickName {
 	display: none;
 }
 
+/* 검색관련 div */
 div#search-rb_title {
 	display: inline-block;
 }
@@ -54,7 +55,7 @@ div.search-bar {
 	width: 400px;
 }
 
-/* 게시판 테이블 색깔 지정 */
+/* 게시판 테이블 th 색깔 지정 */
 table#review-list-table thead tr {
 	background: #004183;
 	color: white;
@@ -96,6 +97,11 @@ th.w100 {
 /* 공지사항용 tr 색 지정 */
 tr.notice{
 	background: #a6ceff7d;
+}
+
+/* 광준이가 헤더에 똑같은 아이디로 속성을 줘서 변경 */
+#searchType {
+	margin: 0;
 }
 
 </style>
