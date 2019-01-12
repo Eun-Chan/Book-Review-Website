@@ -4,7 +4,9 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%
    // FrontController에서 보낸 list 받기
-   List<ReviewBoardDTO> list = (List<ReviewBoardDTO>)request.getAttribute("list");
+
+   List<ReviewBoardViewDTO> list = (List<ReviewBoardViewDTO>)request.getAttribute("list");
+
    String pageBar = (String)request.getAttribute("pageBar");
    
    String searchType = request.getParameter("searchType");
@@ -14,7 +16,7 @@
 <style>
 /* 컨테이너 너비 조정 */
 div#review-list-container{
-	width: 950px;
+   width: 950px;
 }
 
 /* 검색창 보이기&보이지 않기 */
@@ -43,51 +45,51 @@ div.search-bar {
 
 /* 게시판 컬럼별 너무길면 ... 으로 표시 */
 table#review-list-table tbody tr td:nth-child(2) {
-	width: 160px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow : hidden;
-	display : inline-block;
+   width: 160px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   overflow : hidden;
+   display : inline-block;
 }
 
 /* 게시판 테이블 색깔 지정 */
 table#review-list-table thead tr{
-	background: #004183;
-	color: white;
+   background: #004183;
+   color: white;
 }
 
 /* 글쓰기 버튼 위치 */
 div#btn-write-container {
-	position: relative;
-	top: -50px;
-	left: 840px;
+   position: relative;
+   top: -50px;
+   left: 840px;
 }
 
 /* 게시판 새 글 new 표시 */
 span.smft {
-	font-size: 11px;
+   font-size: 11px;
 }
 
 
 /* 테이블 최소 높이 지정 */
 #table-container{
-	min-height: 300px;
+   min-height: 300px;
 }
 </style>
 <script>
 $(function(){
-	// 로그인을 했으면 리뷰작성 페이지로 이동
-	$("button#btn-write").on("click",function(){
-		<%
-		if(user == null){
-		%>
-		alert("로그인 후 이용하세요.");
-		return;
-		<%
-		}
-		%>
-		location.href="<%=request.getContextPath()%>/review/reviewWrite.do";
-	});
+   // 로그인을 했으면 리뷰작성 페이지로 이동
+   $("button#btn-write").on("click",function(){
+      <%
+      if(user == null){
+      %>
+      alert("로그인 후 이용하세요.");
+      return;
+      <%
+      }
+      %>
+      location.href="<%=request.getContextPath()%>/review/reviewWrite.do";
+   });
 });
 </script>
 
@@ -109,13 +111,14 @@ $(function(){
             </tr>
          </thead>
          <tbody>
-         <% for(ReviewBoardDTO rb : list) { %>
+
+         <% for(ReviewBoardViewDTO rb : list) { %>
             <tr>
                <td><%=rb.getRbNo() %></td>
                <td><%=rb.getRbBookTitle()%></td>
                <td>
-               		<a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a> 
-             		<span class="smft"><%=rb.getCommentCnt()>0?rb.getCommentCnt():"" %></span> <%=rb.getIsDateNew()?"<span class='mark smft'>new</span>":"" %>
+                     <a href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rb.getRbNo() %>"><%=rb.getRbTitle() %></a> 
+                   <span class="smft"><%=rb.getCommentCnt()>0?rb.getCommentCnt():"" %></span> <%=rb.isDateNew()?"<span class='mark smft'>new</span>":"" %>
                </td>
                <td><%=rb.getRbWriter() %></td>
                <td><%=rb.getRbDate() %></td>
