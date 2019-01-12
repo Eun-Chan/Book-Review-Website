@@ -26,10 +26,10 @@ img{
 			<span id="comment">댓글 : <%=count %></span>
 		</div>
 		<div id ="reviewDetail-Title">
-			<span>[리뷰]<%=review.getRbTitle() %></span>
+			<h3>[리뷰]<%=review.getRbTitle() %></h3>
 		</div>
 		<div id="reviewDetail-Writer">
-			<span id="booktitle">도서명 : <%=review.getRbBookTitle() %> </span>
+			<span id="reviewDetail-booktitle">도서명 : <%=review.getRbBookTitle() %> </span>
 	      	<div id="start-Container">
 		       <div class="starRev0">
 				  <span class="starR1 on" id="star0"></span>
@@ -48,9 +48,6 @@ img{
 			</div>
 			<span id="reviewBoard-Writer" class="reviewBoard-Writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
 		</div>
-			
-
-		<hr id="bs_hr">
 		<div id ="reviewDetail-Content">
 			<p>
 			<span>
@@ -261,7 +258,7 @@ img{
 			}
 		});
 
-		$(document).on('click','.comment-recomment',function(){
+		$(document).one('click','.comment-recomment',function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
 				return;

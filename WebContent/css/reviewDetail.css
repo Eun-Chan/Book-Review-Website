@@ -6,15 +6,14 @@
 	margin:0 auto;
 	height:auto;
 }
+#reviewDetail-Title h3{
+	color:violet;
+}
 #recomment-list{
 	display:inline;
 	float:left;
 	margin:0 auto;
 	height:auto;
-}
-#bs_hr{
-	margin-top:5px;
-	margin-bottom:0;
 }
 li{
 	list-style: none;
@@ -83,10 +82,10 @@ li{
 	margin-top: 8px;
 	height: auto;
     overflow: hidden;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 7px;
 }
-#booktitle:hover{
-	background:violet;
-}
+
 #reviewDetail-Writer hr{
 	margin-top: 0;
 }
