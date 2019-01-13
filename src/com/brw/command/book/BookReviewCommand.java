@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardDTO;
+import com.brw.dto.ReviewBoardViewDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
@@ -33,7 +34,7 @@ public class BookReviewCommand implements Command {
 		String ISBN13 =request.getParameter("ISBN13");
 		System.out.println("reviewCommand="+ISBN13);
 		DAO dao  = DAO.getInstance();
-		List<ReviewBoardDTO> list = dao.getbookreview(ISBN13);
+		List<ReviewBoardViewDTO> list = dao.getbookreview(ISBN13);//17
 		System.out.println(list);
 		try {
 			new Gson().toJson(list,response.getWriter());

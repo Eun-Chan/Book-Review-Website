@@ -33,7 +33,7 @@ public class InsertCommentCommand implements Command{
 		String rbCommentContent = request.getParameter("rbCommentContent");
 		String rbCommentWriter = request.getParameter("rbCommentWriter");
 		String rbCommentWriterNickName = request.getParameter("rbCommentWriterNickName");
-		System.out.println(rbNo+","+rbCommentContent+","+rbCommentWriter);
+		System.out.println(rbNo+","+rbCommentContent+","+rbCommentWriter+","+rbCommentWriterNickName);
 		
 		ReviewBoardComment comment = new ReviewBoardComment(rbCommentWriter, rbCommentContent, rbNo,rbCommentWriterNickName);
 		

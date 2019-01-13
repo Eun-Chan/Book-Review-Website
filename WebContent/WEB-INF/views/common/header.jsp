@@ -36,10 +36,16 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/header.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<script>
+	
+</script>
 
 </head>
 <body>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
  -->
@@ -70,13 +76,13 @@
           
           	<li><a href="<%=request.getContextPath()%>/index.jsp">홈으로</a></li>
 	
-            <li class="active"><a href="#">공지사항</a></li>
+            <li class="active"><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
-            <li><a href="#contact">즐겨찾기</a></li>
+
             
           </ul>   
           
@@ -88,15 +94,25 @@
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
 		    	<li class="dropdown">
-		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
+		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
-		    			<li><a href="#">내 정보보기</a></li>
+		    			<!-- 유저 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
+		    			<% } %>
+		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
+		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
+		    			<li><a href="">회원 관리</a></li>
+		    			<% } %>
+		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
+		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
+		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
+		    			<% } %>
 		    			<li class="divider"></li>
-		          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
+		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
 		    		</ul>
 		    	</li>
 		    	<%}%>
-		    
           </ul>
         </div><!--/.nav-collapse -->
       </div>

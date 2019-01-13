@@ -104,6 +104,16 @@ th.w100 {
 tr.notice{
 	background: #a6ceff7d;
 }
+
+/* 광준이가 헤더에 똑같은 아이디로 속성을 줘서 변경 */
+#searchType {
+	margin: 0;
+}
+
+/* 테이블 최소 높이 지정 */
+#table-container{
+	min-height: 300px;
+}
 </style>
 <script>
 $(function(){

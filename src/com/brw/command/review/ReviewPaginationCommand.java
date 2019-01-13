@@ -37,8 +37,8 @@ public class ReviewPaginationCommand implements Command {
 		// 리뷰게시판 목록 리스트
 		List<ReviewBoardViewDTO> list = new ArrayList<>();
 
-		// 공지사항 가져오기 (allowview = Y 인 것만)
-		ntcList = dao.noticeList();
+		// 공지사항 가져오기 (allowview = Y 이고 delflag = N 인 것만)
+		ntcList = dao.noticeListAllow();
 		// 페이징용 리뷰리스트 가져오기
 		list = dao.reivewPagination(cPage, numPerPage);
 

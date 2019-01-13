@@ -1,104 +1,108 @@
 body
 {
-	min-width: 950px !important;
+   min-width: 950px !important;
 }
 /*검색*/
 #hiddenInput-search, select#searchType, #search, #btn-search
 {
-	margin-top: 0%;
-	margin-bottom: 1%;
+   margin-top: 0%;
+   margin-bottom: 1%;
 }
 /*검색end*/
 div#Review-Container
 {
-	margin-left:15%;
-	display: inline-block;
-	width: 65%;
+   margin-left:15%;
+   display: inline-block;
+   width: 65%;
 }
 div#bestReview
 {
-	margin-left:15%;
-	display: inline-block;
-	width: 65%;
+   margin-left:15%;
+   display: inline-block;
+   width: 65%;
 }
 /*검색*/
 div#search-Container
 {
-	width: 100%;
-	vertical-align: middle;
+   width: 100%;
+   vertical-align: middle;
 }
 #search-ContainerOut
 {
-	width: 100%;
-	display: table-cell;
+   width: 100%;
+   display: table-cell;
 }
 nav#navSearch
 {
-	margin-top: 0%;
+   margin-top: 10%;
+   z-index: 0;
 }
 #searchType
 {
-	margin: 0;
-	margin-right: 0;
-	color: black;
-	height: 35px;
-	margin-left: 75px;
+   margin: 0;
+   margin-right: 0;
+   color: black;
+   height: 35px;
+   margin-left: 75px;
+   z-index:99999;
 }
 #searchType>option
 {
-	font-size: 15px;
+   font-size: 15px;
+   z-index:99999;
 }
 input#search
 {
-	margin-left: 0.5%;
-	margin-right: 0.5%;
+   margin-left: 0.5%;
+   margin-right: 0.5%;
+   z-index:99999;
 }
 /* 인기도서 Start*/
 div#search-Container
 {
-	width: 1000px;
-	margin: 0 auto;
+   width: 1000px;
+   margin: 0 auto;
 }
 /* 이미지 */
 img#bookImage0, img#bookImage1, img#bookImage2, img#bookImage3
-{	
-	margin-top: 10%;
+{   
+   margin-top: 10%;
 }
 /* 하나의 행 */
 div.row
 {
-	margin-top: 5%;
-	margin-bottom: 5%;
+   margin-top: 5%;
+   margin-bottom: 5%;
 }
 /* 도서명 */
 h3.text-muted
 {
-	margin-bottom: 5%;
+   margin-bottom: 5%;
 }
 /* 도서 하나의 컨테이너 */
 div.thumbnail
 {
-	min-height: 400px;
+   min-height: 400px;
 }
 span.bestseller-title
 {
-	font-size: 16px;
-	font-weight: bold;
+   font-size: 16px;
+   font-weight: bold;
 }
 div.span-center
 {
-	text-align: center;
+   text-align: center;
 }
 
 img.img-thumbnail
 {
-	min-height: 180px;
+   min-height: 180px;
 }
 p.book-Author
 {
-	font-size: 14px;
-	color: gray;
-	text-align: center;
+   font-size: 14px;
+   color: gray;
+   text-align: center;
 }
 .starR1{
     background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
@@ -129,64 +133,64 @@ p.book-Author
 /* 안 */
 div#button-Container
 {
-	display: inline-block;
+   display: inline-block;
     position: relative;
-	left: 14%;
+   left: 14%;
 }
 ul#subMenu
 {
-	display: none;
-	position:absolute;
+   display: none;
+   position:absolute;
 }
 ul#subMenu:hover
 {
-	display:block;
+   display:block;
 }
 /* 인기도서 End*/
 
 
 hr.my-hr2
 {
-	border: 0;
+   border: 0;
     height: 2px;
     background: #ccc;
 }
 /* 최근 리뷰 */
 #recent-Review
 {
-	margin-left: 5%;
-	float: left;
+   margin-left: 5%;
+   float: left;
 }
 #bestReview
 {
-	margin-left: 5%;
-	display: inline-block;
+   margin-left: 5%;
+   display: inline-block;
 }
 span.bookName
 {
-	font-size: 20px;
+   font-size: 20px;
 }
 h3.subTitle
 {
-	margin-top: 2%;
-	margin-bottom: 2%;
+   margin-top: 2%;
+   margin-bottom: 2%;
 }
 hr.title-line
 {
-	width: 80%;
+   width: 80%;
 }
 div.recent_comment
 {
-	margin-left: 10%;
-	margin-bottom: 2%;
+   margin-left: 10%;
+   margin-bottom: 2%;
 }
 span.writer-Time
 {
-	color: gray;
+   color: gray;
 }
 span.rbTitle
 {
-	font-size: 15px;
+   font-size: 15px;
 }
 
 /* Footer */
@@ -208,10 +212,10 @@ footer p {
     display: inline-block;
 }
 #start-Container{
-	margin :0 auto;
+   margin :0 auto;
 }
 .comment-delete{
-	float: right;
+   float: right;
     /* padding-bottom: 20px; */
     cursor: Pointer;
     padding: 0;
