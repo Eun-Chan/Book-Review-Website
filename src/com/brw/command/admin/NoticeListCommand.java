@@ -1,4 +1,4 @@
-package com.brw.command.review;
+package com.brw.command.admin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,7 @@ import com.brw.dao.DAO;
 import com.brw.dto.NoticeDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 
-/*
- * 작성자 : 정명훈
- * 내용 : 리뷰리스트 페이징
- */
-public class ReviewPaginationCommand implements Command {
+public class NoticeListCommand implements Command {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
@@ -32,31 +28,12 @@ public class ReviewPaginationCommand implements Command {
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 10;
 		
-		// 공지사항 목록 리스트
-		List<NoticeDTO> ntcList = new ArrayList<>();
-		// 리뷰게시판 목록 리스트
-		List<ReviewBoardViewDTO> list = new ArrayList<>();
+		// 공지사항 가져오기 (allowview = Y이고 delflag = N 인 것만)
+		List<NoticeDTO> ntcList = dao.noticeList(cPage, numPerPage);
 
-		// 공지사항 가져오기 (allowview = Y 이고 delflag = N 인 것만)
-		ntcList = dao.noticeListAllow();
-		// 페이징용 리뷰리스트 가져오기
-		list = dao.reivewPagination(cPage, numPerPage);
-
-		Integer maxLike = 0;
-		// 각 게시글에 대한 댓글 개수 가져오기
-		// 각 게시글에 대한 총 좋아요 갯수 가져오기
-		for(int i=0; i<list.size(); i++) {
-			int commentCnt = dao.getComment(list.get(i).getRbNo());
-			maxLike = dao.selectLikeCount(list.get(i).getRbNo());
-			if(maxLike==null){
-				list.get(i).setRbRecommend(0);
-			}
-			list.get(i).setCommentCnt(commentCnt);
-			list.get(i).setRbRecommend(maxLike);
-		}
 		
 		// 페이지바 작업
-		int totalContents = dao.countReviewAll();
+		int totalContents = dao.countNoticeAll();
 		
 		int totalPages = (int)Math.ceil(((double)totalContents/numPerPage));
 		int pageBarSize = 5;
@@ -74,7 +51,7 @@ public class ReviewPaginationCommand implements Command {
 				pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + (pageNo-1)
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/admin/noticeList.do?cPage=" + (pageNo-1)
 							+ "'>이전</a></li>";
 			}
 			
@@ -84,7 +61,7 @@ public class ReviewPaginationCommand implements Command {
 					pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
 				}
 				else {
-					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" + pageNo
+					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/admin/noticeList.do?cPage=" + pageNo
 							+ "'>" + pageNo + "</a></li>";
 				}
 				pageNo++;
@@ -95,7 +72,7 @@ public class ReviewPaginationCommand implements Command {
 				pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewList.do?cPage=" 
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/admin/noticeList.do?cPage=" 
 							+ pageNo + "'>다음</a>";
 			}
 	
@@ -106,9 +83,7 @@ public class ReviewPaginationCommand implements Command {
 		
 		
 		request.setAttribute("ntcList", ntcList);
-		request.setAttribute("list", list);
 		request.setAttribute("pageBar", pageBar);
-		
 	}
 
 }

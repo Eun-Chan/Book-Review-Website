@@ -6,15 +6,14 @@
 	margin:0 auto;
 	height:auto;
 }
+#reviewDetail-Title h3{
+	color:violet;
+}
 #recomment-list{
 	display:inline;
 	float:left;
 	margin:0 auto;
 	height:auto;
-}
-#bs_hr{
-	margin-top:5px;
-	margin-bottom:0;
 }
 li{
 	list-style: none;
@@ -83,16 +82,16 @@ li{
 	margin-top: 8px;
 	height: auto;
     overflow: hidden;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 7px;
 }
-#booktitle:hover{
-	background:violet;
-}
+
 #reviewDetail-Writer hr{
 	margin-top: 0;
 }
 #reviewDetail-Content{
 	width:800px;
-	min-height: 400px;
+	min-height: 300px;
 /* 	border: 1px solid black; */
 	margin: 25px 0px 30px 0px;
 	padding-top:20px;
@@ -107,7 +106,7 @@ li{
 	margin:0 auto;
 	float:none;
 	padding-left:46%;
-	position: absolute;
+	/* position: absolute; */
     bottom: 0;
 }
 #like{
@@ -255,6 +254,9 @@ li{
     margin: 0 auto;
     height: auto;
     margin-bottom: 5px;
+}
+#comment-writer{
+	cursor: pointer;
 }
 #comment-body{
 	display: inline-block;

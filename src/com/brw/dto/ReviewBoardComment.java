@@ -2,7 +2,7 @@ package com.brw.dto;
 
 import java.io.Serializable;
 
-public class ReviewBoardComment implements Serializable{
+public class ReviewBoardComment extends UserDTO implements Serializable{
 
 	/**
 	 * 

@@ -37,7 +37,7 @@ public class ReviewSearchCommand implements Command {
 
 		
 		// 공지사항 가져오기 (allowview = Y 인 것만)
-		List<NoticeDTO> ntcList = dao.noticeList();
+		List<NoticeDTO> ntcList = dao.noticeListAllow();
 		// 페이징용 리뷰리스트 가져오기
 		List<ReviewBoardViewDTO> list = dao.reivewSearch(searchType, searchKeyword, cPage, numPerPage);
 		
