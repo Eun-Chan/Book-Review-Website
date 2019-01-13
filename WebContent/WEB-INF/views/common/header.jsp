@@ -112,16 +112,14 @@
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
 		    			<!-- 유저 메뉴. 작성자 : 명훈 -->
+		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
 		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="#">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
 		    			<li><a href="">회원 관리</a></li>
-		    			<% } %>
-		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
-		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
-		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
 		    			<% } %>
 		    			<li class="divider"></li>
 		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
