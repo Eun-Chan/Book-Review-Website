@@ -39,9 +39,6 @@
 
 </head>
 <body>
-<!DOCTYPE html>
-
- 
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -81,9 +78,6 @@
             
             <li><a href="#contact">즐겨찾기</a></li>
             
-            
-            
- 
           </ul>   
           
           <ul class="nav navbar-nav" id="login-Container">
@@ -93,21 +87,6 @@
 		    	<% } 
 		    	else {%>  
 		    	<li><a href="#">채팅</a></li>
- 	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
 		    		<ul class="dropdown-menu" role="menu">
@@ -117,181 +96,14 @@
 		    		</ul>
 		    	</li>
 		    	<%}%>
-		    </li>
+		    
           </ul>
-
         </div><!--/.nav-collapse -->
-        
-        
-
       </div>
-      
-      
-
     </nav>
 
-
-
-<!-- 광준 -->
-<!-- <nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> -->
- 
- 
-
-  
-    
-  <!-- 검색 -->
-  <!--  <form id="frm"> -->
-<!--     <input type="hidden" id="hiddenInput-search"/>
-			<select id="searchType">
-				<option value="title">제목</option> 
-				<option value="author">저자</option>
-			</select> 
-	</input>   
-	   <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="search" id="search">
-	   <input class="btn btn-default" type="button" id="btn-search" value="검색"></button> -->
-   
-	   <!-- <input type="button" class="search-btn" id="btn-search" value="검색"></input> -->
-  <!-- </form> -->  
-    
-<!--   <ul  class="navbar-nav" id="navbar-menu"> -->
-  <!-- 메뉴 -->
-  	<%-- <li class="nav-item">
-  		<a class="navbar-brand" href="#">공지사항</a>
-	</li>
-    <li  class="nav-item"> 
-      <a  class="navbar-brand"  href="<%=request.getContextPath()%>/review/reviewList.do">자유게시판</a> 
-    </li> 
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a> 
-    </li> 
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="#">즐겨찾기</a> 
-    </li>
-    <li class="nav-item"> 
-      <a class="navbar-brand" href="#">채팅</a> 
-    </li> --%>
-
- 	 <%-- <li class="nav-item">
-  	 	<% if(user == null) { %>  
-     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
-    	<% } 
-    	else {%>  
-    	<li><a href="#">채팅</a></li>
-    	<li class="dropdown">
-    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
-    		<ul class="dropdown-menu" role="menu">
-    			<li><a href="#">내 정보보기</a></li>
-    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
-    			<li class="divider"></li>
-          	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
-    		</ul>
-    	</li>
-    	<%}%>
-    </li> --%>
-<!--    </ul>
-  
-  
-</nav>   -->
-<!-- Collect the nav links, forms, and other content for toggling -->
-    <%-- <div class="collapse navbar-collapse" id="topHeader">
-      <ul class="nav navbar-nav">
-        <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
-        <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul> --%>
-
-
-<%-- <nav class="navbar navbar-default">
-	<!-- 너비가 768px 이하가 될 시 data-target을 통해 해당 네비바를 toggle형태로 압축 -->
-	<div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topHeader">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar">테</span>
-        <span class="icon-bar">스</span>
-        <span class="icon-bar">트</span>
-      </button>
-      <a class="navbar-brand" href="#"><img src="<%=request.getContextPath()%>/images/logo.png"></a>
-    </div> --%>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <%-- <div class="collapse navbar-collapse" id="topHeader">
-      <ul class="nav navbar-nav">
-        <li><a href="<%=request.getContextPath()%>">홈<span class="sr-only">(current)</span></a></li>
-        <li><a href="<%=request.getContextPath()%>/review/reviewList.do">도서 리뷰</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">메뉴<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul> --%>
-      <!-- <form action="" class="navbar-form navbar-left" role="search" id="search-Book-Form">
-        <div class="form-group">
-          <input type="text" class="form-control" id="search-Book" placeholder="도서 & 리뷰 검색">
-        </div>
-        span은 bootstrap 전용 이미지 사용 하기 위해
-        <button type="submit" class="btn btn-default" id="search-Book-Button"><span class="glyphicon glyphicon-search"></span></button>
-      </form> -->
-      <!-- <form id="frm">
-			검색타입 :
-			<select id="searchType">
-				<option value="title">제목</option>
-				<option value="author">저자</option>
-			</select>		
-			검색 input태그
-			<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요."/>
-			<input type="button" value="검색" id="btn-search"/>
-		</form> -->
-      <!-- header 오른쪽 구석탱이 -->
-     <%-- <ul class="nav navbar-nav navbar-right">
-     	<% if(user == null) { %>
-       	<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
-      	<% } 
-      	else{%>
-      	<li><a onclick="chatting()">채팅</a></li>
-      	<li class="dropdown">
-      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></a>
-      		<ul class="dropdown-menu" role="menu">
-      			<li><a href="#">내 정보보기</a></li>
-      			<li><a href="<%=request.getContextPath()%>/book/showbasket.do">즐겨찾기</a></li>
-      			<li class="divider"></li>
-            	<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
-      		</ul>
-      	</li>
-      	<%}%>
-      </ul> --%>
-<!--     </div>/.navbar-collapse
-    </div>
-    <fieldset id="chatting_TextArea" style="display:none ">
-        <textarea id="messageWindow" rows="10" cols="50" readonly="true"></textarea>
-        <br/>
-        <input id="inputMessage" type="text"/>
-        <input type="submit" value="send" onclick="send()" />
-    </fieldset>
-</nav>
-=======
-</nav> -->
 <!-- 채팅 -->
-<div class="container" id="chat-Container">
+<div id="chat-Container">
     <div class="row">
         <div class="col-md-5">
             <div class="panel panel-primary" id="chat-Box">
@@ -301,21 +113,21 @@
                         <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </a>
-                    </div>
+                   	</div>
                 </div>
             <div class="panel-collapse collapse" id="collapseOne">
                 <div class="panel-body">
-                    <ul class="chat">
-                      
-                      <!-- 은찬 : 채팅 내용 영역 -->  
-                      
+                    <ul class="chat">                      
+                       <fieldset>
+        					<textarea id="messageWindow" rows="10" cols="40" readonly="true"></textarea>
+   						</fieldset>                
                     </ul>
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <input id="inputMessage" type="text" class="form-control input-sm" placeholder="앙 메시지를 입력해줭" onkeyup="chat_enterkey();"/>
                         <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                            <button class="btn btn-warning btn-sm" id="btn-chat" onclick="send()">
                                 Send</button>
                         </span>
                     </div>
@@ -384,6 +196,11 @@
 		if(window.event.keyCode == 13)
 			loginCheck();
 	}
+	
+	function chat_enterkey(){
+		if(window.event.keyCode == 13)
+			send();
+	}	 
 	
 	function loginCheck(){
 		var userId = $("#userId").val().trim();
@@ -475,7 +292,7 @@
 	}
 /*     var textarea = document.getElementById("messageWindow"); */
 	var textarea = $("#messageWindow");
-    var webSocket = new WebSocket('ws://52.78.61.219:8080/brw/broadcasting');
+    var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting');
     var inputMessage = $("#inputMessage");
     
     webSocket.onerror = function(event) {
@@ -488,7 +305,7 @@
       onMessage(event)
     };
     function onMessage(event) {
-        textarea.value += event.data + "\n";
+        textarea.val(textarea.val() + event.data + "\n");
     }
     function onOpen(event) {
         textarea.val("채팅방에 입장 하셨습니다❤\n");
@@ -497,11 +314,16 @@
       alert(event.data);
     }
     function send() {
+    	if(inputMessage.val().length != 0){
     	<%if(user != null){%>
         textarea.val(textarea.val() + '<%=user.getUserName()%>띠 : ' + inputMessage.val() + "\n");
         webSocket.send('<%=user.getUserName()%>띠  : ' + inputMessage.val());
         inputMessage.val("");
+        /* 채팅창 스크롤 자동 내리기 */
+        const top = textarea.prop('scrollHeight');
+        textarea.scrollTop(top);
     	<%}%>
+    	}
     }
 </script>
 	

@@ -18,6 +18,9 @@ import javax.websocket.server.ServerEndpoint;
 // 클라이언트에 접속할 서버 주소
 @ServerEndpoint("/broadcasting")
 public class BroadSocket {
+	/*
+	 * 자료구조 set ==> 순서 신경 X , 중복 허용 X  , set은 HashSet(정렬X) , TreeSet(저장된 데이터값에 따라 정렬 - red-black tree타입 ) , LinkedHashSet (저장된 순서에 따라 값 정렬) 
+	 */
 	private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
 	
 	// 클라이언트로부터 메시지가 도착했을 경우 처리
@@ -37,12 +40,14 @@ public class BroadSocket {
 	@OnOpen
 	public void onOpen(Session session) {
 		System.out.println(session);
+		System.out.println("클라이언트 접속 완료");
 		clients.add(session);
 	}
 	
 	// 클라가 접속을 끊을 때 처리
 	@OnClose
 	public void onClose(Session session) {
+		System.out.println("클라이언트 접속 종료");
 		clients.remove(session);
 	}
 }
