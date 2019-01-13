@@ -2,10 +2,10 @@
 #chat-Container
 {
 	z-index: 99999;
-	width: 300px;
+	/* width: 70%; */
 	position: fixed !important;
-	margin-left: 57%;
-	margin-top: 0%;
+	left: 75.2%;
+	bottom: 8%;
 }
 #navSearch
 {
@@ -100,6 +100,7 @@ ul.nav navbar-nav navbar-right
 	min-height: 170px;
 	margin-top: 20px;
 	margin-bottom: 35px;
+	z-index: 2;
 }
 ul#navbar-menu
 {
