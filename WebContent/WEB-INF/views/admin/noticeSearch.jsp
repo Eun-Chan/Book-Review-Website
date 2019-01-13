@@ -79,7 +79,29 @@ div.search-bar {
 	margin: 0;
 }
 
+/* 테이블 최소 높이 지정 */
+#table-container{
+	min-height: 300px;
+}
+
 </style>
+<script>
+$(function(){
+	// 공지 관리 라디오 버튼 리스너
+	$("input:radio").on("click",function(){
+		var ntcNo = $(this).parents("form").attr("id");
+		var ntcAllowView = $(this).val();
+		console.log(ntcAllowView);
+		$.ajax({
+			url: "<%=request.getContextPath()%>/admin/noticeUpdateAllowView.do",
+			data: {ntcNo: ntcNo, ntcAllowView: ntcAllowView},
+			success: function(data){
+				console.log("hi");
+			}
+		});
+	});
+});
+</script>
 
 <div id="notice-manager-container" class="container-fluid">
 
@@ -91,11 +113,23 @@ div.search-bar {
 			id="notice-list-table">
 			<thead>
 				<tr>
+					<% if(user != null && "admin".equals(user.getUserId())) { %>
+					<th class="text-center w150">no</th>
+					<th class="text-center w370">제목</th>
+					<th class="w150">작성자</th>
+					<th class="text-center w100">작성일</th>
+					<th class="text-center w50">조회수</th>
+					<!-- 라디오버튼으로 해서 공지사항게시판이 아닌 다른 게시판에서 보여줄 공지, 보여주지 않을 공지를 
+					선택하고 저장하면 공지사항을 제외한 다른 게시판에서 보여줄 공지만 보여주게 된다. -->
+					<th class="text-center w100">공지 관리</th>
+					<% }
+					   else if (user == null || !"admin".equals(user.getUserId())) { %>
 					<th class="text-center w150">no</th>
 					<th class="text-center w370">제목</th>
 					<th class="w150">작성자</th>
 					<th class="text-center w150">작성일</th>
 					<th class="text-center w100">조회수</th>
+					<% } %>
 				</tr>
 			</thead>
 			<tbody>
@@ -112,6 +146,19 @@ div.search-bar {
 					</td>
 					<td class="text-center"><%=n.getNtcDate() %></td>
 					<td class="text-center"><%=n.getNtcReadcnt() %></td>
+					<!-- 관리자일 경우 공지관리하는 라디오버튼 열 추가 -->
+					<% if(user != null && "admin".equals(user.getUserId())) { %>
+					<td class="text-center">
+						<form id="<%=n.getNtcNo()%>">
+							<div class="radio">
+						      <label><input type="radio" name="optradio" <%="Y".equals(n.getNtcAllowview())?"checked":""%> value="Y">공지 보이기</label>
+						    </div>
+						    <div class="radio">
+						      <label><input type="radio" name="optradio" <%="N".equals(n.getNtcAllowview())?"checked":""%> value="N">공지 감추기</label>
+						    </div>
+					    </form>
+					</td>
+					<% } %>
 				</tr>
 				<% } %>
 			</tbody>
@@ -134,7 +181,7 @@ div.search-bar {
 
 	<!-- 글쓰기 버튼 영역 -->
 	<div id="btn-write-container">
-		<button id="btn-write" class="btn btn-success">리뷰 작성</button>
+		<button id="btn-write" class="btn btn-success">공지사항 등록</button>
 	</div>
 
 

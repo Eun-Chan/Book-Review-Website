@@ -32,7 +32,7 @@ public class GetReviewSelectOneCommand implements Command{
 		
 		//조회수 +1 해주기
 		int updateReadCount = dao.updateReadCnt(rbNo);
-		ReviewBoardViewDTO review = null;
+		ReviewBoardViewDTO review = new ReviewBoardViewDTO();
 		//셀렉트 원해서 하나 가져오기
 		if(updateReadCount>0) {
 			review = dao.getReviewSelectOne(rbNo);			

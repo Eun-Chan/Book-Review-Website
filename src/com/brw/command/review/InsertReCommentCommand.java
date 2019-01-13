@@ -32,10 +32,11 @@ public class InsertReCommentCommand implements Command{
 		int rbCommentNo = Integer.parseInt(request.getParameter("rbCommentNo"));
 		String rbCommentContent= request.getParameter("rbCommentContent");
 		String rbCommentWriter = request.getParameter("rbCommentWriter");
+		String rbCommentWriterNickName = request.getParameter("rbCommentWriterNickName");
 		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
 	
 		DAO dao = DAO.getInstance();
-		int result = dao.insertReComment(rbCommentNo,rbCommentContent,rbCommentWriter,rbNo);
+		int result = dao.insertReComment(rbCommentNo,rbCommentContent,rbCommentWriter,rbNo,rbCommentWriterNickName);
 		if(result>0) {
 			Gson gson = new Gson();
 			ReviewBoardComment lastReComment = dao.getReviewBoardReCommentLast(rbCommentNo,rbNo);

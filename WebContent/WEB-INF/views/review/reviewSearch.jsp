@@ -109,6 +109,11 @@ tr.notice{
 #searchType {
 	margin: 0;
 }
+
+/* 테이블 최소 높이 지정 */
+#table-container{
+	min-height: 300px;
+}
 </style>
 <script>
 $(function(){
