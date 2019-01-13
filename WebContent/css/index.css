@@ -34,6 +34,7 @@ div#search-Container
 }
 nav#navSearch
 {
+	z-index: -9999 !important;
    margin-top: 0%;
 }
 #searchType
