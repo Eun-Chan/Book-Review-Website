@@ -187,11 +187,12 @@ public class DAO {
 				// new : 작성한지 만 하루가 지나지 않은 것들
 				// 현재일(day)과 같은 날에 쓴 글은 작성일에 시간만 띄우기 (HH24:MI)
 				boolean dateNew = false;
-				int passingTime = rset.getInt("passingtime");
+				double passingTime = rset.getDouble("passingtime");
 				String sysDay = rset.getString("sysday");
 				String rbDay = rset.getString("rbday");
+				System.out.println("passingTime," + passingTime);
 				
-				if(passingTime <= 1) {
+				if(passingTime <= 1.0) {
 					dateNew = true;
 					if(rbDay.equals(sysDay)) {
 						rbv.setRbDate(rset.getString("todaytime"));
@@ -304,11 +305,11 @@ public class DAO {
 				rbv.setRbReport(rset.getInt("rb_report"));
 				
 				boolean dateNew = false;
-				int passingTime = rset.getInt("passingtime");
+				double passingTime = rset.getDouble("passingtime");
 				String sysDay = rset.getString("sysday");
 				String rbDay = rset.getString("rbday");
 				
-				if(passingTime <= 1) {
+				if(passingTime <= 1.0) {
 					dateNew = true;
 					if(rbDay.equals(sysDay)) {
 						rbv.setRbDate(rset.getString("todaytime"));
@@ -2013,11 +2014,11 @@ public class DAO {
 				n.setNtcAllowview(rset.getString("ntc_allowview"));
 				
 				boolean dateNew = false;
-				int passingTime = rset.getInt("passingtime");
+				double passingTime = rset.getDouble("passingtime");
 				String sysDay = rset.getString("sysday");
 				String ntcDay = rset.getString("ntcday");
 				
-				if(passingTime <= 1) {
+				if(passingTime <= 1.0) {
 					dateNew = true;
 					if(ntcDay.equals(sysDay)) {
 						n.setNtcDate(rset.getString("todaytime"));
@@ -2228,11 +2229,11 @@ public class DAO {
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
 				
 				boolean dateNew = false;
-				int passingTime = rset.getInt("passingtime");
+				Double passingTime = rset.getDouble("passingtime");
 				String sysDay = rset.getString("sysday");
 				String ntcDay = rset.getString("ntcday");
 				
-				if(passingTime <= 1) {
+				if(passingTime <= 1.0) {
 					dateNew = true;
 					if(ntcDay.equals(sysDay)) {
 						n.setNtcDate(rset.getString("todaytime"));

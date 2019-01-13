@@ -223,7 +223,7 @@ input#rbBookTitle{
 				<textarea name="rbContent" id="summernote"></textarea>
 			</div>
 			<div id="btn-group" class="text-center">
-			<button type="submit" class="btn btn-success" id="btnSave">등록</button>
+			<button type="button" class="btn btn-success" id="btnSave">등록</button>
 			<button type="reset" class="btn btn-warning">초기화</button>
 			<button type="button" class="btn btn-danger" id="cancel">취소</button>
 			</div>
