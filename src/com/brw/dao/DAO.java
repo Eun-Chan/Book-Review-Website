@@ -2831,7 +2831,7 @@ public class DAO {
 		return list;
 	}
 	
-	//60. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
+	//66. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
 	public UserDTO reviewGradeSelect(String writer)
 	{
 		Connection conn = null;
