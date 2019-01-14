@@ -31,6 +31,8 @@ public class FindEmailCheckCommand implements Command {
 		try {
 			out = response.getWriter();
 			// 해당 이메일로 가입 된 아이디가 있다면, 이메일로 아이디를 알려줌 ㅇㅈ? ㅇ ㅇㅈ
+			
+			
 			if(result == 1) {
 				out.append("true");
 				return;

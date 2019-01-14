@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="com.brw.dto.*" %>
 <%
-	UserDTO user = (UserDTO)session.getAttribute("user");
+	// 웹사이트 일반 유저 일때
+	UserDTO	user = (UserDTO)session.getAttribute("user");
 	
 	// 전송된 쿠키확인
 	boolean saveId = false;
@@ -34,7 +35,11 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/custom.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/header.css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" /> <!-- footer의 css -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+
 <script>
 	
 </script>
@@ -80,9 +85,6 @@
             <li><a href="<%=request.getContextPath()%>/checkAttendance.do">출석체크</a></li>
 
             
-            
-            
- 
           </ul>   
           
           <ul class="nav navbar-nav" id="login-Container">
@@ -91,7 +93,8 @@
 		     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
 		    	<% } 
 		    	else {%>  
-		    	<li><a href="#">채팅</a></li>
+		    	<li><a onclick="chatting();">채팅</a></li>
+		    	<li class="dropdown">
  	
 		    	
 		    	<li class="dropdown" id="toggleMenu-Header-li">
@@ -113,59 +116,18 @@
 		    	</li>
 		    	<%}%>
           </ul>
-
         </div><!--/.nav-collapse -->
-        
-        
-
-      </div> 
-      
-      
-
+      </div>
     </nav>
-  
+
 <!-- 채팅 -->
-<div class="container" id="chat-Container">
-    <div class="row2" id="chat-row">  
-        <div class="col-md-5" id="col-md-5-chat">
-            <div class="panel panel-primary" id="chat-Box">
-                <div class="panel-heading" id="accordion">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
-                    <div class="btn-group pull-right">
-                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
-                    </div>
-                </div>
-            <div class="panel-collapse collapse" id="collapseOne">
-                <div class="panel-body">
-                    <ul class="chat">
-                      
-                      <!-- 은찬 : 채팅 내용 영역 -->  
-                      
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat">
-                                Send</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
+<div id="chatting_div">
+   <div style="height: 90%">
+   	<textarea id="messageWindow" readonly="true" style="height: 100%; width: 100%"></textarea>
+   </div>
+   <input id="inputMessage" class="form-control" type="text" onkeyup="chat_enterkey()" placeholder="채팅을 입력해줭"/>
+   <input type="submit" id="sendBtn" class="btn btn-default" value="보내기" onclick="send()" />
 </div>
-
-
-
-
-
-
-
 
 
 	
@@ -201,6 +163,11 @@
   			<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/signUp.do'">회원가입</button>
   			<br /><br />
   			<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">아이디 찾기</a>&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/idAndPwdSearch.do">비밀번호 찾기</a>
+  			<div class="form-group">
+  			<br /><br />
+  				<!-- <a id="kakao-login-btn"></a> -->
+  				<a onclick="kakaoLogin()">카카오톡 로그인</a>
+  			</div>
 		</form>        
       </div> <!-- modal-body 끝 -->
       
@@ -215,11 +182,17 @@
 	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
 	
 	<script>
-	
+	/* Enter 로 바로 로그인 */
+
 	function enterkey(){
 		if(window.event.keyCode == 13)
 			loginCheck();
 	}
+	
+	function chat_enterkey(){
+		if(window.event.keyCode == 13)
+			send();
+	}	 
 	
 	function loginCheck(){
 		var userId = $("#userId").val().trim();
@@ -234,12 +207,12 @@
 		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/login.do",
+			type : "POST",
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
 			success : function(data){
 				if(data == "true"){
 					location.reload();
 					console.log("여긴 오지");
-					
 				}	
 				else if(data == "false"){
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
@@ -249,6 +222,101 @@
 		});
 	}
 	
+	/* 카카오톡 api 로그인 */
+	//<![CDATA[
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('7988131d106ae6467262223dfd9dc8d8');
+ 	/* 카카오 로그인 */
+ 	function kakaoLogin() {
+      // 로그인 창을 띄웁니다.
+ 		Kakao.Auth.loginForm({
+			
+			// 세션이 종료된 이후에도 토큰을 유지.
+			persistAccessToken: true,
+			// 세션이 종료된 이후에도 refresh토큰을 유지.
+			persistRefreshToken: true,
+			
+			
+			success: function(authObj) {
+				console.log("success!");
+				console.log(authObj);
+				console.log("ㅡㅡㅡㅡㅡㅡㅡㅡ");
+				userGetProfile();
+			},
+			fail: function(err) {
+				alert("로그인 에러");
+				console.log(err);
+			}
+		});
+    };	
+ 	/* 카카오 api로 로그인한 유저 프로필 가져오기 */
+    function userGetProfile(){
+ 		Kakao.API.request({
+ 			url : '/v1/user/me',
+ 			success : function(res){
+ 				console.log(res);
+ 				console.log("res.id = " , res.id);
+ 				console.log("res.acount_email = ", res.kaccount_email);
+ 				console.log("res.usernickName = ", res.properties.nickname);
+ 				/* 카카오톡 유저 회원으로 추가 */
+ 				kakaoUserSignUp(res.id , res.kaccount_email, res.properties.nickname);	
+ 			}
+ 		});
+ 	};
+    
+    function kakaoUserSignUp(userId, userEmail, userName){
+    	$.ajax({
+    		url : "<%=request.getContextPath()%>/sign/kakaoCreateUserCommand.do",
+    		data : {userId : userId , userEmail : userEmail , userNickName : userName},
+    		success : function(data){
+   				// 카카오톡 로그인후 새로고침	
+    			location.reload();
+    		}
+    	});
+    }
+
+    function chatting(){
+/* 		$("#chatting_div").css('display','block'); */
+		$("#chatting_div").toggle();
+    }
+/*     var textarea = document.getElementById("messageWindow"); */
+	var textarea = $("#messageWindow");
+    var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting');
+    var inputMessage = $("#inputMessage");
+    
+    webSocket.onerror = function(event) {
+      onError(event)
+    };
+    webSocket.onopen = function(event) {
+      onOpen(event)
+    };
+    webSocket.onmessage = function(event) {
+      onMessage(event)
+    };
+    function onMessage(event) {
+        textarea.val(textarea.val() + event.data + "\n");
+        const top = textarea.prop('scrollHeight');
+        textarea.scrollTop(top);
+    }
+    function onOpen(event) {
+        textarea.val("채팅방에 입장 하셨습니다❤\n");
+        console.log(event.data);
+    }
+    function onError(event) {
+      alert(event.data);
+    }
+    function send() {
+    	if(inputMessage.val().length != 0){
+    	<%if(user != null){%>
+        textarea.val(textarea.val() + '<%=user.getUserName()%>띠 : ' + inputMessage.val() + "\n");
+        webSocket.send('<%=user.getUserName()%>띠 : ' + inputMessage.val());
+        inputMessage.val("");
+        /* 채팅창 스크롤 자동 내리기 */
+        const top = textarea.prop('scrollHeight');
+        textarea.scrollTop(top);
+    	<%}%>
+    	}
+    }
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

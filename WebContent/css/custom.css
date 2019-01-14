@@ -1,6 +1,5 @@
 /* header부분 백그라운드 컬러 */
 .navbar-default {
-	background-color: black;
 }
 
 .navbar-brand>img {
@@ -23,6 +22,6 @@
 }
 
 .navbar-default {
-	background-color : violet;
+	
 }
 

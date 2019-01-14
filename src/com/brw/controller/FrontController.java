@@ -23,6 +23,7 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardCommand;
 import com.brw.command.review.DeleteReviewBoardCommentCommand;
 import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -39,9 +40,12 @@ import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
+import com.brw.command.user.FindPwdEmailAuthCommand;
 import com.brw.command.user.IdCheckCommand;
+import com.brw.command.user.KakaoCreateUserCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
+import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.OldPwdChangeOrLaterCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
 import com.brw.command.user.SelectOneUserInfo;
@@ -135,20 +139,20 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*
-		 * 5. index.jsp 최근 리뷰 & 인기 도서
+		 * 7. index.jsp 최근 리뷰 & 인기 도서
 		 */
 		else if(command.equals("/index.do")) {
 			com = new IndexCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 6. 알라딘 API
+		 * 8. 알라딘 API
 		 */
 		else if(command.equals("/book/bookList.do")) {
 	         viewPage = "/WEB-INF/views/book/bookList.jsp";
 		}
 		/*
-		 * 7. 알라딘 API에서 Book List 중에서 Book 클릭 시 상세 내용
+		 * 9. 알라딘 API에서 Book List 중에서 Book 클릭 시 상세 내용
 		 */
 		else if(command.equals("/book/bookInfo.do")) {
 			com = new BookInfomationCommand();
@@ -156,7 +160,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/book/bookInfo.jsp";
 		}
 		/*
-		 * 8. (7.) 상세 내용 밑에 댓글 내용 출력
+		 * 10. (9.) 상세 내용 밑에 댓글 내용 출력
 		 */
 		else if(command.equals("/book/bookreviewInfo.do")) {
 			System.out.println("front성공");
@@ -164,7 +168,7 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*
-		 * 9. 리뷰 리스트 (리뷰 게시판)
+		 * 11. 리뷰 리스트 (리뷰 게시판)
 		 */
 		else if(command.equals("/review/reviewList.do")) {
 			com = new ReviewPaginationCommand();
@@ -172,7 +176,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewList.jsp";
 		}
 		/*
-		 * 10. 리뷰 게시판 안에서 검색 결과
+		 * 12. 리뷰 게시판 안에서 검색 결과
 		 */
 		else if(command.equals("/review/reviewSearch.do")) {
 			com = new ReviewSearchCommand();
@@ -180,7 +184,7 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewSearch.jsp";
 		}
 		/*
-		 * 11. 리뷰 게시판에서 리뷰 클릭 시 상세내용 
+		 * 13. 리뷰 게시판에서 리뷰 클릭 시 상세내용 
 		 */
 		else if(command.equals("/review/reviewDetail.do")) {
 			//해당 게시물 가져오는 쿼리
@@ -190,27 +194,27 @@ public class FrontController extends HttpServlet {
 			viewPage = "/WEB-INF/views/review/reviewDetail.jsp";
 		}
 		/*
-		 * 12. 리뷰 상세 보기에서의 댓글
+		 * 14. 리뷰 상세 보기에서의 댓글
 		 */
 		else if(command.equals("/insertComment.do")) {
 			com = new InsertCommentCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 13. 리뷰 상세 보기에서의 댓글의 댓글
+		 * 15. 리뷰 상세 보기에서의 댓글의 댓글
 		 */
 		else if(command.equals("/insertReComment.do")) {
 			com = new InsertReCommentCommand();
 			com.execute(req, res);
 		}
 		/*
-		 * 14. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
+		 * 16. 리뷰 게시판에서 리뷰 작성 버튼 클릭 시 스마트 에디터를 통한 리뷰 작성
 		 */
 		else if(command.equals("/review/reviewWrite.do")) {
 			viewPage = "/WEB-INF/views/review/reviewWrite.jsp";
 		}
 		/*
-		 * 15. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
+		 * 17. 리뷰 작성에 대한 정보(제목, 내용, 도서명, ISBN, 작성자) 입력 후 리뷰 등록
 		 */
 	    else if(command.equals("/review/reviewWriteEnd.do")) {
 	    	com = new ReviewWriteEndCommand();
@@ -225,26 +229,26 @@ public class FrontController extends HttpServlet {
 			}
 	    }
 		/*
-		 * 16. BookList에서 책 검색 시 결과
+		 * 18. BookList에서 책 검색 시 결과
 		 */
 	    else if(command.equals("/review/bookSearch.do")) {
 	       viewPage = "/WEB-INF/views/review/bookSearch.jsp";
 	    }
 		/*
-		 * 17. 아이디 혹은 비밀번호 찾기 페이지 이동
+		 * 19. 아이디 혹은 비밀번호 찾기 페이지 이동
 		 */
 	    else if(command.equals("/idAndPwdSearch.do")) {
 	    	viewPage = "/WEB-INF/views/sign/idAndPwdSearch.jsp";
 	    }
 		/*
-		 * 18. 아이디 찾기 시 이메일이 존재하는지 확인
+		 * 20. 아이디 찾기 시 이메일이 존재하는지 확인
 		 */
 	    else if(command.equals("/emailCheck.do")) {
 	    	com = new FindEmailCheckCommand();
 	    	com.execute(req, res);
 	    }
 		/**
-		 * 19. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
+		 * 21. BookInfo에서 즐겨찾기(장바구니) 클릭시 Book DB저장 및 Basket DB 저장
 		 */
 	    else if(command.equals("/book/basket.do")) {
 	    	com = new BasketInsertCommand();
@@ -255,142 +259,182 @@ public class FrontController extends HttpServlet {
 	    }
 		
 		/*
-		 * 20. 좋아요 버튼 클릭시 처리 ajax 
+		 * 22. 좋아요 버튼 클릭시 처리 ajax 
 		 */
 	    else if(command.equals("/review/reviewLike.do")){
 	    	com = new ReviewBoardLikeCommend();
 	    	com.execute(req,res);
 	    }
 		/*
-		 * 21. 댓글 삭제 쿼리  
+		 * 23. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
 	    	com = new DeleteReviewBoardCommentCommand();
 	    	com.execute(req, res);
 	    }
-		/*22. 즐겨찾기 보여주는 결과*/
+		/*24. 즐겨찾기 보여주는 결과*/
 	    else if(command.equals("/book/showBookBasket.do")) {
 	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*23. 즐겨찾기로 가버렷*/
+		/*25. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/goBasket.do")) {
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
 		/**
-		 * 24. 이메일을 통해 아이디 찾아보리기
+		 * 26. 이메일을 통해 아이디 찾아보리기
 		 */
 	    else if(command.equals("/sign/searchIdForEmail.do")) {
 	    	com = new SearchIdForEmailCommand();
 	    	com.execute(req, res);
 	    }
 		/*
-		 * 25. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
+		 * 27. 지수킹이 만든 IdSearchEnd.jsp 로 보내버리기 (아이디 찾기 성공시 나오는 view)
 		 */
 	    else if(command.equals("/sign/idSearchEnd.do")) {
+	    	System.out.println("여기 컨트롤러 idSearchEnd.do");
 	    	viewPage = "/WEB-INF/views/sign/IdSearchEnd.jsp";
 	    }
 		/*
-		 * 26.check된 책 없애기
+		 * 28.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
 	    	com = new CheckedBasketCommand();
 	    	com.execute(req, res);
 	    }
+		/**
+		 * 29
+		 * 작성자 : 김은찬
+		 * 내용 : 아이디를 통해 이메일을 찾고, 메일로 인증번호 보내기
+		 */
+	    else if(command.equals("/sign/findPwdEmailAuth.do")) {
+	    	com = new FindPwdEmailAuthCommand();
+	    	com.execute(req, res);
+	    }
+		/**
+		 * 30
+		 * 작성자 : 김은찬
+		 * 내용 : 비밀번호 찾기 시 비밀번호 변경
+		 */
+	    else if(command.equals("/sign/passwordUpdate.do")) {
+	    	com = new PasswordUpdateCommand();
+	    	com.execute(req, res);
+	    	viewPage = "/index.jsp";
+	    }
+		/**
+		 * 31
+		 * 작성자 : 김은찬
+		 * 내용 : 비밀번호 변경 페이지로 이동
+		 */
+	    else if(command.equals("/sign/changePwd.do")) {
+	    	/* 회원에게 입력받은 아아디를 changePwd.jsp에 옮기는 용도*/
+	    	String userId = req.getParameter("userId");
+	    	req.setAttribute("userId", userId);
+	    	viewPage = "/WEB-INF/views/sign/changePwd.jsp";
+	    }
+		/**
+		 * 32
+		 * 작성자 : 김은찬
+		 * 내용 : 카카오톡 유저 회원가입 (카카오톡 유저 로그인 기능도 담당)
+		 */
+	    else if(command.equals("/sign/kakaoCreateUserCommand.do")) {
+	    	com = new KakaoCreateUserCommand();
+	    	com.execute(req, res);
+	    }
 
-		/*27. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
+		/*33. 명훈 : 리뷰글 등록시 이미지 저장 ajax*/
 	    else if(command.equals("/review/reviewWriteImage.do")) {
 	    	com = new ReviewWriteImageCommand();
 	    	com.execute(req, res);
 	    }
-		/*28. 한 줄 리뷰 등록: 김민우*/
+		/*34. 한 줄 리뷰 등록: 김민우*/
 	    else if(command.equals("/book/oneLineRV.do")) {
 	    	com = new OneLineInsertCommand();
 	    	com.execute(req, res);
 	    }
-		/*29 . 회원가입시 닉네임 체크*/
+		/*35 . 회원가입시 닉네임 체크*/
 		else if(command.equals("/nickNameCheck.do")) {
 			com = new NickNameCheckCommand();
 			com.execute(req, res);
 		}
-		/*30. 명훈 : 공지사항 상세보기*/
+		/*36. 명훈 : 공지사항 상세보기*/
 		else if(command.equals("/admin/noticeDetail.do")) {
 			com = new NoticeDetailViewCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeDetail.jsp";
 		}
-		/*31. 한 줄 리뷰 삭제 버튼 구현 : 김민우*/
+		/*37. 한 줄 리뷰 삭제 버튼 구현 : 김민우*/
 		else if(command.equals("/book/oneLineDel.do")) {
 			com = new OneLineDeleteCommand();
 			com.execute(req, res);
 		}
-		/*32. 명훈 : 공지사항 리스트 페이지*/
+		/*38. 명훈 : 공지사항 리스트 페이지*/
 		else if(command.equals("/admin/noticeList.do")) {
 			com = new NoticeListCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
-		/*33. 명훈 : 공지사항 리스트 검색 페이지*/
+		/*39. 명훈 : 공지사항 리스트 검색 페이지*/
 		else if(command.equals("/admin/noticeSearch.do")) {
 			com = new NoticeSearchCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
-		/*34. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
+		/*40. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
 		else if(command.equals("/admin/noticeUpdateAllowView.do")) {
 			com = new NoticeUpdateAllowViewCommand();
 			com.execute(req, res);
 		}
-		/*35. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 변경페이지로 보내보리기 */
+		/*41. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 변경페이지로 보내보리기 */
 	    else if(command.equals("/sign/OldPwdChangeOrLater.do")) {
 	    	viewPage = "/WEB-INF/views/sign/OldPwdChangeOrLater.jsp";
 	    }
-		/*36. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 비밀번호 변경시켜보리기 */
+		/*42. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 비밀번호 변경시켜보리기 */
 	    else if(command.equals("/sign/OldPwdChangeOrLaterUpdate.do")) {
 	    	com = new OldPwdChangeOrLaterCommand();
 	    	com.execute(req, res);
 	    	viewPage = "/index.jsp";
 	    }
-		/*37 . 선웅 : 신고 페이지 고고띵*/
+		/*43 . 선웅 : 신고 페이지 고고띵*/
 		else if(command.equals("/review/reviewReport.do")) {
 			viewPage="/WEB-INF/views/review/reviewReport.jsp";
 		}
 
-		/*38 . 선웅 : 신고 페이지 insert 및 리뷰보드 업데이트, 메일발송까지*/
+		/*44 . 선웅 : 신고 페이지 insert 및 리뷰보드 업데이트, 메일발송까지*/
 		else if(command.equals("/review/insertReviewBoardReport.do")) {
 			com = new InsertReviewBoardReport();
 			com.execute(req, res);
 		}
 		
-		/*39. 선웅 :  내정보 보기 창*/
+		/*45. 선웅 :  내정보 보기 창*/
 		else if(command.equals("/sign/userPrivacy.do")) {
 			com = new SelectOneUserInfo();
 			com.execute(req, res);
 			viewPage="/WEB-INF/views/sign/userInfo.jsp";
 			
 		}
-		/*40. 선웅: 내정보보기 클릭시 보여주는 jsp*/
+		/*46. 선웅: 내정보보기 클릭시 보여주는 jsp*/
 		else if(command.equals("/sign/userPasswordCheck.do")) {
 			viewPage="/WEB-INF/views/sign/userInfoPasswordChecked.jsp";
 		}
 		
-		/*41. 33에서 비밀번호 데이터를 넘겻을때 user테이블과 값 비교 ajax*/
+		/*47. 33에서 비밀번호 데이터를 넘겻을때 user테이블과 값 비교 ajax*/
 		else if(command.equals("/sign/checkedPassword.do")) {
 			com = new CheckedPasswordCommand();
 			com.execute(req, res);
 		}
-		/*42. @광준 : 최종 유저정보 업데이트 */
+		/*48. @광준 : 최종 유저정보 업데이트 */
 		else if(command.equals("/sign/updateUser.do")) {
 			com = new UpdateUserCommand();
 			com.execute(req, res);
 			//아작스라 뷰페이지가 없어유
 		}
 
-		/*43. 명훈 : 공지사항 작성 페이지 */
+		/*49. 명훈 : 공지사항 작성 페이지 */
 		else if(command.equals("/admin/noticeWrite.do")) {
 			viewPage = "/WEB-INF/views/admin/noticeWrite.jsp";
 		}
-		/*44. 명훈 : 작성한 공지사항 등록 후 작성한 공지사항 상세보기 */
+		/*50. 명훈 : 작성한 공지사항 등록 후 작성한 공지사항 상세보기 */
 		else if(command.equals("/admin/noticeWriteEnd.do")) {
 			com = new NoticeWriteEndCommand();
 			com.execute(req, res);
@@ -403,25 +447,26 @@ public class FrontController extends HttpServlet {
 				viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 			}
 		}
-		/*45. 명훈 : 출석체크 페이지 */
+		/*51. 명훈 : 출석체크 페이지 */
 		else if(command.equals("/checkAttendance.do")) {
 			com = new CheckAttendanceCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/sign/checkAttendance.jsp";
 		}
-		/*46 선웅 : 대댓글 삭제 : 작업중*/
+		/*52 선웅 : 대댓글 삭제 : 작업중*/
 		else if(command.equals("/review/reviewReCommentDelete.do")) {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
+		/*47. 선웅 게시글 삭제*/
+		else if(command.equals("/review/reviewDelete.do")) {
+			com = new DeleteReviewBoardCommand();
+			com.execute(req, res);
+		}
 		
-
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
 		}
-		
-		
-		
 	}
 }
