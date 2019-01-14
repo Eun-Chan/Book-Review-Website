@@ -23,6 +23,7 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardCommand;
 import com.brw.command.review.DeleteReviewBoardCommentCommand;
 import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -412,6 +413,11 @@ public class FrontController extends HttpServlet {
 		/*46 선웅 : 대댓글 삭제 : 작업중*/
 		else if(command.equals("/review/reviewReCommentDelete.do")) {
 			com = new DeleteReviewBoardRecommentCommand();
+			com.execute(req, res);
+		}
+		/*47. 선웅 게시글 삭제*/
+		else if(command.equals("/review/reviewDelete.do")) {
+			com = new DeleteReviewBoardCommand();
 			com.execute(req, res);
 		}
 		
