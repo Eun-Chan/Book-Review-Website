@@ -51,10 +51,13 @@ public class IndexCommand implements Command {
 		
 		for(int i=0; i<reviewRecentList.size(); i++)
 		{
+			rb = new ReviewBoardDTO();
 			rb = reviewRecentList.get(i);
 			JsonObject jobj = new JsonObject();
 		    jobj.addProperty("rbTitle", rb.getRbTitle());
 		    jobj.addProperty("rbWriter", rb.getRbWriter());
+		    jobj.addProperty("rbGrade", (dao.reviewGradeSelect(rb.getRbWriter())).getUserGrade());
+		    jobj.addProperty("rbNickname", (dao.reviewGradeSelect(rb.getRbWriter())).getUserNickName());
 		    jobj.addProperty("rbBookTitle", rb.getRbBookTitle());
 		    jobj.addProperty("rb_readCnt", rb.getRbReadCnt());
 		    jobj.addProperty("rb_recommend", rb.getRbRecommend());
@@ -102,10 +105,13 @@ public class IndexCommand implements Command {
 		
 		for(int i=0; i<reviewBestList.size(); i++)
 		{
+			rb2 = new ReviewBoardDTO();
 			rb2 = reviewBestList.get(i);
 			JsonObject jobj3 = new JsonObject();
 		    jobj3.addProperty("rbTitle", rb2.getRbTitle());
 		    jobj3.addProperty("rbWriter", rb2.getRbWriter());
+		    jobj3.addProperty("rbGrade", (dao.reviewGradeSelect(rb2.getRbWriter())).getUserGrade());
+		    jobj3.addProperty("rbNickname", (dao.reviewGradeSelect(rb2.getRbWriter())).getUserNickName());
 		    jobj3.addProperty("rbBookTitle", rb2.getRbBookTitle());
 		    jobj3.addProperty("rb_readCnt", rb2.getRbReadCnt());
 		    jobj3.addProperty("rb_recommend", rb2.getRbRecommend());

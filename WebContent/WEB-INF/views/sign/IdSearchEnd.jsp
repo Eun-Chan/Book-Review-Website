@@ -14,7 +14,7 @@
 			<h3><p class="text-alert">해당 메일로 고객님의 개인정보를 전송 했습니다.</p></h3>
 			<h3><p class="text-alert">이메일을 확인해 주십시오</p></h3>
 			<br /><br /><br />
-			<button class="btn-success" onclick="location.href='index.jsp'">
+			<button class="btn-success" onclick="location.href='<%=request.getContextPath()%>/index.jsp'">
 				메인 페이지 가기
 			</button>
 			</div>

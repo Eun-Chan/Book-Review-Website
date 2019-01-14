@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
@@ -14,7 +13,6 @@ import com.brw.dto.BookBasketDTO;
 import com.brw.dto.UserDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
-import com.sun.xml.internal.bind.v2.runtime.Location;
 
 public class CheckedBasketCommand implements Command {
 
