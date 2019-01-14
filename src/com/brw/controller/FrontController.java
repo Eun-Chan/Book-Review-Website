@@ -14,6 +14,7 @@ import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.admin.NoticeListCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
+import com.brw.command.admin.NoticeWriteEndCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
@@ -22,7 +23,8 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
-import com.brw.command.review.DeleteReviewBoardComment;
+import com.brw.command.review.DeleteReviewBoardCommentCommand;
+import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
@@ -32,6 +34,7 @@ import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
+import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
@@ -265,7 +268,7 @@ public class FrontController extends HttpServlet {
 		 * 23. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
-	    	com = new DeleteReviewBoardComment();
+	    	com = new DeleteReviewBoardCommentCommand();
 	    	com.execute(req, res);
 	    }
 		/*24. 즐겨찾기 보여주는 결과*/
@@ -273,7 +276,7 @@ public class FrontController extends HttpServlet {
 	    	com = new BookBasketCommand();
 	    	com.execute(req, res);
 	    }
-		/*23. 즐겨찾기로 가버렷*/
+		/*25. 즐겨찾기로 가버렷*/
 	    else if(command.equals("/book/goBasket.do")) {
 	    	viewPage = "/WEB-INF/views/book/bookBasket.jsp";
 	    }
@@ -364,73 +367,100 @@ public class FrontController extends HttpServlet {
 			com = new OneLineDeleteCommand();
 			com.execute(req, res);
 		}
-		/*32. 명훈 : 공지사항 리스트 페이지*/
+		/*38. 명훈 : 공지사항 리스트 페이지*/
 		else if(command.equals("/admin/noticeList.do")) {
 			com = new NoticeListCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
-		/*33. 명훈 : 공지사항 검색 리스트 페이지*/
+		/*39. 명훈 : 공지사항 리스트 검색 페이지*/
 		else if(command.equals("/admin/noticeSearch.do")) {
 			com = new NoticeSearchCommand();
 			com.execute(req, res);
-			viewPage = "/WEB-INF/views/admin/noticeSearch.jsp";
+			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
-		/*34. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
+		/*40. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
 		else if(command.equals("/admin/noticeUpdateAllowView.do")) {
 			com = new NoticeUpdateAllowViewCommand();
 			com.execute(req, res);
 		}
-		/*35. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 변경페이지로 보내보리기 */
+		/*41. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 변경페이지로 보내보리기 */
 	    else if(command.equals("/sign/OldPwdChangeOrLater.do")) {
 	    	viewPage = "/WEB-INF/views/sign/OldPwdChangeOrLater.jsp";
 	    }
-		/*36. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 비밀번호 변경시켜보리기 */
+		/*42. 지수 : 비밀번호 변경한지 90일이상 지난 닌겐들 비밀번호 변경시켜보리기 */
 	    else if(command.equals("/sign/OldPwdChangeOrLaterUpdate.do")) {
 	    	com = new OldPwdChangeOrLaterCommand();
 	    	com.execute(req, res);
 	    	viewPage = "/index.jsp";
 	    }
-		/*37 . 선웅 : 신고 페이지 고고띵*/
+		/*43 . 선웅 : 신고 페이지 고고띵*/
 		else if(command.equals("/review/reviewReport.do")) {
 			viewPage="/WEB-INF/views/review/reviewReport.jsp";
 		}
 
-		/*38 . 선웅 : 신고 페이지 insert 및 리뷰보드 업데이트, 메일발송까지*/
+		/*44 . 선웅 : 신고 페이지 insert 및 리뷰보드 업데이트, 메일발송까지*/
 		else if(command.equals("/review/insertReviewBoardReport.do")) {
 			com = new InsertReviewBoardReport();
 			com.execute(req, res);
 		}
 		
-		/*39. 선웅 :  내정보 보기 창*/
+		/*45. 선웅 :  내정보 보기 창*/
 		else if(command.equals("/sign/userPrivacy.do")) {
 			com = new SelectOneUserInfo();
 			com.execute(req, res);
 			viewPage="/WEB-INF/views/sign/userInfo.jsp";
 			
 		}
-		/*40. 선웅: 내정보보기 클릭시 보여주는 jsp*/
+		/*46. 선웅: 내정보보기 클릭시 보여주는 jsp*/
 		else if(command.equals("/sign/userPasswordCheck.do")) {
 			viewPage="/WEB-INF/views/sign/userInfoPasswordChecked.jsp";
 		}
 		
-		/*41. 33에서 비밀번호 데이터를 넘겻을때 user테이블과 값 비교 ajax*/
+		/*47. 33에서 비밀번호 데이터를 넘겻을때 user테이블과 값 비교 ajax*/
 		else if(command.equals("/sign/checkedPassword.do")) {
 			com = new CheckedPasswordCommand();
 			com.execute(req, res);
 		}
-		/*35. @광준 : 최종 유저정보 업데이트 */
+		/*48. @광준 : 최종 유저정보 업데이트 */
 		else if(command.equals("/sign/updateUser.do")) {
 			com = new UpdateUserCommand();
 			com.execute(req, res);
 			//아작스라 뷰페이지가 없어유
 		}
+
+		/*49. 명훈 : 공지사항 작성 페이지 */
+		else if(command.equals("/admin/noticeWrite.do")) {
+			viewPage = "/WEB-INF/views/admin/noticeWrite.jsp";
+		}
+		/*50. 명훈 : 작성한 공지사항 등록 후 작성한 공지사항 상세보기 */
+		else if(command.equals("/admin/noticeWriteEnd.do")) {
+			com = new NoticeWriteEndCommand();
+			com.execute(req, res);
+			int result = (int)req.getAttribute("result");
+			if(result > 0) {
+				int lastNoticeNo = (int)req.getAttribute("lastNoticeNo");
+				viewPage = "/admin/noticeDetail.do?ntcNo=" + lastNoticeNo;
+			}
+			else {
+				viewPage = "/WEB-INF/views/admin/noticeList.jsp";
+			}
+		}
+		/*51. 명훈 : 출석체크 페이지 */
+		else if(command.equals("/checkAttendance.do")) {
+			com = new CheckAttendanceCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/sign/checkAttendance.jsp";
+		}
+		/*52 선웅 : 대댓글 삭제 : 작업중*/
+		else if(command.equals("/review/reviewReCommentDelete.do")) {
+			com = new DeleteReviewBoardRecommentCommand();
+			com.execute(req, res);
+		}
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
 		}
-		
-		
-		
 	}
 }

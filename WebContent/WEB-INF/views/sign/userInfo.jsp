@@ -20,7 +20,7 @@
 		<div class="page-header">
 			<h1>내 정보 수정</h1>
 		</div>
-		
+		<div class="form-horizontal">
 			<div class="form-group">
 				<label for="userId" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-4">
@@ -84,10 +84,10 @@
 				<label for="inputName" class="col-sm-2 control-label"></label>
 				<div class="col-sm-6">
       				<button type="button" class="btn btn-primary" id="updateUser-Btn">수정하기</button>
-      				<button type="button" class="btn btn-primary" onclick="location.href='index.jsp'">취소하기</button>
+      				<button type="button" class="btn btn-primary" onclick="location.href='<%=request.getContextPath()%>/index.jsp'">취소하기</button>
     			</div>
 			</div>
-
+	</div>
 	</article>
 </div>
 

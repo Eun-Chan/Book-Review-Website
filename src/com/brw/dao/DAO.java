@@ -3,6 +3,7 @@ package com.brw.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.AttendanceDTO;
 import com.brw.dto.BookBasketDTO;
 import com.brw.dto.NoticeDTO;
 import com.brw.dto.OneLineReviewDTO;
@@ -2123,7 +2125,7 @@ public class DAO {
 		}
 	
 	/*
-	 * 46. 작성자 : 정명훈
+	 * 49. 작성자 : 정명훈
 	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.)
 	 */
 	public List<NoticeDTO> noticeList(int cPage, int numPerPage) {
@@ -2309,7 +2311,7 @@ public class DAO {
 	      return result;
 	   }
 	/*
-	 * 50. 작성자 : 정명훈
+	 * 53. 작성자 : 정명훈
 	 * 내용 : 공지사항 총 개수 구하기
 	 */
 	public int countNoticeAll() {
@@ -2344,7 +2346,7 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 51. 작성자 : 정명훈
+	 * 54. 작성자 : 정명훈
 	 * 내용 : 각 게시판에 보여줄 공지사항 가져오기 (allowview = Y 인 것만 가져오기) 
 	 */
 	public List<NoticeDTO> noticeListAllow() {
@@ -2406,7 +2408,7 @@ public class DAO {
 		}
 		return list;
 	}
-	/*52. 작성자 : 박세준
+	/*55. 작성자 : 박세준
 	 * 내용 : 즐겨찾기한 개수 찾기*/
 	public int countBasketAll(String userId) {
 		int result = 0;
@@ -2440,7 +2442,7 @@ public class DAO {
 	}
 	
 	/*
-	 * 53. 작성자 : 정명훈
+	 * 56. 작성자 : 정명훈
 	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
 	 */
 	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
@@ -2479,7 +2481,7 @@ public class DAO {
 	}
 	/**
 	 * @지수
-	 * 54.로그인한 유저의 날짜계산
+	 * 57.로그인한 유저의 날짜계산
 	 */
 	public int checkDate(String userId) {
 	
@@ -2515,7 +2517,7 @@ public class DAO {
 		return result;
 }
 	/**
-	 * 55
+	 * 58
 	 * 작성자 : 정지수...?라쓰고 김은찬이라 쓴다
 	 * 내용 : 비밀번호 변경 90일 지난 사람들 비밀번호 변경 후에 변경날짜 오늘 날짜로 갱신하기
 	 */
@@ -2552,7 +2554,7 @@ public class DAO {
 	}
 
 
-	/*장선웅 : 56.신고테이블에 인서트*/
+	/*장선웅 : 59.신고테이블에 인서트*/
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2589,7 +2591,7 @@ public class DAO {
 		return result;
 	}
 
-	/*장선웅 : 57. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
+	/*장선웅 : 60. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
 	public int updateReviewBoardReport(int rbReportNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2620,7 +2622,7 @@ public class DAO {
 
 
 	/*
-	 * 58.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
+	 * 61.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
 	 */
 	public UserDTO checkedUserPassword(String userId, String userPassword) {
 		Connection conn = null;
@@ -2653,7 +2655,7 @@ public class DAO {
 	}
 
 	
-	//59 . 박광준 : 유저테이블 수정 쿼리 
+	//62 . 박광준 : 유저테이블 수정 쿼리 
 	public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
 		Connection conn = null;
 		PreparedStatement pstmt =null;
@@ -2671,11 +2673,319 @@ public class DAO {
 			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
 		return result;
+	}
+	/*
+	 * 63. 작성자 : 정명훈
+	 * 내용 : 공지사항게시판 검색 리스트 가져오기
+	 */
+	public List<NoticeDTO> noticeListSearch(String searchKeyword, int cPage, int numPerPage) {
+		List<NoticeDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from (select rownum rnum, n.* from (select * from notice n where ntc_delflag = 'N' and ntc_title like '%'||?||'%' order by ntc_no desc) n) n where rnum between ? and ?";
+		
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			pstmt.setInt(2, startRnum);
+			pstmt.setInt(3, endRnum);
+			
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				NoticeDTO n = new NoticeDTO();
+				
+				n.setNtcNo(rset.getInt("ntc_no"));
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				n.setNtcAllowview(rset.getString("ntc_allowview"));
+				
+				boolean dateNew = false;
+				double passingTime = rset.getDouble("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1.0) {
+					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
+				}
+				else {
+					n.setNtcDate(rset.getString("strdate"));
+				}
+				
+				n.setDateNew(dateNew);
+				
+				list.add(n);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	/*
+	 * 64. 작성자 : 정명훈
+	 * 내용 : 공지사항게시판 검색 리스트 총 개수 구하기
+	 */
+	public int countNoticeSearch(String searchKeyword) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from notice where ntc_delflag = 'N' and ntc_title like '%'||?||'%' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 65. 작성자 : 정명훈
+	 * 내용 : 공지사항 글 등록
+	 */
+	public int noticewWrite(NoticeDTO ntc) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into notice (ntc_no,ntc_title,ntc_content) values (seq_notice_no.nextval,?,?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, ntc.getNtcTitle());
+			pstmt.setString(2, ntc.getNtcContent());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				// conn.close(); 일부러 안했음. 다음 dao 메소드 실행할 때 같은 커넥션 객체 이용하기 위함.
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		return result;
+	}
+	/*
+	 * 66. 작성자 : 정명훈
+	 * 내용 : 등록된 공지사항 글 번호 가져오기 (즉 디비에서 마지막 공지사항 글 번호 가져오기)
+	 */
+	public int getLastNoticeNo() {
+		int lastNoticeNo = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select max(ntc_no) from notice";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				lastNoticeNo = rset.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		return lastNoticeNo;
+	}
+	/*
+	 * 67. 작성자 : 정명훈
+	 * 내용 : 오늘을 중심으로 일주일 날짜 가져오기 (String임)
+	 */
+	public List<String> getDayList() {
+		List<String> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select to_char(sysdate-3, 'YYYY-MM-DD') todaym3, to_char(sysdate-2, 'YYYY-MM-DD') todaym2, to_char(sysdate-1, 'YYYY-MM-DD') todaym1, to_char(sysdate, 'YYYY-MM-DD') today, to_char(sysdate+1, 'YYYY-MM-DD') todayp1, to_char(sysdate+2, 'YYYY-MM-DD') todayp2,  to_char(sysdate+3, 'YYYY-MM-DD') todayp3 from dual";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rset.getMetaData(); // 익스큐트쿼리 후 ResultSet의 컬럼개수 구하기위한 클래스
+			
+			list = new ArrayList<>();
+			if(rset.next()) {
+				for(int i=0; i<rsmd.getColumnCount(); i++) {
+					list.add(rset.getString(i+1));
+				}
+			}
+			
+			System.out.println(list + ",," + list.size());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	/*
+	 * 68. 작성자 : 정명훈
+	 * 내용 : 오늘 기준 출석체크 내용 가져오기
+	 */
+	public List<AttendanceDTO> atList() {
+		List<AttendanceDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join tempusertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				AttendanceDTO at = new AttendanceDTO();
+				
+				at.setAtNo(rset.getInt("at_no"));
+				at.setAtContent(rset.getString("at_content"));
+				at.setAtUserId(rset.getString("at_userid"));
+				at.setAtTotal(rset.getInt("at_total"));
+				at.setAtSerial(rset.getInt("at_serial"));
+				at.setAtDate(rset.getString("strdate"));
+				at.setUserNickName(rset.getString("usernickname"));
+				at.setUserGrade(rset.getInt("usergrade"));
+				
+				list.add(at);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		return list;
+	}
+	
+	//69. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
+	public UserDTO reviewGradeSelect(String writer)
+	{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		UserDTO userInfo_grade = null;
+		String query = "SELECT usergrade, usernickname FROM tempusertable WHERE userid=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, writer);
+			
+			rset = pstmt.executeQuery();
+			userInfo_grade = new UserDTO();
+			if(rset.next())
+			{
+				//null처리 탈퇴한 회원의 등급은?
+				userInfo_grade.setUserNickName((rset.getString("usernickname"))==null?"탈퇴한 회원":(rset.getString("usernickname")));
+				userInfo_grade.setUserGrade(rset.getInt("usergrade"));
+			}
+			else
+			{
+				userInfo_grade.setUserNickName("탈퇴한 회원");
+				userInfo_grade.setUserGrade(0);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("reviewGradeSelect@쿼리 실행에 실패했습니다. [광준]");
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("reviewGradeSelect@자원 반납에 실패했습니다. [광준]");
+				e.printStackTrace();
+			}
+		}
+		return userInfo_grade;
 	}
 }
 

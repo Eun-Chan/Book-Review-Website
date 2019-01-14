@@ -60,7 +60,7 @@
             <span class="sr-only">Toggle navigation</span>
 
             <span class="icon-bar"></span>
-
+ 
             <span class="icon-bar"></span>
  
             <span class="icon-bar"></span>
@@ -82,6 +82,7 @@
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
+            <li><a href="<%=request.getContextPath()%>/checkAttendance.do">출석체크</a></li>
 
             
           </ul>   
@@ -94,19 +95,20 @@
 		    	else {%>  
 		    	<li><a onclick="chatting();">채팅</a></li>
 		    	<li class="dropdown">
+ 	
+		    	
+		    	<li class="dropdown" id="toggleMenu-Header-li">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
-		    		<ul class="dropdown-menu" role="menu">
+		    		<ul class="dropdown-menu" role="menu" id="toggleMenu-Header">
 		    			<!-- 유저 메뉴. 작성자 : 명훈 -->
+		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
 		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
+		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
 		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
 		    			<li><a href="">회원 관리</a></li>
-		    			<% } %>
-		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
-		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
-		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
 		    			<% } %>
 		    			<li class="divider"></li>
 		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>
@@ -117,11 +119,14 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
+  
 <!-- 채팅 -->
 <!-- <div id="chat-Container">
     <div class="row">
         <div class="col-md-5">
+<div class="container" id="chat-Container">
+    <div class="row2" id="chat-row">  
+        <div class="col-md-5" id="col-md-5-chat">
             <div class="panel panel-primary" id="chat-Box">
                 <div class="panel-heading" id="accordion">
                     <span class="glyphicon glyphicon-comment"></span> Chat

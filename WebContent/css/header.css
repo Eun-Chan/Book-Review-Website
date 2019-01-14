@@ -32,6 +32,39 @@
 #toggleMenu-Header
 {
    z-index: 99999 !important;
+
+/* #chat-Box
+{
+	margin-bottom: 0;	
+} */
+.modal-backdrop
+{
+	z-index: 0 !important;
+}
+/* #chat-Container
+{ 
+	z-index: 99999;
+	width: 70%;
+	position: fixed !important;
+	right: 0;
+	bottom: 0;
+	padding: 0;
+	min-width: 300px;
+	width: 300px
+} 
+#col-md-5-chat
+{
+	min-width: 300px;
+	width: 300px;
+	padding: 0;
+} */
+#toggleMenu-Header-li
+{
+	z-index: 9999 !important;
+}
+#toggleMenu-Header
+{
+	z-index: 99999 !important;
 }
 #navSearch
 {
@@ -92,6 +125,7 @@ ul#navbar-menu
 nav#navbar-menuBar
 {
    position: static;
+   position: relative;
 }
 ul.nav navbar-nav navbar-right
 {
