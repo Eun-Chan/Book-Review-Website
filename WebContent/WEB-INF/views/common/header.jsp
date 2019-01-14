@@ -119,45 +119,6 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-  
-<!-- 채팅 -->
-<!-- <div id="chat-Container">
-    <div class="row">
-        <div class="col-md-5">
-<div class="container" id="chat-Container">
-    <div class="row2" id="chat-row">  
-        <div class="col-md-5" id="col-md-5-chat">
-            <div class="panel panel-primary" id="chat-Box">
-                <div class="panel-heading" id="accordion">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
-                    <div class="btn-group pull-right">
-                        <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
-                   	</div>
-                </div>
-            <div class="panel-collapse collapse" id="collapseOne">
-                <div class="panel-body">
-                    <ul class="chat">                      
-                       <fieldset>
-        					<textarea id="messageWindow" rows="10" cols="40" readonly="true"></textarea>
-   						</fieldset>                
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="inputMessage" type="text" class="form-control input-sm" placeholder="앙 메시지를 입력해줭" onkeyup="chat_enterkey();"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat" onclick="send()">
-                                Send</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <!-- 채팅 -->
 <div id="chatting_div">
@@ -334,9 +295,12 @@
     };
     function onMessage(event) {
         textarea.val(textarea.val() + event.data + "\n");
+        const top = textarea.prop('scrollHeight');
+        textarea.scrollTop(top);
     }
     function onOpen(event) {
         textarea.val("채팅방에 입장 하셨습니다❤\n");
+        console.log(event.data);
     }
     function onError(event) {
       alert(event.data);
