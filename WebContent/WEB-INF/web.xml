@@ -9,4 +9,8 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <error-page>
+  	<!-- <error-code>404</error-code> 또는 <exception-type>java.sql.Sql</exception-type>  안쓰면 모든 에러처리-->
+  	<location>/WEB-INF/views/common/error.jsp</location>
+  </error-page>
 </web-app>

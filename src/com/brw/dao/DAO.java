@@ -3,6 +3,7 @@ package com.brw.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.brw.dto.AttendanceDTO;
 import com.brw.dto.BookBasketDTO;
 import com.brw.dto.NoticeDTO;
 import com.brw.dto.OneLineReviewDTO;
@@ -2258,7 +2260,7 @@ public class DAO {
 				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
 				
 				boolean dateNew = false;
-				Double passingTime = rset.getDouble("passingtime");
+				double passingTime = rset.getDouble("passingtime");
 				String sysDay = rset.getString("sysday");
 				String ntcDay = rset.getString("ntcday");
 				
@@ -2563,6 +2565,263 @@ public class DAO {
 		}
 		
 		return result;
+	}
+	/*
+	 * 60. 작성자 : 정명훈
+	 * 내용 : 공지사항게시판 검색 리스트 가져오기
+	 */
+	public List<NoticeDTO> noticeListSearch(String searchKeyword, int cPage, int numPerPage) {
+		List<NoticeDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select n.*, to_char(ntc_date, 'YYYY-MM-DD HH24:MI') strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(n.ntc_date, 'YYYY-MM-DD') ntcday, to_char(n.ntc_date, 'HH24:MI') as todaytime, (sysdate - n.ntc_date) as passingtime from (select rownum rnum, n.* from (select * from notice n where ntc_delflag = 'N' and ntc_title like '%'||?||'%' order by ntc_no desc) n) n where rnum between ? and ?";
+		
+		int startRnum = (cPage - 1) * numPerPage + 1;
+		int endRnum = cPage * numPerPage;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			pstmt.setInt(2, startRnum);
+			pstmt.setInt(3, endRnum);
+			
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				NoticeDTO n = new NoticeDTO();
+				
+				n.setNtcNo(rset.getInt("ntc_no"));
+				n.setNtcTitle(rset.getString("ntc_title"));
+				n.setNtcContent(rset.getString("ntc_content"));
+				n.setNtcReadcnt(rset.getInt("ntc_readcnt"));
+				n.setNtcAllowview(rset.getString("ntc_allowview"));
+				
+				boolean dateNew = false;
+				double passingTime = rset.getDouble("passingtime");
+				String sysDay = rset.getString("sysday");
+				String ntcDay = rset.getString("ntcday");
+				
+				if(passingTime <= 1.0) {
+					dateNew = true;
+					if(ntcDay.equals(sysDay)) {
+						n.setNtcDate(rset.getString("todaytime"));
+					}
+					else {
+						n.setNtcDate(rset.getString("strdate"));
+					}
+				}
+				else {
+					n.setNtcDate(rset.getString("strdate"));
+				}
+				
+				n.setDateNew(dateNew);
+				
+				list.add(n);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	/*
+	 * 61. 작성자 : 정명훈
+	 * 내용 : 공지사항게시판 검색 리스트 총 개수 구하기
+	 */
+	public int countNoticeSearch(String searchKeyword) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select count(*) from notice where ntc_delflag = 'N' and ntc_title like '%'||?||'%' order by ntc_no desc";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchKeyword);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/*
+	 * 62. 작성자 : 정명훈
+	 * 내용 : 공지사항 글 등록
+	 */
+	public int noticewWrite(NoticeDTO ntc) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "insert into notice (ntc_no,ntc_title,ntc_content) values (seq_notice_no.nextval,?,?)";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, ntc.getNtcTitle());
+			pstmt.setString(2, ntc.getNtcContent());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			else {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				// conn.close(); 일부러 안했음. 다음 dao 메소드 실행할 때 같은 커넥션 객체 이용하기 위함.
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		return result;
+	}
+	/*
+	 * 63. 작성자 : 정명훈
+	 * 내용 : 등록된 공지사항 글 번호 가져오기 (즉 디비에서 마지막 공지사항 글 번호 가져오기)
+	 */
+	public int getLastNoticeNo() {
+		int lastNoticeNo = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select max(ntc_no) from notice";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				lastNoticeNo = rset.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		return lastNoticeNo;
+	}
+	/*
+	 * 64. 작성자 : 정명훈
+	 * 내용 : 오늘을 중심으로 일주일 날짜 가져오기 (String임)
+	 */
+	public List<String> getDayList() {
+		List<String> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select to_char(sysdate-3, 'YYYY-MM-DD') todaym3, to_char(sysdate-2, 'YYYY-MM-DD') todaym2, to_char(sysdate-1, 'YYYY-MM-DD') todaym1, to_char(sysdate, 'YYYY-MM-DD') today, to_char(sysdate+1, 'YYYY-MM-DD') todayp1, to_char(sysdate+2, 'YYYY-MM-DD') todayp2,  to_char(sysdate+3, 'YYYY-MM-DD') todayp3 from dual";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rset.getMetaData(); // 익스큐트쿼리 후 ResultSet의 컬럼개수 구하기위한 클래스
+			
+			list = new ArrayList<>();
+			if(rset.next()) {
+				for(int i=0; i<rsmd.getColumnCount(); i++) {
+					list.add(rset.getString(i+1));
+				}
+			}
+			
+			System.out.println(list + ",," + list.size());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	/*
+	 * 65. 작성자 : 정명훈
+	 * 내용 : 오늘 기준 출석체크 내용 가져오기
+	 */
+	public List<AttendanceDTO> atList() {
+		List<AttendanceDTO> list = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join tempusertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			
+			list = new ArrayList<>();
+			while(rset.next()) {
+				AttendanceDTO at = new AttendanceDTO();
+				
+				at.setAtNo(rset.getInt("at_no"));
+				at.setAtContent(rset.getString("at_content"));
+				at.setAtUserId(rset.getString("at_userid"));
+				at.setAtTotal(rset.getInt("at_total"));
+				at.setAtSerial(rset.getInt("at_serial"));
+				at.setAtDate(rset.getString("strdate"));
+				at.setUserNickName(rset.getString("usernickname"));
+				at.setUserGrade(rset.getInt("usergrade"));
+				
+				list.add(at);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		return list;
 	}
 	
 	

@@ -77,6 +77,7 @@
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
+            <li><a href="<%=request.getContextPath()%>/checkAttendance.do">출석체크</a></li>
 
             
             
