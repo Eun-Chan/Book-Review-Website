@@ -2558,11 +2558,62 @@ public class DAO {
 			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
 		return result;
+	}
+	
+	//60. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
+	public UserDTO reviewGradeSelect(String writer)
+	{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		UserDTO userInfo_grade = null;
+		String query = "SELECT usergrade, usernickname FROM tempusertable WHERE userid=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, writer);
+			
+			rset = pstmt.executeQuery();
+			userInfo_grade = new UserDTO();
+			if(rset.next())
+			{
+				//null처리 탈퇴한 회원의 등급은?
+				userInfo_grade.setUserNickName((rset.getString("usernickname"))==null?"탈퇴한 회원":(rset.getString("usernickname")));
+				userInfo_grade.setUserGrade(rset.getInt("usergrade"));
+			}
+			else
+			{
+				userInfo_grade.setUserNickName("탈퇴한 회원");
+				userInfo_grade.setUserGrade(0);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("reviewGradeSelect@쿼리 실행에 실패했습니다. [광준]");
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println("reviewGradeSelect@자원 반납에 실패했습니다. [광준]");
+				e.printStackTrace();
+			}
+		}
+		return userInfo_grade;
 	}
 	
 	
