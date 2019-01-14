@@ -1,19 +1,19 @@
 tr.recent_comment:hover
 {
-	cursor: pointer;
+   cursor: pointer;
 }
 #search-ContainerDiv-out
 {
-	width: 100%;
-	background-color: #428bca;
-	display: table-cell;
+   width: 100%;
+   background-color: #428bca;
+   display: table-cell;
 }
 #search-ContainerDiv
 {
-	
-	height: 150px;
-	border: 0px;
-	vertical-align: middle;
+   
+   height: 150px;
+   border: 0px;
+   vertical-align: middle;
 }
 body
 {
@@ -22,7 +22,7 @@ body
 
 #btn-search
 {
-	margin-top: 0%;
+   margin-top: 0%;
 }
 
 /*검색*/
@@ -59,7 +59,6 @@ div#search-Container
 }
 nav#navSearch
 {
-   margin-top: 0%;
    /* margin-top: 10%; */
    z-index: 0;
 }

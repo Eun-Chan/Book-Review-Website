@@ -2621,71 +2621,82 @@ public class DAO {
 
 
 
-	/*
-	 * 61.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
-	 */
-	public UserDTO checkedUserPassword(String userId, String userPassword) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet res = null;
-		String query ="select * from tempusertable where userid = ? and userpassword=?";
-		UserDTO user = null;
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			pstmt.setString(2, userPassword);
-			res= pstmt.executeQuery();
-			user = new UserDTO();
-			while(res.next()) {
-				user.setUserId(res.getString("userId"));
-				user.setUserName(res.getString("userName"));
-				user.setUserEmail(res.getString("userEmail"));
-				user.setUserNickName(res.getString("userNickName"));
-				user.setUserGrade(res.getInt("usergrade"));
-				user.setUserPoint(res.getInt("userpoint"));
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return user;
-	}
+	   /*
+	    * 61.   장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
+	    */
+	   public UserDTO checkedUserPassword(String userId, String userPassword) {
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      ResultSet res = null;
+	      String query ="select * from tempusertable where userid = ? and userpassword=?";
+	      UserDTO user = null;
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userId);
+	         pstmt.setString(2, userPassword);
+	         res= pstmt.executeQuery();
+	         user = new UserDTO();
+	         while(res.next()) {
+	            user.setUserId(res.getString("userId"));
+	            user.setUserName(res.getString("userName"));
+	            user.setUserEmail(res.getString("userEmail"));
+	            user.setUserNickName(res.getString("userNickName"));
+	            user.setUserGrade(res.getInt("usergrade"));
+	            user.setUserPoint(res.getInt("userpoint"));
+	         }
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            res.close();
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }
+	      }
+	      
+	      return user;
+	   }
 
 	
-	//62 . 박광준 : 유저테이블 수정 쿼리 
-	public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
-		Connection conn = null;
-		PreparedStatement pstmt =null;
-		int result = 0;
-		String query ="UPDATE  tempusertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
-		System.out.println("userId" + userId);
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userPassword);
-			pstmt.setString(2, userEmail);
-			pstmt.setString(3, userNickName);
-			pstmt.setString(4, userId);
-			
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		return result;
-	}
+	 //62 . 박광준 : 유저테이블 수정 쿼리 
+	   public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
+	      Connection conn = null;
+	      PreparedStatement pstmt =null;
+	      int result = 0;
+	      String query ="UPDATE  tempusertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
+	      System.out.println("userId" + userId);
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userPassword);
+	         pstmt.setString(2, userEmail);
+	         pstmt.setString(3, userNickName);
+	         pstmt.setString(4, userId);
+	         
+	         result = pstmt.executeUpdate();
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }
+	         
+	      }
+	      
+	      return result;
+	   }
 	/*
 	 * 63. 작성자 : 정명훈
 	 * 내용 : 공지사항게시판 검색 리스트 가져오기
@@ -2905,7 +2916,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join tempusertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')";
+		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join tempusertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD') order by at_no desc";
 		
 		try {
 			conn = dataSource.getConnection();

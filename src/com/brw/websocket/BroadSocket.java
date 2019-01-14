@@ -30,7 +30,7 @@ public class BroadSocket {
 		synchronized (clients) {
 			for (Session client : clients) {
 				if(!client.equals(session)) {
-					client.getBasicRemote().sendText(message);
+					client.getBasicRemote().sendText(message + "(총 접속자 : " + clients.size() + ")");	
 				}
 			}
 		}

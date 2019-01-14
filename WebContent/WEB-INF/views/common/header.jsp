@@ -164,7 +164,6 @@
    <div style="height: 90%">
    	<textarea id="messageWindow" readonly="true" style="height: 100%; width: 100%"></textarea>
    </div>
-   <p id="chat_num">엥</p>
    <input id="inputMessage" class="form-control" type="text" onkeyup="chat_enterkey()" placeholder="채팅을 입력해줭"/>
    <input type="submit" id="sendBtn" class="btn btn-default" value="보내기" onclick="send()" />
 </div>
@@ -307,7 +306,6 @@
     function kakaoUserSignUp(userId, userEmail, userName){
     	$.ajax({
     		url : "<%=request.getContextPath()%>/sign/kakaoCreateUserCommand.do",
-    		type : "POST",
     		data : {userId : userId , userEmail : userEmail , userNickName : userName},
     		success : function(data){
    				// 카카오톡 로그인후 새로고침	
