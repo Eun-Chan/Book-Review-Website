@@ -22,7 +22,8 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
-import com.brw.command.review.DeleteReviewBoardComment;
+import com.brw.command.review.DeleteReviewBoardCommentCommand;
+import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
 import com.brw.command.review.InsertCommentCommand;
 import com.brw.command.review.InsertReCommentCommand;
@@ -262,7 +263,7 @@ public class FrontController extends HttpServlet {
 		 * 21. 댓글 삭제 쿼리  
 		 */
 	    else if(command.equals("/review/reviewCommentDelete.do")) {
-	    	com = new DeleteReviewBoardComment();
+	    	com = new DeleteReviewBoardCommentCommand();
 	    	com.execute(req, res);
 	    }
 		/*22. 즐겨찾기 보여주는 결과*/
@@ -382,7 +383,11 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			//아작스라 뷰페이지가 없어유
 		}
-		
+		/*42 선웅 : 대댓글 삭제 : 작업중*/
+		else if(command.equals("/review/reviewReCommentDelete.do")) {
+			com = new DeleteReviewBoardRecommentCommand();
+			com.execute(req, res);
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

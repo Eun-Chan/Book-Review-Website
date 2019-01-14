@@ -244,6 +244,9 @@ li{
 	display: inline-block;
 }
 #comment-textArea{
+	width:580px;
+}
+#comment-textArea2{
 	width:680px;
 }
 #comment-html{
@@ -447,3 +450,22 @@ li{
     text-decoration: none;
     color: black;
 }
+#comment-Writer{
+	width:100px;
+	height:60px;
+	margin-right: 10px;
+}
+#comment-Writer span{
+	position: relative;
+	top:30%;
+}
+::-webkit-input-placeholder {
+padding: 10px 0px 0px 10px;
+}
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
+	color:transparent; 
+} 
+#delete-img{
+	display: inline-block;
+}
+
