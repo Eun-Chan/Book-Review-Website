@@ -16,6 +16,7 @@ import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.admin.NoticeWriteEndCommand;
 import com.brw.command.book.BasketInsertCommand;
+import com.brw.command.book.BasketSearchCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
@@ -414,8 +415,11 @@ public class FrontController extends HttpServlet {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
-		
-
+		/*47 세준 : 즐겨찾기 검색시 결과창*/
+		else if(command.equals("/book/basketSearch.do")) {
+			com = new BasketSearchCommand();
+			com.execute(req, res);
+		}
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	
