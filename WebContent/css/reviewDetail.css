@@ -41,6 +41,7 @@ li{
 	padding: 8px 0px 5px 10px;
 	min-height: 35px;
 	background: #f1f1f1;
+	margin-top: 20px;
 }
 #reviewDetail-Header span{
 	font-size: 0.8em;
@@ -76,6 +77,14 @@ li{
     white-space: nowrap;
     overflow: hidden;
 }
+#reviewDetail-booktitle:hover{
+	font-weight: bold;
+}
+
+#reviewBoard-Writer{
+	cursor: pointer;
+}
+
 #reviewDetail-Writer{
 	width:800px;
 	text-align: right;
@@ -235,6 +244,9 @@ li{
 	display: inline-block;
 }
 #comment-textArea{
+	width:580px;
+}
+#comment-textArea2{
 	width:680px;
 }
 #comment-html{
@@ -269,13 +281,12 @@ li{
 }
 .comment-recomment{
 	float:right;
-/* 	padding-bottom: 20px; */
+	padding-bottom: 20px;
 	cursor:Pointer;
 	padding: 0;
     border: 0;
     background: white;
 }
-
 /*대댓글 리스트 보여주는 곳*/
 #recomment-html{
 	width:600px;
@@ -326,6 +337,12 @@ li{
     margin: 0 auto;
     height: auto;
    	margin-bottom: 15px;
+}
+.recomment-Area.hidden{
+	visibility: hidden;
+}
+.recomment-Area.visible{
+	visibility: visible;
 }
 
 .recomment-textArea{
@@ -433,3 +450,22 @@ li{
     text-decoration: none;
     color: black;
 }
+#comment-Writer{
+	width:100px;
+	height:60px;
+	margin-right: 10px;
+}
+#comment-Writer span{
+	position: relative;
+	top:30%;
+}
+::-webkit-input-placeholder {
+padding: 10px 0px 0px 10px;
+}
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
+	color:transparent; 
+} 
+#delete-img{
+	display: inline-block;
+}
+

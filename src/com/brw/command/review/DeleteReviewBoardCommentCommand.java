@@ -14,7 +14,7 @@ import com.brw.dto.ReviewBoardComment;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class DeleteReviewBoardComment implements Command{
+public class DeleteReviewBoardCommentCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

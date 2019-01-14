@@ -76,7 +76,11 @@ img{
 				<li><a href="#" class="btn-gradient green" id="nextpage">다음글</a></li>
 			</ul>
 			<ul id="right-menu">
-				<li><button class="btn-gradient red">신고하기</button></li>
+				<li><button class="btn-gradient red" style ="float: right;">신고하기</button></li>
+			<%if(user!=null && (user.getUserId().equals(review.getRbWriter()) || user.getUserId().equals("admin"))){ %>
+				<li><button class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
+				<li><button class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
+			<%} %>
 			</ul>
 		</div>
 		<div id ="comment-Content">
@@ -90,7 +94,7 @@ img{
 							<div id="comment-header">
 								<span class="comment-writer<%=rbc.getRbCommentNo()%>" id="comment-writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=rbc.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=rbc.getRbCommentWriterNickName() %></span>
 								<input type="hidden" class="comment-writerval" value=<%=rbc.getRbCommentNo()%>>
-								<span style="font-size:0.8em;"><%=rbc.getRbCommentDate() %></span>
+								<span style="font-size:0.8em;">(<%=rbc.getRbCommentDate() %>)</span>
 							</div>
 							<div id ="comment-body">
 								<span id="review-con<%=rbc.getRbCommentNo()%>"><%=rbc.getRbCommentContent() %></span>
@@ -108,42 +112,47 @@ img{
 				</ul>
 				<script>
 					//작성자 영역을 제외한곳 클릭시 해당 div 숨기기
-					$(".comment-writer<%=rbc.getRbCommentNo()%>").click(function(e){
-						var x = $(this).position().top+20;
-						var y = $(this).position().left+25;
-						console.log(x,y);
-						$("#hide-div").css("visibility","visible");
-						$("#hide-div").css("top",x).css("left",y);
-						$("#hide-div").append("<input type='hidden' id='Writer'value='<%=rbc.getRbCommentWriter()%>'>");
-					});	
-					$('html').on('click', function(e){
-					    var $tgPoint = $(e.target);
-					    var $popCallBtn = $tgPoint.hasClass('comment-writer<%=rbc.getRbCommentNo()%>');
-					    var $popCallBtn2 = $tgPoint.hasClass('reviewBoard-Writer');
-					    var $popArea = $tgPoint.hasClass('hide-div');
-					 
-					    if (!$popCallBtn && !$popArea && !$popCallBtn2) {
-					    	$("#hide-div").css("visibility","hidden");
-					    }
+					$(function(){
+						$(document).on('click',".comment-writer<%=rbc.getRbCommentNo()%>",function(){
+							var x = $(this).position().top+20;
+							var y = $(this).position().left+25;
+							console.log(x,y);
+							$("#hide-div").css("visibility","visible");
+							$("#hide-div").css("top",x).css("left",y);
+							$("#Writer").val("<%=rbc.getRbCommentWriterNickName()%>");
+						});
+						
+						$('html').on('click', function(e){
+						    var $tgPoint = $(e.target);
+						    var $popCallBtn = $tgPoint.hasClass('comment-writer<%=rbc.getRbCommentNo()%>');
+						    var $popCallBtn2 = $tgPoint.hasClass('reviewBoard-Writer');
+						    var $popArea = $tgPoint.hasClass('hide-div');
+						 
+						    if (!$popCallBtn && !$popArea && !$popCallBtn2) {
+						    	$("#hide-div").css("visibility","hidden");
+						    }
+						});
 					});
 				</script>
 		<%if(reviewReComment!=null) {%>
 			<%for(ReviewBoardComment rbrc : reviewReComment) {%>
 				<%if(rbrc.getRbCommentRef()==rbc.getRbCommentNo()) {%>
-					<div id ="recomment-list">
+					<div id ="recomment-list" class="recomment-List<%=rbrc.getRbCommentNo()%>">
 						<ul>
 							<li>
 								<div id="recomment-html">
 									<div id="recomment-header">
-										<span><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=rbrc.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=rbrc.getRbCommentWriterNickName() %></span>	
+										<span class="recomment-writer<%=rbrc.getRbCommentNo()%>"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=rbrc.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=rbrc.getRbCommentWriterNickName() %></span>	
 										<span style="font-size:0.7em;">(<%=rbrc.getRbCommentDate() %>)</span>
+										<div id="delete-img"><img src="<%=request.getContextPath() %>/images/delete-button.png" style="width: 15px; height: 15px; cursor: pointer;"/></div>
+										<input type="hidden" id="recomment-writerNo" value="<%=rbrc.getRbCommentNo() %>" />
 									</div>
 									<div id="recomment-body">
 											<span><%=rbrc.getRbCommentContent() %></span>
 									</div>
 								</div>
 							</li>
-						</ul>				
+						</ul>		
 					</div>
 				<%} %>
 			<%} %>
@@ -155,17 +164,44 @@ img{
 		<div id ="comment-Area">
 			<table>
 				<tr>
+				<%if(user!=null) {%>
+					<td>
+						<div id="comment-Writer">
+							<span><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=user.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><strong><%=user.getUserNickName() %></strong></span>
+						</div>
+					</td>
 					<td>
 						<div id="comment-textArea">
-							<textarea name="comment" id="comment-area"rows="3" cols="90"></textarea>
+							<textarea name="comment" id="comment-area"rows="3" cols="75" placeholder="명예회손,욕설,허위사실 유포 등의 글은 관리자에의해 제재또는 삭제될수 있습니다."></textarea>
 						</div>
 					</td>	
 				<td>
 					<input type="button" value="등록" id="comment-button"/>
 				</td>
+				<%}else{ %>
+					<td>
+						<div id="comment-textArea2">
+							<textarea name="comment" id="comment-area"rows="3" cols="90" placeholder="명예회손,욕설,허위사실 유포 등의 글은 관리자에의해 제재또는 삭제될수 있습니다."></textarea>
+						</div>
+					</td>	
+				<td>
+					<input type="button" value="등록" id="comment-button"/>
+				</td>
+				
+				<%} %>
 				</tr>
 			</table>
 		</div>
+		<script>
+				$(document).on('click',"#reviewBoard-Writer",function(){
+				var x = $(this).position().top+20;
+				var y = $(this).position().left+25;
+				console.log(x,y);
+				$("#hide-div").css("visibility","visible");
+				$("#hide-div").css("top",x).css("left",y);
+				$("#Writer").val("<%=review.getUserNickName()%>");
+			});
+		</script>
 		<div id="hide-div" class="hide-div">
 			<ul>
 				<li>
@@ -175,6 +211,7 @@ img{
 					<span>닫기</span>
 				</li>
 			</ul>
+		<input type="hidden" id="Writer"/>
 		</div>
 	</div>
 	<script>
@@ -195,17 +232,10 @@ img{
 		
 		//이름으로 검색하기 클릭시 처리
 		$("#nameSearch").click(function(){
-			var rbCommentWriter = $("#Writer").val();
-			location.href="<%=request.getContextPath()%>/review/reviewSearch.do?searchType=rb_writer&searchKeyword="+rbCommentWriter;
+			var rbCommentWriterNickName = $("#Writer").val();
+			location.href="<%=request.getContextPath()%>/review/reviewSearch.do?searchType=userNickName&searchKeyword="+rbCommentWriterNickName;
 		});					
-		$("#reviewBoard-Writer").click(function(event){
-			var x = $(this).position().top+20;
-			var y = $(this).position().left+25;
-			console.log(x,y);
-			$("#hide-div").css("visibility","visible");
-			$("#hide-div").css("top",x).css("left",y);
-			$("#hide-div").append("<input type='hidden' id='Writer' value='<%=review.getRbWriter()%>");
-		});
+	
 		
 		//도서명 클릭시 도서 상세정보로 가기
 		$("#reviewDetail-booktitle").click(function(){
@@ -215,6 +245,7 @@ img{
 			}
 		});
 
+		//별점 처리
 		var result = 0;
 		var starscore = <%=review.getRbStarscore()%>
 		$(function(){
@@ -226,6 +257,8 @@ img{
            		$(".starR2.on").css("display","block");
        		}
 		});
+		
+		//댓글 입력하는 곳
 		$("#comment-button").on('click',function(){
 			if($("#comment-area").val().trim().length ==0){
 				alert("댓글을 입력해 주세요.");
@@ -257,23 +290,33 @@ img{
 				<%}%>
 			}
 		});
+		//대댓글 입력창 ajax로 생성
+		var i = 0;
+			$(document).on('click','.comment-recomment',function(){
+				<%if(user==null){%>
+					alert("로그인 후 이용 가능 합니다.");
+					return;
+				<%}%>
+				if(i==0){
+					var div =$("<div class ='recomment-Area'></div>");
+					var html ="";
+					html +="<table><tr><td><div class='recomment-textArea'><textarea name='recomment' id='recomment-area' rows='3' cols='75'></textarea></div></td>";
+					html +="<td><button value='"+$(this).val()+"'class='recomment-button'>등록</button></td></tr></table>";
+					div.append(html);
+					$("#comment-Content").append(div); 
+					div.insertAfter($(this).parent().parent()).children("div").slideDown(800);
+					// 핸들러 한 번 실행 후 제거
+					$(this).off("click");
+					i = 1;
+				}
+				else{
+					$(".recomment-Area").remove();
+					i = 0;
+				}
+			});
 
-		$(document).one('click','.comment-recomment',function(){
-			<%if(user==null){%>
-				alert("로그인 후 이용 가능 합니다.");
-				return;
-			<%}%>
-			var div =$("<div class ='recomment-Area'></div>");
-			var html ="";
-			html +="<table><tr><td><div class='recomment-textArea'><textarea name='recomment' id='recomment-area' rows='3' cols='75'></textarea></div></td>";
-			html +="<td><button value='"+$(this).val()+"'class='recomment-button'>등록</button></td></tr></table>";
-			div.append(html);
-/* 			$("#comment-Content").append(div); */
-			div.insertAfter($(this).parent().parent()).children("div").slideDown(800);
-			// 핸들러 한 번 실행 후 제거
-			$(this).off("click");
-		});
 		
+		//대댓글 입력 하는곳
 		$(document).on('click',".recomment-button",function(){
 			<%if(user==null){%>
 				alert("로그인 후 이용 가능 합니다.");
@@ -298,12 +341,14 @@ img{
 						var divs =$("<div id='recomment-list' class='recomment-list"+data.rbCommentNo+"'></div>");
 						var htmls ="";
 						if(data!=null){
-							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span><img src='<%=request.getContextPath() %>/images/userGradeImage/<%=user.getUserGrade() %>.svg'  width='25px' height='25px'/>"+data.rbCommentWriterNickName+"</span><span>"+data.rbCommentDate+"</span></div>";
+							htmls+= "<ul><li><div id='recomment-html'><div id='recomment-header'><span class='recomment-writer"+data.rbCommentNo+"'><img src='<%=request.getContextPath() %>/images/userGradeImage/<%=user.getUserGrade() %>.svg'  width='25px' height='25px'/>"+data.rbCommentWriterNickName+"</span><span style = 'font-size:0.7em;'>"+(data.rbCommentDate)+"</span>";
+							htmls+= "<div id='delete-img'><img='<%=request.getContextPath()%>/images/delete-button.png' style='width:15px; height:15px; cursor:pointer;'></img><input type='hidden' id='recomment-writerNo' value='"+data.rbcommentNo+"'></div></div>";
 							htmls+= "<div id='recomment-body'><span>"+data.rbCommentContent+"</span></div></div></li></ul>";
 						}
 						divs.append(htmls);
 						$("#recomment-area").parents("#comment-list").append(divs);
 						$(".recomment-Area").remove();
+						i=0;
 						console.log(data);
 						isAjaxing = false;
 					}
@@ -311,6 +356,7 @@ img{
 				<%}%>
 			}
 		});
+		//다음글처리
 		$("#nextpage").click(function(){
 			if(<%=nextNumber%>==0){
 				alert("다음글이 존재하지 않습니다.");
@@ -318,6 +364,7 @@ img{
 			}
 			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=nextNumber%>";
 		});
+		//이전글 처리
 		$("#prevpage").click(function(){
 			if(<%=prevNumber%>==0){
 				alert("이전글이 존재하지 않습니다.");
@@ -326,6 +373,7 @@ img{
 			location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=prevNumber%>";
 		});
 		
+		//좋아요 버튼
 		$("#like").click(function(){
 			<%if(user==null){%>
 				alert("로그인후 이용할 수 있습니다.");
@@ -354,6 +402,7 @@ img{
 				return;
 			<%}%>
 		});
+		//댓글 삭제 처리
 		$(document).on('click','.comment-delete',function(){
 			var replay = confirm("정말 삭제 하실 거에요??");
 			var brNo = $(this).val();
@@ -374,5 +423,15 @@ img{
 				})
 			}
 		});
+		
+		//대댓글 삭제 처리
+		$(document).on('click','#delete-img',function(){
+			var recommentNo = $("#recomment-wrtierNo").val();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/review/reviewReCommentDelete.do?rbCommentNo="+recommentNo+"&rbNo=<%=review.getRbNo()%>",
+				success:function(data){
+					console.log(data);
+				}
+			});
+		})
 	</script>
-<%-- <%@ include file="/WEB-INF/views/common/footer.jsp" %> --%>
