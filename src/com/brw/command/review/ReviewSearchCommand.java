@@ -65,7 +65,7 @@ public class ReviewSearchCommand implements Command {
 		
 		// [이전] 이전
 		if(pageNo == 1) {
-			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
+			pageBar += "<li class='page-item disabled'><a class='page-link'>이전</a></li>";
 		}
 		else {
 			pageBar += "<li class='page-item'><a class='page-link' href='" 
@@ -88,7 +88,7 @@ public class ReviewSearchCommand implements Command {
 
 		// [다음] 영역
 		if(pageNo > totalPages) {
-			pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
+			pageBar += "<li class='page-item disabled'><a class='page-link'>다음</a></li>";
 		}
 		else {
 			pageBar += "<li class='page-item'><a class='page-link' href='" 

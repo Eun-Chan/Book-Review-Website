@@ -11,6 +11,18 @@
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
+<style>
+footer{
+	position: relative;
+	top: 80px;
+}
+footer p{
+	position: relative;
+	bottom: 70px;
+}
+</style>
+
+
 	<div id ="reviewDetail">
 		<div id ="reviewDetail-Header">
 			<span id="date"><%=n.getNtcDate() %></span>
@@ -43,7 +55,7 @@
 		</div>
 		<div id="side-menu">
 			<ul id="left-menu">
-				<li><a href="<%=request.getContextPath() %>/review/reviewList.do" class="btn-gradient green">목록 </a></li>
+				<li><a href="<%=request.getContextPath() %>/admin/noticeList.do" class="btn-gradient green">목록 </a></li>
 			</ul>
 		</div>
 	</div>	

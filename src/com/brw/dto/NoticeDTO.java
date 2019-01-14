@@ -22,8 +22,7 @@ public class NoticeDTO implements Serializable {
 	public NoticeDTO() {}
 	
 	// 공지사항 글 등록용 생성자
-	public NoticeDTO(int ntcNo, String ntcTitle, String ntcContent) {
-		this.ntcNo = ntcNo;
+	public NoticeDTO(String ntcTitle, String ntcContent) {
 		this.ntcTitle = ntcTitle;
 		this.ntcContent = ntcContent;
 	}

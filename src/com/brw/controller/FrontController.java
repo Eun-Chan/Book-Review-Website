@@ -14,6 +14,7 @@ import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.admin.NoticeListCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
+import com.brw.command.admin.NoticeWriteEndCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
@@ -33,6 +34,7 @@ import com.brw.command.review.ReviewPaginationCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
+import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.EmailAuthCommand;
@@ -328,11 +330,11 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
-		/*33. 명훈 : 공지사항 검색 리스트 페이지*/
+		/*33. 명훈 : 공지사항 리스트 검색 페이지*/
 		else if(command.equals("/admin/noticeSearch.do")) {
 			com = new NoticeSearchCommand();
 			com.execute(req, res);
-			viewPage = "/WEB-INF/views/admin/noticeSearch.jsp";
+			viewPage = "/WEB-INF/views/admin/noticeList.jsp";
 		}
 		/*34. 명훈 : 공지사항 보이기/보이지않기 관리 ajax*/
 		else if(command.equals("/admin/noticeUpdateAllowView.do")) {
@@ -377,17 +379,43 @@ public class FrontController extends HttpServlet {
 			com = new CheckedPasswordCommand();
 			com.execute(req, res);
 		}
-		/*35. @광준 : 최종 유저정보 업데이트 */
+		/*42. @광준 : 최종 유저정보 업데이트 */
 		else if(command.equals("/sign/updateUser.do")) {
 			com = new UpdateUserCommand();
 			com.execute(req, res);
 			//아작스라 뷰페이지가 없어유
 		}
-		/*42 선웅 : 대댓글 삭제 : 작업중*/
+
+		/*43. 명훈 : 공지사항 작성 페이지 */
+		else if(command.equals("/admin/noticeWrite.do")) {
+			viewPage = "/WEB-INF/views/admin/noticeWrite.jsp";
+		}
+		/*44. 명훈 : 작성한 공지사항 등록 후 작성한 공지사항 상세보기 */
+		else if(command.equals("/admin/noticeWriteEnd.do")) {
+			com = new NoticeWriteEndCommand();
+			com.execute(req, res);
+			int result = (int)req.getAttribute("result");
+			if(result > 0) {
+				int lastNoticeNo = (int)req.getAttribute("lastNoticeNo");
+				viewPage = "/admin/noticeDetail.do?ntcNo=" + lastNoticeNo;
+			}
+			else {
+				viewPage = "/WEB-INF/views/admin/noticeList.jsp";
+			}
+		}
+		/*45. 명훈 : 출석체크 페이지 */
+		else if(command.equals("/checkAttendance.do")) {
+			com = new CheckAttendanceCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/sign/checkAttendance.jsp";
+		}
+		/*46 선웅 : 대댓글 삭제 : 작업중*/
 		else if(command.equals("/review/reviewReCommentDelete.do")) {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
+		
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

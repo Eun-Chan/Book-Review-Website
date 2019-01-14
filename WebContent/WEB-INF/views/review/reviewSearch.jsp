@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.util.List, com.brw.dto.ReviewBoardDTO"%>
+<%@ page import="java.util.List"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 	// FrontController에서 보낸 list 받기
