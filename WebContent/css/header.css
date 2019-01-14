@@ -1,11 +1,35 @@
-
-#chat-Container
+#chat-Box
 {
+	margin-bottom: 0;	
+}
+.modal-backdrop
+{
+	z-index: 0 !important;
+}
+#chat-Container
+{ 
 	z-index: 99999;
 	/* width: 70%; */
 	position: fixed !important;
-	left: 75.2%;
-	bottom: 8%;
+	right: 0;
+	bottom: 0;
+	padding: 0;
+	min-width: 300px;
+	width: 300px
+} 
+#col-md-5-chat
+{
+	min-width: 300px;
+	width: 300px;
+	padding: 0;
+}
+#toggleMenu-Header-li
+{
+	z-index: 9999 !important;
+}
+#toggleMenu-Header
+{
+	z-index: 99999 !important;
 }
 #navSearch
 {
@@ -14,7 +38,7 @@
 /*@광준: 로그인팝업창 호출 시 어둡게 처리가 맨 앞으로 나와 순서를 조정함*/
 .modal-dialog
 {
-	z-index: 1050;
+	/* z-index: 1050; */
 }
 nav#navbar-menuBar
 {
@@ -65,7 +89,7 @@ ul#navbar-menu
 }
 nav#navbar-menuBar
 {
-	position: static;
+	position: relative;
 }
 ul.nav navbar-nav navbar-right
 {
@@ -98,7 +122,7 @@ ul.nav navbar-nav navbar-right
 	justify-content: center;
 	align-items: center;
 	min-height: 170px;
-	margin-top: 20px;
+	/* margin-top: 20px; */
 	margin-bottom: 35px;
 	z-index: 2;
 }
