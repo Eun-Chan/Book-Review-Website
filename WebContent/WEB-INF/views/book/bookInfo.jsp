@@ -131,9 +131,13 @@ div#seller{
 								<a onclick='oneLineDel(<%=oneLineList.get(i).getNo()%>,"<%=oneLineList.get(i).getUserId()%>",event);'>삭제</a><br>
 								
 						</li>
-				<% 	};%><button id="load">더보기</button><% 
+				<% 	}%><button id="load">더보기</button><% 
 					oneLineStar=oneLineStar/oneLineList.size();//한 줄 리뷰의 별점 평균
-				};%>
+				}else {
+					%>
+						<script>$("#oneLineSSShowScore").text("0 /5");</script>
+					
+				<%}%>
 	
 			</ul>
 		</div>
@@ -146,7 +150,7 @@ div#seller{
 	<div id="command-info">
 		<p id="reviewTab">위의 도서로 작성 된 리뷰!</p>
 		<div id="review-rate3">
-			<p>리뷰 게시판 평점 :</p>
+			<span>리뷰 게시판 평점 :</span><span id="starScoreAvg3" style="color:block; font-size:16px;"></span>
 			<div id="start-Container3" style="left:0">
 		       <div class="starRev0">
 				  <span class="starR1" id="star0">별1_왼쪽</span>
@@ -159,7 +163,7 @@ div#seller{
 				  <span class="starR2" id="star7">별4_오른쪽</span>
 				  <span class="starR1" id="star8">별5_왼쪽</span>
 				  <span class="starR2" id="star9">별5_오른쪽</span>
-				  <span id="starScoreAvg3" style="color:block; font-size:16px;"></span>
+				  
 				</div>
 			</div>
 		</div>
@@ -169,10 +173,14 @@ div#seller{
 	</div>
 	
 <script>
-//한줄 리뷰 10줄씩 보게끔 하는 함수
+//한 줄 리뷰 10줄씩 보게끔 하는 함수
 function showOneLine(){
 $("li.oneLineReview").hide();
 $("li.oneLineReview").slice(0,10).show();
+
+if($("li.oneLineReview").length == 0){
+	$("button#load").hide();
+}
 
 $("button#load").click(function(){
 
@@ -207,11 +215,11 @@ var oneLinetotalStar = <%=oneLineStar%>;
 function showLoadOneLineSS(){
 	console.log("oneLinetotalStar", oneLinetotalStar);
 	
-	if(oneLinetotalStar == "NaN"){
-		oneLinetotalStar = 0.0;
-	}
-	
-	$("#oneLineSSShowScore").text((Math.ceil(oneLinetotalStar*100)/100)+" /5");	
+	if(oneLinetotalStar > 0){				
+		$("#oneLineSSShowScore").text((Math.ceil(oneLinetotalStar*100)/100)+" /5");	
+	}else{
+		$("#oneLineSSShowScore").text("0 /5");	
+	}	
 }
 showLoadOneLineSS();
 
@@ -233,7 +241,7 @@ if(oneLinetotalStar%1 > 0 && oneLinetotalStar >1){
 	$("#oneLineSSAVG").append("<i class='fas fa-star-half-alt'></i>");
 }
 
-//한줄 리뷰 별점 클릭시 켜지는 함수
+//한 줄 리뷰 별점 클릭시 켜지는 함수
 $('div#start-Container2 span').click(function(){
 	  $(this).parent().children('span').removeClass('on');
 	  $(this).addClass('on').prevAll('span').addClass('on');
@@ -252,10 +260,10 @@ function insert_oneLineRV(){
 	
 	var oneLineRV = $("#oneLineRV").val();
 	//DB에 미등록 되어있는 책일 시 등록하기 위해 필요한 변수
-	if(oneLineRV == 0){
+	if(oneLineRV.length == 0){
 		alert("리뷰를 작성하세요!");
 		return;
-	}else if(oneLineRV > 50){
+	}else if(oneLineRV.length > 50){
 		alert("50자 이내로 작성 가능합니다!");
 		return;
 	}
@@ -321,10 +329,10 @@ function insert_oneLineRV(){
 
 //새로운 한 줄 리뷰 작성 시 별 평점 새로 바꾸기
 function showOneLineSS(oneLineSS){
-	
+		
 	$("#oneLineSSShowScore").text(Math.ceil(oneLineSS*100)/100+" /5");
 	oneLineSS = Math.ceil(oneLineSS*2)/2;
-
+	console.log("oneLineSS", oneLineSS)
 	$("#oneLineSSAVG").html("");
 	
 	if(oneLineSS%1 > 0 && oneLineSS >1){//소수점이 있고 1보다 큰 점수
@@ -332,13 +340,16 @@ function showOneLineSS(oneLineSS){
 			$("#oneLineSSAVG").append("<i class='fas fa-star'></i>");
 		}
 		$("#oneLineSSAVG").append("<i class='fas fa-star-half-alt'></i>");
-	}else if(oneLinetotalStar%1 == 0){//소수점이 없는 점수
+	}else if(oneLineSS%1 == 0){//소수점이 없는 점수
 		
 		for(var i = 0; i < oneLineSS; i++){
 			$("#oneLineSSAVG").append("<i class='fas fa-star'></i>");
 		}
-	}else{//0.5점만 준 경우
+	}else if(oneLineSS < 1 && oneLineSS%1 > 0){//0.5점만 준 경우
 		$("#oneLineSSAVG").append("<i class='fas fa-star-half-alt'></i>");
+	
+	} else {//모든 한 줄 리뷰가 삭제됐을 경우
+		$("#oneLineSSAVG").append("<span>등록된 한 줄 리뷰가 없어요!</span>");
 	}
 }
 
@@ -472,9 +483,15 @@ function showBookSumStarScore(score){
 		total = starScoreOneLineAvg;
 	}
 	console.log("total", total);
-	for(var j=0; j<total*2; j++){
-   		$("div#start-Container1 span#star"+j).addClass('on');
-		}
+	if(total > 0){
+		for(var j=0; j<total*2; j++){
+	   		$("div#start-Container1 span#star"+j).addClass('on');
+			}		
+	}else if(total = 0){
+		for(var j=0; j<10; j++){
+	   		$("div#start-Container1 span#star"+j).removeClass('on');
+			}	
+	}
    	$("#starScoreAvg1").text(total+ " /5.0");
 		
 }
@@ -501,14 +518,30 @@ function oneLineDel(oneLineNo, userId, event){
 				//한 줄 리뷰 별점 수정을 위한 함수
 				showOneLineSS(sumStarScore/data.length);
 				//별점 합계가 표시되는 별점 변경 함수 실행
-				var tempReviewSS = $("#starScoreAvg3").text().split(" ");
-				showBookSumStarScore(parseFloat(tempReviewSS[0]));
+				if(data.length == 0){
+					showBookSumStarScore(0);
+				}else{
+					var tempReviewSS = $("#starScoreAvg3").text().split(" ");
+					showBookSumStarScore(parseFloat(tempReviewSS[0]));				
+				}
 
+				if($("li.oneLineReview").length == 0){
+					console.log("되라 쫌")
+					$("button#load").hide();
+				}//아무런 한 줄 리뷰가 없으면 버튼 안보이기
+				
+				if($("#oneLineSSShowScore").text() == "NaN /5"){
+					$("#oneLineSSShowScore").text("0 /5");
+				}//아무런 한 줄 리뷰가 없을 경우 0점 표기
+				
+				
 			}
 		});
 	}else{
 		alert("본인의 게시글만 삭제 가능합니다!");
 	}
+
+	
 	
 	<%}%>
 }
