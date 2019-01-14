@@ -22,20 +22,24 @@
 <!-- ======= 1. 검색 Part START ======= -->
 	
 <!-- @광준 : 검색 Container -->
-<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch"> 
+<nav class="navbar  navbar-expand-sm  bg-primary  navbar-dark" id="navSearch">
+<!-- <div id="search-ContainerDiv-out">
+<div id="search-ContainerDiv">   -->
 	<!-- 전송을 위해 form 태그에 담았으나, 담는순간 CSS가 먹히지 않는 오류가 있어 jquery click함수를 통해 수동으로 전송함 -->
 	<!-- select의 margin CSS가 먹히지 않아 hidden타입으로 input을 하나 끼워넣고 margin을 통해 거리를 벌림 -->
-	<input type="hidden" id="hiddenInput-search"/>
+	<input type="hidden" id="hiddenInput-search"/> 
 	<!-- 검색방법을 선택 - 제목/저자 -->
 	<select id="searchType">
 		<option value="title">제목</option> 
 		<option value="author">저자</option>
-	</select>
+	</select> 
 	<!-- 검색바 -->
 	<input type="text" class="form-control" placeholder="도서를 검색해주세요." name="search" id="search">
 	<!-- 검색버튼 - 클릭 시 jquery로 검색에 필요한 데이터를 전송한다. -->
 	<input class="btn btn-default" type="button" id="btn-search" value="검색">
 </nav>  
+<!-- </div>
+</div> -->
 	
 <!-- ======= 1. 검색 Part END ======= -->
 
@@ -83,9 +87,9 @@
 					</div>
 					<br /><br />
 					<div id="button-Container">
-						<p>
-							<a href="#" class="btn btn-primary" role="button">구매하기</a>
-							<a href="#" class="btn btn-default" role="button" id="detail-Book0">더 보기</a>
+						<p> 
+							<a class="btn btn-primary" role="button" id="book-buy0">구매하기</a>
+							<a class="btn btn-default" role="button" id="detail-Book0">더 보기</a>
 						</p>
 					</div>
 				</div>
@@ -115,7 +119,7 @@
 			</div>
 			</div>
 			<br /><br />
-	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book1">더 보기</a></p>
+	       <p><a href="#" class="btn btn-primary" role="button" id="book-buy1">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book1">더 보기</a></p>
 	     </div>
 	   </div>
 	</div>
@@ -143,7 +147,7 @@
 			</div>
 			</div>
 			<br /><br />
-	       <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book2">더 보기</a></p>
+	       <p><a href="#" class="btn btn-primary" role="button" id="book-buy2">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book2">더 보기</a></p>
 	     </div>
 	   </div>
 	 </div>
@@ -171,7 +175,7 @@
 			</div>
 			</div>
 			<br /><br />
-	      <p><a href="#" class="btn btn-primary" role="button">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book3">더 보기</a></p>
+	      <p><a href="#" class="btn btn-primary" role="button" id="book-buy3">구매하기</a> <a href="#" class="btn btn-default" role="button" id="detail-Book3">더 보기</a></p>
 	    </div>
 	  </div>
 	</div>
@@ -358,7 +362,6 @@ function reloadBookInfo(searchUrl){
 	    dataType: "jsonp",
 	    success:function(data)
 	    {	
-	    	console.log(data);
 	    	/* 책 정보 파싱 >> 리스트 */
 	    	var bookList = [];
 	    	
@@ -370,9 +373,10 @@ function reloadBookInfo(searchUrl){
 	   			var author = book.author; //도서저자
 	   			var cover = book.cover; //도서이미지
 	   			var adult = book.adult; //성인등급 확인(true:ㅎㅎ/false:없음)
+	   			var linkBuy = book.link; //도서구매 링크
 	   			
 	   			//성인등급이 false일 경우에만 추가
-	   			if(!adult && isbn13 != "") bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover});
+	   			if(!adult && isbn13 != "") bookList.push({"isbn13":isbn13, "title":title, "author":author, "cover":cover, "linkBuy":linkBuy});
 	   		}
 	    	
 	    	
@@ -393,22 +397,35 @@ function reloadBookInfo(searchUrl){
 				}
 	   		}
 	
-	    	/* 데이터 view 처리*/
-			$("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,10)+"…":(bookList[ranNum[0]].title));
+			/*@광준 : 데이터 view처리, 리펙토링*/
+	    	for(var i=0; i<4; i++)
+    		{
+	    		$("span#book"+i).html((bookList[ranNum[i]].title).length>12?(bookList[ranNum[i]].title).substr(0,10)+"…":(bookList[ranNum[i]].title));
+				$("p#book-Author"+i).html((bookList[ranNum[i]].author).length>10?(bookList[ranNum[i]].author).substr(0,10)+"...":(bookList[ranNum[i]].author));
+				$("#bookImage"+i).attr("src", bookList[ranNum[i]].cover);
+				$("#book-buy"+i).attr("href", bookList[ranNum[i]].linkBuy);	
+    		}
+			
+			/* $("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,10)+"…":(bookList[ranNum[0]].title));
 			$("p#book-Author0").html((bookList[ranNum[0]].author).length>10?(bookList[ranNum[0]].author).substr(0,10)+"...":(bookList[ranNum[0]].author));
 			$("#bookImage0").attr("src", bookList[ranNum[0]].cover);
+			$("#book-buy0").attr("href", bookList[ranNum[0]].linkBuy);
+			
 			
 			$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,10)+"…":(bookList[ranNum[1]].title));
 			$("p#book-Author1").html((bookList[ranNum[1]].author).length>10?(bookList[ranNum[1]].author).substr(0,10)+"...":(bookList[ranNum[1]].author));
 			$("#bookImage1").attr("src", bookList[ranNum[1]].cover);
+			$("#book-buy1").attr("href", bookList[ranNum[1]].linkBuy);
 			
 			$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,10)+"…":(bookList[ranNum[2]].title));
 			$("p#book-Author2").html((bookList[ranNum[2]].author).length>10?(bookList[ranNum[2]].author).substr(0,10)+"...":(bookList[ranNum[2]].author));
 			$("#bookImage2").attr("src", bookList[ranNum[2]].cover);
+			$("#book-buy2").attr("href", bookList[ranNum[2]].linkBuy);
 			
 			$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,10)+"…":(bookList[ranNum[3]].title));
 			$("p#book-Author3").html((bookList[ranNum[3]].author).length>10?(bookList[ranNum[3]].author).substr(0,10)+"...":(bookList[ranNum[3]].author));
-			$("#bookImage3").attr("src", bookList[ranNum[3]].cover);	
+			$("#bookImage3").attr("src", bookList[ranNum[3]].cover);
+			$("#book-buy3").attr("href", bookList[ranNum[3]].linkBuy); */
 			
 			/**
 			 * @광준
@@ -446,7 +463,8 @@ $('#indexForm').ready(function(){
             	if(data[0][i] != null && !(isEmpty(data[0][i]))) //isEmpty함수가 없기 때문에, 직접 정의한다.(하단에 변수참고)
            		{
 	            	$("td#bookName"+i).text((data[0][i].rbBookTitle).length > 10?(data[0][i].rbBookTitle).substr(0,10)+"…":(data[0][i].rbBookTitle));
-		            $("td#writer"+i).text(data[0][i].rbWriter);
+	            	$("td#writer"+i).html("<img src=<%=request.getContextPath()%>/images/userGradeImage/"+data[0][i].rbGrade+".svg width='30px' height='30px' alt='userGrade icon'>" + " " + data[0][i].rbNickname);
+	            	/* $("td#writer"+i).text(data[0][i].rbWriter); */
 		            $("td#rbTitle"+i).text(data[0][i].rbTitle);
 		           	$("td#readCnt"+i).text(data[0][i].rb_readCnt);
 		           	$("td#recommendCnt"+i).text(data[0][i].rb_recommend); 	           
@@ -454,7 +472,8 @@ $('#indexForm').ready(function(){
 		           	
 		           	/* 인기 리뷰 */
 		           	$("td#best-bookName"+i).text((data[2][i].rbBookTitle).length > 10?(data[2][i].rbBookTitle).substr(0,10)+"…":(data[2][i].rbBookTitle));
-		            $("td#best-writer"+i).text(data[2][i].rbWriter);
+		           	$("td#best-writer"+i).html("<img src=<%=request.getContextPath()%>/images/userGradeImage/"+data[2][i].rbGrade+".svg width='30px' height='30px' alt='userGrade icon'>" + " " + data[2][i].rbNickname);
+		            /* $("td#best-writer"+i).text(data[2][i].rbWriter); */
 		            $("td#best-rbTitle"+i).text(data[2][i].rbTitle);
 		           	$("td#best-readCnt"+i).text(data[2][i].rb_readCnt);
 		           	$("td#best-recommendCnt"+i).text(data[2][i].rb_recommend);

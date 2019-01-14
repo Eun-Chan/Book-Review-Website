@@ -58,19 +58,24 @@ public class BookBasketCommand implements Command {
          
       // [이전] 이전
       if(pageNo == 1) {
+    	  System.out.println("-1");
          pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
       }
       else {
+    	  System.out.println("0");
          pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/book/goBasket.do?cPage=" + (pageNo-1)
                   + "'>이전</a></li>";
       }
       
       // 페이지 숫자 영역
       while(!(pageNo > endPage || pageNo > totalPages)) {
+    	 System.out.println("1");
          if(pageNo == cPage) {
+        	 System.out.println("2");
             pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
          }
          else {
+        	 System.out.println("3");
             pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/book/goBasket.do?cPage=" + pageNo
                   + "'>" + pageNo + "</a></li>";
          }
@@ -78,9 +83,11 @@ public class BookBasketCommand implements Command {
       }
       // [다음] 영역
       if(pageNo > totalPages) {
+    	  System.out.println("4");
          pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
       }
       else {
+    	  System.out.println("5");
          pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/book/goBasket.do?cPage=" 
                      + pageNo + "'>다음</a>";
       }
