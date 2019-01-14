@@ -100,6 +100,12 @@ $(function(){
 			}
 		});
 	});
+	
+	// 공지사항 작성 버튼 리스너
+	$("#btn-write").on("click",function(){
+		location.href="<%=request.getContextPath()%>/admin/noticeWrite.do";
+	});
+	
 });
 </script>
 
@@ -172,7 +178,7 @@ $(function(){
 			<form action="<%=request.getContextPath()%>/admin/noticeSearch.do">
 				<div class="form-group search-bar divInline">
 					<input type="text" name="searchKeyword" class="form-control"
-						placeholder="제목 검색"/>
+						placeholder="제목 검색" value="<%=searchKeyword==null?"":searchKeyword%>"/>
 				</div>
 				<button type="submit" class="btn btn-default">검색</button>
 			</form>
@@ -183,14 +189,14 @@ $(function(){
 	<% if(user != null && "admin".equals(user.getUserId())) { %>
 	<!-- 글쓰기 버튼 영역 -->
 	<div id="btn-write-container">
-		<button id="btn-write" class="btn btn-success">공지사항 등록</button>
+		<button id="btn-write" class="btn btn-success">공지사항 작성</button>
 	</div>
 	<% } %>
 	<!-- 페이지바 영역 -->
 	<div id="pagebar-container" class="text-center">
 		<%=pageBar %>
 	</div>
-
+	
 
 </div>
 
