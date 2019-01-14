@@ -78,8 +78,8 @@ img{
 			<ul id="right-menu">
 				<li><button class="btn-gradient red" style ="float: right;">신고하기</button></li>
 			<%if(user!=null && (user.getUserId().equals(review.getRbWriter()) || user.getUserId().equals("admin"))){ %>
-				<li><button class="btn-gradient green" style="margin-right: 5px;" id="review-delete">삭제</button></li>
-				<li><button class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
+				<li><button class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
+				<li><button id="btn-revise-review" class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
 			<%} %>
 			</ul>
 		</div>
@@ -131,6 +131,10 @@ img{
 						    if (!$popCallBtn && !$popArea && !$popCallBtn2) {
 						    	$("#hide-div").css("visibility","hidden");
 						    }
+						});
+						// 명훈 : 리뷰 수정 버튼 리스너
+						$("#btn-revise-review").on("click",function(){
+							location.href = "<%=request.getContextPath()%>/review/reviewRevise.do";
 						});
 					});
 				</script>

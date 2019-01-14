@@ -14,7 +14,7 @@
 	<article class="container">
 		<div class="page-header">
 			<h1>회원가입</h1>
-		</div>
+		</div> 
 		<form action="<%=request.getContextPath()%>/createUser.do" class="form-horizontal" onsubmit="return createUserSubmit();">
 			<div class="form-group">
 				<label for="userId" class="col-sm-2 control-label">아이디</label>

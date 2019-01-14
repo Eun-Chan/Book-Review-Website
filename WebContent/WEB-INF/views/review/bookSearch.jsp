@@ -5,9 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>도서 검색</title>
-<%-- <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" /> --%>
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" />
 <script src="<%=request.getContextPath() %>/js/jquery-3.3.1.js"></script>
-<%-- <script src="<%=request.getContextPath() %>/js/bootstrap.js"></script> --%>
+<script src="<%=request.getContextPath() %>/js/bootstrap.js"></script>
 <style>
 /* input타입 inline-block으로 변경 */
 div.myformgroup{

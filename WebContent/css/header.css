@@ -1,111 +1,171 @@
-
-#chat-Container
+.modal-backdrop
 {
+   z-index: 0 !important;
+}
+#chatting_div
+{
+   z-index: 9;
+   width: 30%;
+   position: fixed !important;
+   left: 70%;
+   height : 90%;
+   text-align : center;
+   display : none;
+   background-color : #428bca;
+}
+
+#messageWindow{
+	resize : none;
+}
+
+#inputMessage
+{
+	 width: 70%;
+	 display: inline;
+ 	 margin-top : 5%;
+}
+
+#toggleMenu-Header-li
+{
+   z-index: 9999 !important;
+}
+#toggleMenu-Header
+{
+   z-index: 99999 !important;
+}
+#chat-Box
+{
+	margin-bottom: 0;	
+}
+.modal-backdrop
+{
+	z-index: 0 !important;
+}
+#chat-Container
+{ 
 	z-index: 99999;
-	/* width: 70%; */
+	width: 70%;
 	position: fixed !important;
-	left: 75.2%;
-	bottom: 8%;
+	right: 0;
+	bottom: 0;
+	padding: 0;
+	min-width: 300px;
+	width: 300px
+} 
+#col-md-5-chat
+{
+	min-width: 300px;
+	width: 300px;
+	padding: 0;
+}
+#toggleMenu-Header-li
+{
+	z-index: 9999 !important;
+}
+#toggleMenu-Header
+{
+	z-index: 99999 !important;
 }
 #navSearch
 {
-	z-index: -9999;
+   z-index: -9999;
 }
 /*@광준: 로그인팝업창 호출 시 어둡게 처리가 맨 앞으로 나와 순서를 조정함*/
 .modal-dialog
 {
-	z-index: 1050;
+   /* z-index: 1050; */
 }
 nav#navbar-menuBar
 {
-	margin-bottom: 0px;
+   margin-bottom: 0px;
 }
 div#menuBar-Container
 {
-	margin-left: 2%;
+   margin-left: 2%;
 }
 /* 기호제거 */
 ul.navbar-nav
 {
-	list-style:none;
+   list-style:none;
     padding-left:0px;
     margin-right: 5%;
 }
-/* 좌측상단 로고 */	
+/* 좌측상단 로고 */   
 a#home-img-Container
 {
-	padding-left: 0px;
-	padding-top: 0px;
+   padding-left: 0px;
+   padding-top: 0px;
 }
 img#home_img
 {
-	min-width: 213px;
-	min-height: 53px;
+   min-width: 213px;
+   min-height: 53px;
 }
 /* 텍스트 */
 a.navbar-brand
 {
-	font-size: 2vmin;
-	color: lightgray;	
+   font-size: 2vmin;
+   color: lightgray;   
 }
 a.navbar-brand:hover
 {
-	color: white;	
+   color: white;   
 }
 /* 메뉴 */
 li.nav-item
 {
-	margin-top: 8%;
+   margin-top: 8%;
 }
 ul#navbar-menu
 {
-	margin-left: 3%;
-	float: right;
-	margin-bottom: 1%;
+   margin-left: 3%;
+   float: right;
+   margin-bottom: 1%;
 }
 nav#navbar-menuBar
 {
-	position: static;
+   position: static;
+   position: relative;
 }
 ul.nav navbar-nav navbar-right
 {
-	margin: 0 auto;
+   margin: 0 auto;
 }
 #login-Container
 {
-	margin-top: 0px;
-	margin-bottom: 0px;
+   margin-top: 0px;
+   margin-bottom: 0px;
 }
 #login-Container
 {
-	position: absolute;
-	right: 1px;
+   position: absolute;
+   right: 1px;
 }
 /* 검색 */
 #hiddenInput-search
 {
-	margin: 0 auto;
+   margin: 0 auto;
 }
 #search
 {
-	width: 25%;
-	height: 40px;
-	border: 3px solid #286aa3;
+   width: 25%;
+   height: 40px;
+   border: 3px solid #286aa3;
 }
 #navSearch
 {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 170px;
-	margin-top: 20px;
-	margin-bottom: 35px;
-	z-index: 2;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 170px;
+   margin-top: 20px;
+   margin-bottom: 35px;
+   z-index: 2;
 }
 ul#navbar-menu
 {
-	display: flex;
-	align-items: center;
+   display: flex;
+   align-items: center;
 }
 
 .search-btn {
@@ -116,6 +176,6 @@ ul#navbar-menu
 }
 #frm
 {
-	width: 30%;
-	margin: 0 auto;
+   width: 30%;
+   margin: 0 auto;
 }

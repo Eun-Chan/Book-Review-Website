@@ -48,23 +48,28 @@ $.ajax({
       }
       var cnt = parseInt(i)+1;
       if(isNaN(cnt) == true) {
+    	  console.log("if절들어왔니?");
          var cntHtml = "<p><h4>"+"총 0권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";
-         location.href = "<%=request.getContextPath()%>/book/goBasket.do?cPage=1";
+        <%--  location.href = "<%=request.getContextPath()%>/book/goBasket.do?cPage=1"; --%>
       }
       else {      
          var cntHtml = "<p><h4>"+"총 "+data.totalContents+"권의 책을 즐겨찾기에 추가하셨습니다."+"</h4></p>";      
       }
+      console.log("빠졌니?");
       var paging = data.pageBar;
       console.log("cnt",cnt);
       $("#pagebar-container").html(paging);
+      console.log("jsp1");
       $("#basketList").html(table);
+      console.log("jsp2");
       $("#totalBasket").html(cntHtml);
-      
+      console.log("jsp3");
    },
    error : function() {
       console.log("실패");
    }
 });
+
 $("#deleteButton").click(function() {
    $("input:checkbox[name='chk']:checked").each(function() {
       var ISBN = $(this).val();
