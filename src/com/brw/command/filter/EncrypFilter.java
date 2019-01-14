@@ -16,7 +16,7 @@ import com.brw.command.filter.EncryptWrapper;
 /**
  * Servlet Filter implementation class EncrypFilter
  */
-@WebFilter({"/createUser.do", "/login.do" ,"/sign/checkedPassword.do", "/sign/updateUser.do","/sign/OldPwdChangeOrLaterUpdate.do"})
+@WebFilter({"/createUser.do", "/login.do" ,"/sign/checkedPassword.do", "/sign/updateUser.do","/sign/OldPwdChangeOrLaterUpdate.do" , "/sign/passwordUpdate.do"})
 public class EncrypFilter implements Filter {
 
     /**

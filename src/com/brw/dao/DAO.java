@@ -1752,52 +1752,52 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 40. 작성자 : 박세준
-	 * 내용 : 즐겨찾기 보여주는 결과
-	 */
-	public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
-		List<BookBasketDTO> list = new ArrayList();
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
-		int startRnum = (cPage - 1) * numPerPage + 1;
-		int endRnum = cPage * numPerPage;
-			try {
-				conn = dataSource.getConnection();
-				pstmt = conn.prepareStatement(query);
-				pstmt.setString(1, userId);
-				pstmt.setInt(2, startRnum);
-				pstmt.setInt(3, endRnum);
-				rset = pstmt.executeQuery();
-				
-				while(rset.next()) {
-					BookBasketDTO bb = new BookBasketDTO(); 
-					bb.setBasketNo(rset.getInt("basketNo"));
-					bb.setUserId(rset.getString("userid"));
-					bb.setUserName(rset.getString("username"));
-					bb.setISBN(rset.getString("isbn"));
-					bb.setBookTitle(rset.getString("booktitle"));
-					bb.setPrice(rset.getInt("price"));
-					bb.setQuantity(rset.getInt("quantity"));
-					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getString("pickdate"));
-				
-					list.add(bb);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					rset.close();
-					pstmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return list;
-		}
+	    * 40. 작성자 : 박세준
+	    * 내용 : 즐겨찾기 보여주는 결과
+	    */
+	   public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
+	      List<BookBasketDTO> list = new ArrayList();
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      ResultSet rset = null;
+	      String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
+	      int startRnum = (cPage - 1) * numPerPage + 1;
+	      int endRnum = cPage * numPerPage;
+	         try {
+	            conn = dataSource.getConnection();
+	            pstmt = conn.prepareStatement(query);
+	            pstmt.setString(1, userId);
+	            pstmt.setInt(2, startRnum);
+	            pstmt.setInt(3, endRnum);
+	            rset = pstmt.executeQuery();
+	            
+	            while(rset.next()) {
+	               BookBasketDTO bb = new BookBasketDTO(); 
+	               bb.setBasketNo(rset.getInt("basketNo"));
+	               bb.setUserId(rset.getString("userid"));
+	               bb.setUserName(rset.getString("username"));
+	               bb.setISBN(rset.getString("isbn"));
+	               bb.setBookTitle(rset.getString("booktitle"));
+	               bb.setPrice(rset.getInt("price"));
+	               bb.setQuantity(rset.getInt("quantity"));
+	               bb.setTotalPrice(rset.getInt("totalprice"));
+	               bb.setPickDate(rset.getString("pickdate"));
+	            
+	               list.add(bb);
+	            }
+	         } catch (SQLException e) {
+	            e.printStackTrace();
+	         } finally {
+	            try {
+	               rset.close();
+	               pstmt.close();
+	               conn.close();
+	            } catch (SQLException e) {
+	               e.printStackTrace();
+	            }
+	         }
+	         return list;
+	      }
 
 	/**
 	 * 41

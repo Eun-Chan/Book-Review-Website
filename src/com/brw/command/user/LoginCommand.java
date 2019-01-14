@@ -61,7 +61,6 @@ public class LoginCommand implements Command {
 				
 				session.setMaxInactiveInterval(60*10);
 				session.setAttribute("user", userDTO);
-				session.setAttribute("cla", 0);
 				out.append("true");
 			}
 				

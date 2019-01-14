@@ -92,7 +92,7 @@
 		     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
 		    	<% } 
 		    	else {%>  
-		    	<li><a href="#">채팅</a></li>
+		    	<li><a onclick="chatting();">채팅</a></li>
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=user.getUserName()%> 님<span class="caret"/></span></a>
 		    		<ul class="dropdown-menu" role="menu">
@@ -119,7 +119,7 @@
     </nav>
 
 <!-- 채팅 -->
-<div id="chat-Container">
+<!-- <div id="chat-Container">
     <div class="row">
         <div class="col-md-5">
             <div class="panel panel-primary" id="chat-Box">
@@ -152,7 +152,18 @@
             </div>
         </div>
     </div>
+</div> -->
+
+<!-- 채팅 -->
+<div id="chatting_div">
+   <div style="height: 90%">
+   	<textarea id="messageWindow" readonly="true" style="height: 100%; width: 100%"></textarea>
+   </div>
+   <p id="chat_num">엥</p>
+   <input id="inputMessage" class="form-control" type="text" onkeyup="chat_enterkey()" placeholder="채팅을 입력해줭"/>
+   <input type="submit" id="sendBtn" class="btn btn-default" value="보내기" onclick="send()" />
 </div>
+
 
 	
 <!-- The Modal 로그인 버튼 클릭시 나오는 팝업창-->
@@ -235,10 +246,8 @@
 			data : {userId : userId , userPassword : userPassword, saveId : saveId},
 			success : function(data){
 				if(data == "true"){
-					
 					location.reload();
 					console.log("여긴 오지");
-					
 				}	
 				else if(data == "false"){
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
@@ -285,8 +294,7 @@
  				console.log("res.acount_email = ", res.kaccount_email);
  				console.log("res.usernickName = ", res.properties.nickname);
  				/* 카카오톡 유저 회원으로 추가 */
- 				kakaoUserSignUp(res.id , res.kaccount_email, res.properties.nickname);
- 				
+ 				kakaoUserSignUp(res.id , res.kaccount_email, res.properties.nickname);	
  			}
  		});
  	};
@@ -304,8 +312,9 @@
     }
 
     function chatting(){
-		$("#chatting_TextArea").css('display','block').css('z-index',1000);   
-	}
+/* 		$("#chatting_div").css('display','block'); */
+		$("#chatting_div").toggle();
+    }
 /*     var textarea = document.getElementById("messageWindow"); */
 	var textarea = $("#messageWindow");
     var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting');
@@ -333,7 +342,7 @@
     	if(inputMessage.val().length != 0){
     	<%if(user != null){%>
         textarea.val(textarea.val() + '<%=user.getUserName()%>띠 : ' + inputMessage.val() + "\n");
-        webSocket.send('<%=user.getUserName()%>띠  : ' + inputMessage.val());
+        webSocket.send('<%=user.getUserName()%>띠 : ' + inputMessage.val());
         inputMessage.val("");
         /* 채팅창 스크롤 자동 내리기 */
         const top = textarea.prop('scrollHeight');

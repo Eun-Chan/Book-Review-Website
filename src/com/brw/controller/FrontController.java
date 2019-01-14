@@ -18,7 +18,7 @@ import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
-import com.brw.command.book.checkedBasketCommand;
+import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
@@ -295,7 +295,7 @@ public class FrontController extends HttpServlet {
 		 * 28.check된 책 없애기
 		 */
 	    else if(command.equals("/book/checkedBasket.do")) {
-	    	com = new checkedBasketCommand();
+	    	com = new CheckedBasketCommand();
 	    	com.execute(req, res);
 	    }
 		/**
