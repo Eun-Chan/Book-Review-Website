@@ -31,6 +31,8 @@ import com.brw.command.review.InsertReCommentCommand;
 import com.brw.command.review.InsertReviewBoardReport;
 import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
+import com.brw.command.review.ReviewReviseCommand;
+import com.brw.command.review.ReviewReviseEndCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
@@ -456,6 +458,19 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/review/reviewReCommentDelete.do")) {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
+		}
+		/*52 명훈 : 리뷰글 수정 */
+		else if(command.equals("/review/reviewRevise.do")) {
+			com = new ReviewReviseCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/review/reviewRevise.jsp";
+		}
+		/*53 명훈 : 리뷰글 수정 */
+		else if(command.equals("/review/reviewReviseEnd.do")) {
+			com = new ReviewReviseEndCommand();
+			com.execute(req, res);
+			int rbNo = (int)req.getAttribute("rbNo");
+			viewPage = "/review/reviewDetail.do?rbNo=" + rbNo;
 		}
 		
 		if(viewPage!=null){			
