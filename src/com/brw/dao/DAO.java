@@ -23,6 +23,8 @@ import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 import com.brw.dto.UserDTO;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class DAO {
 	
@@ -1884,7 +1886,7 @@ public class DAO {
 		   PreparedStatement pstmt = null;
 		   ResultSet rset = null;
 		   List<ReviewBoardDTO> rbList = new ArrayList<>();
-		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 AND rownum <6";
 		   
 		   try {
 		      conn = dataSource.getConnection();
@@ -2558,7 +2560,7 @@ public class DAO {
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,default)";
+		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,sysdate, default)";
 		int result = 0;
 		
 		try {
@@ -3270,6 +3272,96 @@ public class DAO {
 		
 		return result;
 	}
+	
+	//77. @박광준 : 내가 작성한 모든 글 조회
+		public JsonArray postListLookup(String userId) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			JsonObject jbvd = null;
+			JsonArray postWriteList = new JsonArray();
+			String query = "SELECT * FROM reviewboard WHERE rb_writer=? ORDER BY rb_date DESC";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				
+				rset = pstmt.executeQuery();
+				
+				while(rset.next())
+				{
+					jbvd = new JsonObject(); 
+					jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+					jbvd.addProperty("rb_title", rset.getString("rb_title"));
+					jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+					jbvd.addProperty("rb_writer", rset.getString("rb_writer"));
+					jbvd.addProperty("rb_date", rset.getString("rb_date".toString()));
+					jbvd.addProperty("rb_readcnt", rset.getInt("rb_readcnt"));
+					jbvd.addProperty("rb_recommend", rset.getInt("rb_recommend"));
+					jbvd.addProperty("del_flag", rset.getString("del_flag"));
+					postWriteList.add(jbvd);
+				}
+			} catch (SQLException e) {
+				System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			return postWriteList;
+		}
+		
+		//78. @박광준 : 내가 작성한 모든 댓글 조회
+		public JsonArray commentListLookup(String userId) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			JsonObject jbvd = null;
+			JsonArray commentWriteList = new JsonArray();
+			String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? ORDER BY rb_comment_date DESC";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				rset = pstmt.executeQuery();
+				
+				/*결과 데이터 담기*/
+				while(rset.next())
+				{	
+					jbvd = new JsonObject();
+					jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+					jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+					jbvd.addProperty("rb_title", rset.getString("rb_title"));
+					jbvd.addProperty("rb_comment_content", rset.getString("rb_comment_content"));
+					jbvd.addProperty("rb_comment_date", (rset.getString("rb_comment_date")).toString());
+					jbvd.addProperty("rb_comment_delflag", rset.getString("rb_comment_delflag"));
+					jbvd.addProperty("rb_readcnt", rset.getString("rb_readcnt"));
+					jbvd.addProperty("rb_recommend", rset.getString("rb_recommend"));
+					commentWriteList.add(jbvd);
+				}
+
+			} catch (SQLException e) {
+				System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return commentWriteList;
+		}
 			
 }
 
