@@ -41,6 +41,7 @@ import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.DeleteMemberCommand;
+import com.brw.command.user.DoAttendanceCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.FindPwdEmailAuthCommand;
@@ -501,6 +502,12 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/sign/userInfoViewJoin.do")) {
 			com = new UserInfoViewCommand();
 			com.execute(req, res);
+		}
+		/*60.명훈 : 출석체크 하기 */
+		else if(command.equals("/doAttendance.do")) {
+			com = new DoAttendanceCommand();
+			com.execute(req, res);
+			viewPage = "/checkAttendance.do";
 		}
 		
 		if(viewPage!=null){			
