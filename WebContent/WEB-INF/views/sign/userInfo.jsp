@@ -2,13 +2,7 @@
 <%@page import="org.apache.catalina.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	UserDTO user = (UserDTO)session.getAttribute("user");
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!-- 반응형 웹을 위한 메타태그 -->
 <meta name="viewport" content="width=device-width", initial-scral="1">
 <title>내 정보 수정</title>
@@ -321,6 +315,4 @@ function updateUserInfo()
 
 	/* 회원가입 - 중복확인 버튼 완료 */
 </script>
-
-</body>
-</html>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
