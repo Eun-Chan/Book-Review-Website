@@ -248,7 +248,6 @@
 			}
 		});
 	}
-	
 </script>
 	
 <!-- header와 footer를 붙이기 위해 </body></html>를 지움 -->

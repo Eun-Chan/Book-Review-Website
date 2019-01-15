@@ -328,9 +328,7 @@
 	         </tbody>
 	      </table>
 	   </div> <!-- end of #table-container -->
-   </div>
-    
-   
+   </div>  
    <br><br />
 <script>
 
