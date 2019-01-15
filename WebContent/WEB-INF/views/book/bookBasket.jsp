@@ -25,7 +25,7 @@
 	   		<div id="search-container" class="form-group">
 		   		<label for="searchKeyword">책이름 : </label>
 		   		<input type="text" class="form-control" name="searchKeyword" id="searchKeyword"/>
-		   		<input type="button" class="btn btn-default" id="searchButton" value="검색" />	   	
+		   		<input type="button" class="btn btn-default" id="searchButton" value="검색" onkeyup="enterSearch()"/>	   	
 	  		 </div>
 	   	</form>
 	   <div id="pagebar-container" class="text-center"></div>
@@ -45,14 +45,20 @@ $.ajax({
       console.log(data);
       console.log("list",data.list);
       var table = $("<table class='table'><th>"+"책제목"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
-      for(var i in data.list) {
-         var basket = data.list[i];
-         var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+basket.ISBN+"'>"+basket.bookTitle+"</a></td>";   
-         html += "<td>"+basket.price+"원"+"</td>";
-         html += "<td>"+basket.pickDate+"</td>";
-         html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
-         
-         table.append(html);
+      if(data.list.length == 0) {
+    	  var html = "<tr><td colspan='4' style='text-align:center'>"+"해당 데이터가 없습니다."+"</td><tr>";
+    	  table.append(html);
+      } 
+      else {
+	      for(var i in data.list) {
+	         var basket = data.list[i];
+	         var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+basket.ISBN+"'>"+basket.bookTitle+"</a></td>";   
+	         html += "<td>"+basket.price+"원"+"</td>";
+	         html += "<td>"+basket.pickDate+"</td>";
+	         html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
+	         
+	         table.append(html);
+	      }    	  
       }
       var cnt = parseInt(i)+1;
       if(isNaN(cnt) == true) {
@@ -100,8 +106,7 @@ $("#deleteButton").click(function() {
       });
    });
 });
-$("#searchButton").click(function() {
-	console.log("들아왔니?");
+function searchBasket() {
 	var searchKeyword = $("#searchKeyword").val();
 	console.log(searchKeyword);
 	$.ajax({
@@ -109,15 +114,21 @@ $("#searchButton").click(function() {
 		success : function(data) {
 			console.log("data",data);
 			var table = $("<table class='table'><th>"+"책제목"+"</th><th>"+"가격"+"</th><th>"+"날짜"+"</th><th>"+"선택"+"</th></table>");
-		    for(var i in data.list) {
-		       var basket = data.list[i];
-		       var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+basket.ISBN+"'>"+basket.bookTitle+"</a></td>";   
-		       html += "<td>"+basket.price+"원"+"</td>";
-		       html += "<td>"+basket.pickDate+"</td>";
-		       html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
-		        
-		       table.append(html);
-		    }
+			if(data.list.length == 0) {
+		    	  var html = "<tr><td colspan='4' style='text-align:center'>"+"해당 데이터가 없습니다."+"</td><tr>";
+		    	  table.append(html);
+		      } 
+		      else {
+			      for(var i in data.list) {
+			         var basket = data.list[i];
+			         var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+basket.ISBN+"'>"+basket.bookTitle+"</a></td>";   
+			         html += "<td>"+basket.price+"원"+"</td>";
+			         html += "<td>"+basket.pickDate+"</td>";
+			         html += "<td><input type='checkbox' id='basketcheck' name = 'chk' value='"+basket.ISBN+"'/></td></tr>";
+			         
+			         table.append(html);
+			      }    	  
+		      }
 		    var cnt = parseInt(i)+1;
 		    if(isNaN(cnt) == true) {
 		       var cntHtml = "<p><h4>"+"검색결과가 없습니다."+"</h4></p>";
@@ -134,7 +145,7 @@ $("#searchButton").click(function() {
 		    $("#totalBasket").html(cntHtml);
 		}
 	});
-});
+}
 //전체선택 옵션 구상중..
 var clickCount = 0;
 $("#allButton").click(function() {
@@ -147,7 +158,13 @@ $("#allButton").click(function() {
       $("input[name=chk]:checkbox").prop("checked",true);   
    }
 });
-
+$("#searchButton").click(function() {
+	searchBasket();
+});
+$("form").on("submit",function(eventEnter){
+	eventEnter.preventDefault();
+	searchBasket();
+});
 </script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

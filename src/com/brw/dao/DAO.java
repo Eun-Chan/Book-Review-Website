@@ -3417,7 +3417,8 @@ public class DAO {
 			try {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
-				
+				pstmt.setString(1, userId);
+				pstmt.setString(2, searchKeyword);
 				rset = pstmt.executeQuery();
 				
 				if(rset.next()) {
