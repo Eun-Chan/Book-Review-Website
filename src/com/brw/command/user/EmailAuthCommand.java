@@ -48,7 +48,7 @@ public class EmailAuthCommand implements Command {
       
       authNum = getAuthNum();
       
-      new EmailSend().emailSend(email, "책 읽는 사람들 인증번호 입니다.", String.valueOf(authNum));;
+      new EmailSend().emailSend(email, "책 읽는 사람들 인증번호 입니다.", String.valueOf(authNum));
 	  
 	 try {
 		out = response.getWriter();

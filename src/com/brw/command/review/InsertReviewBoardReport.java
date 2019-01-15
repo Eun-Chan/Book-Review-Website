@@ -58,7 +58,7 @@ public class InsertReviewBoardReport implements Command{
 		int result = dao.insertReviewBoardReport(report);
 		if(result>0) {
 			result = dao.updateReviewBoardReport(rbReportNo);
-			new EmailSend().emailSend("2019.khproject@gmail.com", "[신고]"+reportselect+"로 해당 게시글을 신고합니다.", "신고당한 게시판의 글번호 :"+rbReportNo+",신고한 아이디 :"+rbReportWriter);
+			new EmailSend().emailSend("2019.khproject@gmail.com", "[신고]"+reportselect+"로 해당 게시글을 신고합니다.","작성자 :"+rbReportWriter+"신고당한 게시판의 글번호 :"+rbReportNo+",신고한 아이디 :"+rbReportWriter+"신고 내용 : "+reportTextArea);
 			
 		}
 		

@@ -1,6 +1,5 @@
 /* header부분 백그라운드 컬러 */
 .navbar-default {
-	background-color: black;
 }
 
 .navbar-brand>img {
@@ -11,7 +10,6 @@
 #test{
 	display : inline;
 	text-align : center;
-	
 }
 
 #loginModal-header{
@@ -23,6 +21,6 @@
 }
 
 .navbar-default {
-	background-color : violet;
+	
 }
 

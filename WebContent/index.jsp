@@ -354,12 +354,13 @@ $("a#select-AllBook, a#select-NewBook, a#select-ForeginBook, a#select-eBook").cl
  */
  
 function reloadBookInfo(searchUrl){
+	 
 	/* 베스트셀러 10건을 가져온다. */
 	$.ajax({
 	    url: searchUrl,
 	    dataType: "jsonp",
 	    success:function(data)
-	    {	
+	    {
 	    	/* 책 정보 파싱 >> 리스트 */
 	    	var bookList = [];
 	    	
@@ -404,27 +405,6 @@ function reloadBookInfo(searchUrl){
 				$("#book-buy"+i).attr("href", bookList[ranNum[i]].linkBuy);	
     		}
 			
-			/* $("span#book0").html((bookList[ranNum[0]].title).length>12?(bookList[ranNum[0]].title).substr(0,10)+"…":(bookList[ranNum[0]].title));
-			$("p#book-Author0").html((bookList[ranNum[0]].author).length>10?(bookList[ranNum[0]].author).substr(0,10)+"...":(bookList[ranNum[0]].author));
-			$("#bookImage0").attr("src", bookList[ranNum[0]].cover);
-			$("#book-buy0").attr("href", bookList[ranNum[0]].linkBuy);
-			
-			
-			$("span#book1").html((bookList[ranNum[1]].title).length>12?(bookList[ranNum[1]].title).substr(0,10)+"…":(bookList[ranNum[1]].title));
-			$("p#book-Author1").html((bookList[ranNum[1]].author).length>10?(bookList[ranNum[1]].author).substr(0,10)+"...":(bookList[ranNum[1]].author));
-			$("#bookImage1").attr("src", bookList[ranNum[1]].cover);
-			$("#book-buy1").attr("href", bookList[ranNum[1]].linkBuy);
-			
-			$("span#book2").html((bookList[ranNum[2]].title).length>12?(bookList[ranNum[2]].title).substr(0,10)+"…":(bookList[ranNum[2]].title));
-			$("p#book-Author2").html((bookList[ranNum[2]].author).length>10?(bookList[ranNum[2]].author).substr(0,10)+"...":(bookList[ranNum[2]].author));
-			$("#bookImage2").attr("src", bookList[ranNum[2]].cover);
-			$("#book-buy2").attr("href", bookList[ranNum[2]].linkBuy);
-			
-			$("span#book3").html((bookList[ranNum[3]].title).length>12?(bookList[ranNum[3]].title).substr(0,10)+"…":(bookList[ranNum[3]].title));
-			$("p#book-Author3").html((bookList[ranNum[3]].author).length>10?(bookList[ranNum[3]].author).substr(0,10)+"...":(bookList[ranNum[3]].author));
-			$("#bookImage3").attr("src", bookList[ranNum[3]].cover);
-			$("#book-buy3").attr("href", bookList[ranNum[3]].linkBuy); */
-			
 			/**
 			 * @광준
 			 * API로 가져온 도서정보에서 우리 DB의 별점 데이터를 가져오기 위해 변수로 IBSN 정보를 저장한다. 
@@ -449,7 +429,8 @@ function reloadBookInfo(searchUrl){
 
 function startPage(bookIsbn){
 /* 최근리뷰 view */
-$('#indexForm').ready(function(){
+$(document).ready(function(){
+	
    $.ajax({
         type: 'post',
         url: "<%=request.getContextPath()%>/index.do?bookIsbn="+bookIsbn,
@@ -462,7 +443,6 @@ $('#indexForm').ready(function(){
            		{
 	            	$("td#bookName"+i).text((data[0][i].rbBookTitle).length > 10?(data[0][i].rbBookTitle).substr(0,10)+"…":(data[0][i].rbBookTitle));
 	            	$("td#writer"+i).html("<img src=<%=request.getContextPath()%>/images/userGradeImage/"+data[0][i].rbGrade+".svg width='30px' height='30px' alt='userGrade icon'>" + " " + data[0][i].rbNickname);
-	            	/* $("td#writer"+i).text(data[0][i].rbWriter); */
 		            $("td#rbTitle"+i).text(data[0][i].rbTitle);
 		           	$("td#readCnt"+i).text(data[0][i].rb_readCnt);
 		           	$("td#recommendCnt"+i).text(data[0][i].rb_recommend); 	           
@@ -471,7 +451,6 @@ $('#indexForm').ready(function(){
 		           	/* 인기 리뷰 */
 		           	$("td#best-bookName"+i).text((data[2][i].rbBookTitle).length > 10?(data[2][i].rbBookTitle).substr(0,10)+"…":(data[2][i].rbBookTitle));
 		           	$("td#best-writer"+i).html("<img src=<%=request.getContextPath()%>/images/userGradeImage/"+data[2][i].rbGrade+".svg width='30px' height='30px' alt='userGrade icon'>" + " " + data[2][i].rbNickname);
-		            /* $("td#best-writer"+i).text(data[2][i].rbWriter); */
 		            $("td#best-rbTitle"+i).text(data[2][i].rbTitle);
 		           	$("td#best-readCnt"+i).text(data[2][i].rb_readCnt);
 		           	$("td#best-recommendCnt"+i).text(data[2][i].rb_recommend);
@@ -479,13 +458,13 @@ $('#indexForm').ready(function(){
            		}
            	}    
             /* 베스트셀러 별점처리 */
-            for(var j=0; i<data[1].length; j++)
+            for(var j=0; j<data[1].length; j++)
             {
-	            var totalStarScore = scoreRound(data[1][j].starScoreBook);
+	            var totalStarScore = scoreRound(data[1][j].isbn);
 	           	var selectStarScore = totalStarScore / 0.5;
 	           	for(var i=0; i<selectStarScore; i++)
 	       		{
-	           		$("span#star"+j+"-"+i).addClass('on');
+	           		$("span#star"+j+"-"+i).addClass(' on');
 	       		}
             }
 
@@ -536,9 +515,6 @@ $("#select-AllBook").trigger("click");
  /**
  * @광준 - form 대신 데이터 전송을 위한 구조 변경
  */
-/* $(document).one('click','#btn-search',function(){
-	dataSend();
-}); */
 $("#btn-search").click(function(){
 	dataSend();
 });

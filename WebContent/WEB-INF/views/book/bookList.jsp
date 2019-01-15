@@ -14,20 +14,21 @@
 
 	<!-- 검색시작 -->
 	
-	<div id="finder">
+	<div id="bookList_finder">
 		<!-- 검색 select태그 -->
-		<!-- <div id="search-container">
-			<form id="frm">
-				검색타입 :
-				<select id="searchType">
+		<div id="bookList_search-container">
+		<br />
+			<form id="bookList_frm">
+				<!-- 검색타입 : -->
+				<select id="bookList_searchType">
 					<option value="title">제목</option>
 					<option value="author">저자</option>
 				</select>		
-				검색 input태그
-				<input type="text" name="search" id="search" placeholder = " 내용을 입력하세요."/>
-				<input type="button" value="검색" id="btn-search"/>
+				<!-- 검색 input태그 -->
+				<input type="text" name="search" id="bookList_search" placeholder = " 내용을 입력하세요."/>
+				<input type="button" value="검색" id="bookList_btn-search"/>
 			</form>		
-		</div> -->
+		</div>
 	<div id="totalContent"></div>
 	<div id="bookListContainer"></div>
 	
@@ -35,10 +36,13 @@
 	</div>
 <style>
 
-div#finder{
+div#bookList_finder {
 	margin-left: 200px;
 	margin-right: 100px;
     min-height: 800px;
+}
+div#bookList_finder div#bookList_search-container{
+	text-align: center;
 }
 table th{
 	font-size: 18px;
@@ -56,18 +60,18 @@ table th{
 		bookSearch(cPage);
 	});
 	
-	$("#btn-search").click(function(){	
+	$("#bookList_btn-search").click(function(){	
 		cPage = 1;
-		searchVal = $("input#search").val();
-		searchType = $("#searchType").val();
+		searchVal = $("input#bookList_search").val();
+		searchType = $("#bookList_searchType").val();
 		bookSearch(cPage);	
 	});
 
 	$("form").on("submit", function(event){
 		event.preventDefault();
 		cPage = 1;
-		searchVal = $("input#search").val();
-		searchType = $("#searchType").val();
+		searchVal = $("input#bookList_search").val();
+		searchType = $("#bookList_searchType").val();
 		bookSearch(cPage);	
 	});
 	//알라딘 open api를 사용하여 검색하는 함수
@@ -88,7 +92,7 @@ table th{
 		
 		
 		
-		var table = $("<table class='table'><tr><th>표지</th><th>책제목</th><th>내용</th><th>작가</th><th style='width:95px'>출판일</th><th>정가</th></tr></table>");
+		var table = $("<table class='table table-hover''><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
 		var numPerPage = 10;
 		var totalResults = data.totalResults;//검색 결과 총 수
 		//전체 페이지 수	
@@ -151,6 +155,7 @@ table th{
 	function moveCategoryView(CID){
 		cPage = 1;
 		CID = CID;
+		console.log("CID1", CID);
 		$.ajax({
 			url: "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&Sort=PublishTime&QueryType=ItemNewAll&MaxResults=10&start=1&CategoryId="+CID+"&SearchTarget=Book&output=js&callback=bookCListDisplay&Version=20131101",
 			jsonp: "bookCListDisplay",
@@ -162,6 +167,7 @@ table th{
 	function moveCategoryView2(CID, pageNo){
 		CID=CID;
 		cPage = pageNo;
+		console.log("CID2", CID);
 		$.ajax({
 			url: "http://www.aladin.co.kr/ttb/api/ItemList.aspx?ttbkey=ttbkmw71511428001&Sort=PublishTime&QueryType=ItemNewAll&MaxResults=10&start="+cPage+"&CategoryId="+CID+"&SearchTarget=Book&output=js&callback=bookCListDisplay&Version=20131101",
 			jsonp: "bookCListDisplay",
@@ -175,7 +181,7 @@ table th{
 		
 		console.log(data);
 		
-		var table = $("<table class='table'><tr><th>표지</th><th>책제목</th><th>내용</th><th>작가</th><th  style='width:95px'>출판일</th><th>정가</th></tr></table>");
+		var table = $("<table class='table table-hover'><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
 		var numPerPage = 10;
 		var totalResults = data.totalResults;//검색 결과 총 수
 		//전체 페이지 수	
@@ -186,7 +192,7 @@ table th{
 		var pageNo = startPage;//출력될 페이지 번호
 		
 		//도서정보 리스트 출력부
-		console.log("isbn13!!!",data.item[0].isbn13);
+		
 		for(var i in data.item) {
 			var book  = data.item[i];
 			var html = "<tr><td>"+"<img src ='"+book.cover+"'></td>";
@@ -202,13 +208,13 @@ table th{
 		
 		//pageBar
 		var pageBar = "<ul class='pagination'>";
-		
+
 		//이전 section
 	    if(pageNo == 1 ){
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
 	    }
 	    else {
-	        pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView2(\""+CID+"\","+(pageNo-1)+")'>이전</a></li>";
+	        pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView2("+data.searchCategoryId+","+(pageNo-1)+")'>이전</a></li>";
 	    }
 	        
 		//[페이지] section
@@ -218,7 +224,7 @@ table th{
 	            pageBar += "<li class='page-item'><a class='page-link' href='#'><span class='cPage'>"+pageNo+"</span></li>";
 	        }
 	        else {
-	            pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView2(\""+CID+"\","+pageNo+")'>"+pageNo+"</a></li>";
+	            pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView2("+data.searchCategoryId+","+pageNo+")'>"+pageNo+"</a></li>";
 	        }
 	        pageNo++;
 	    }
@@ -227,7 +233,7 @@ table th{
 	    if(pageNo > totalPage){
 	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
 	    } else {
-	        pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView(\""+CID+"\","+pageNo+")'>다음</a></li>";
+	        pageBar += "<li class='page-item'><a class='page-link' onclick='moveCategoryView("+data.searchCategoryId+","+pageNo+")'>다음</a></li>";
 	    }
 	    
 	    $("div#pageBar").append(pageBar);

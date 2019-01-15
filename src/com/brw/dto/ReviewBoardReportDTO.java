@@ -7,12 +7,14 @@ public class ReviewBoardReportDTO {
 	private String rbReportWriter; //신고 하는 사람
 	private String rbReportContent; //신고내용
 	private String rbReportClasses; //신고 분류
+	private String reReportDate;//신고당한 날짜
 	
 	
 	public ReviewBoardReportDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	public ReviewBoardReportDTO(int rbReportRbNo, String rbReportTitle, String rbReportSuspect, String rbReportWriter,
 			String rbReportContent, String rbReportClasses) {
 		super();
@@ -58,6 +60,12 @@ public class ReviewBoardReportDTO {
 	}
 	public void setRbReportClasses(String rbReportClasses) {
 		this.rbReportClasses = rbReportClasses;
+	}
+	public String getReReportDate() {
+		return reReportDate;
+	}
+	public void setReReportDate(String reReportDate) {
+		this.reReportDate = reReportDate;
 	}
 	@Override
 	public String toString() {

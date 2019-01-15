@@ -23,6 +23,8 @@ import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 import com.brw.dto.UserDTO;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class DAO {
 	
@@ -53,6 +55,7 @@ public class DAO {
 	 * 내용 : 회원가입
 	 */
 	public void createUser(UserDTO user) throws SQLException {
+		
 		int result = 0;
 		String query = "insert into usertable(userid,userpassword,username,useremail,userNickName,userPoint,userGrade) values(?,?,?,?,?,default,default)";
 		
@@ -72,7 +75,7 @@ public class DAO {
 			pstmt.setString(4, user.getUserEmail());
 			pstmt.setString(5, user.getUserNickName());
 			
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 			System.out.println("user create commit()");
 			connection.commit();
@@ -743,9 +746,8 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		
-		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
-		
+		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ? and user_del_flag = 'N') when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+	
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -1753,56 +1755,57 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 40. 작성자 : 박세준
-	 * 내용 : 즐겨찾기 보여주는 결과
-	 */
-	public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
-		List<BookBasketDTO> list = new ArrayList();
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
-		int startRnum = (cPage - 1) * numPerPage + 1;
-		int endRnum = cPage * numPerPage;
-			try {
-				conn = dataSource.getConnection();
-				pstmt = conn.prepareStatement(query);
-				pstmt.setString(1, userId);
-				pstmt.setInt(2, startRnum);
-				pstmt.setInt(3, endRnum);
-				rset = pstmt.executeQuery();
-				
-				while(rset.next()) {
-					BookBasketDTO bb = new BookBasketDTO(); 
-					bb.setBasketNo(rset.getInt("basketNo"));
-					bb.setUserId(rset.getString("userid"));
-					bb.setUserName(rset.getString("username"));
-					bb.setISBN(rset.getString("isbn"));
-					bb.setBookTitle(rset.getString("booktitle"));
-					bb.setPrice(rset.getInt("price"));
-					bb.setQuantity(rset.getInt("quantity"));
-					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getString("pickdate"));
-				
-					list.add(bb);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					rset.close();
-					pstmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return list;
-		}
+	    * 40. 작성자 : 박세준
+	    * 내용 : 즐겨찾기 보여주는 결과
+	    */
+	   public List<BookBasketDTO> showBookBasket(String userId, int cPage, int numPerPage) {
+	      List<BookBasketDTO> list = new ArrayList();
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      ResultSet rset = null;
+	      String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? order by pickdate desc)v)v where rnum between ? and ?";
+	      int startRnum = (cPage - 1) * numPerPage + 1;
+	      int endRnum = cPage * numPerPage;
+	         try {
+	            conn = dataSource.getConnection();
+	            pstmt = conn.prepareStatement(query);
+	            pstmt.setString(1, userId);
+	            pstmt.setInt(2, startRnum);
+	            pstmt.setInt(3, endRnum);
+	            rset = pstmt.executeQuery();
+	            
+	            while(rset.next()) {
+	               BookBasketDTO bb = new BookBasketDTO(); 
+	               bb.setBasketNo(rset.getInt("basketNo"));
+	               bb.setUserId(rset.getString("userid"));
+	               bb.setUserName(rset.getString("username"));
+	               bb.setISBN(rset.getString("isbn"));
+	               bb.setBookTitle(rset.getString("booktitle"));
+	               bb.setPrice(rset.getInt("price"));
+	               bb.setQuantity(rset.getInt("quantity"));
+	               bb.setTotalPrice(rset.getInt("totalprice"));
+	               bb.setPickDate(rset.getString("pickdate"));
+	            
+	               list.add(bb);
+	            }
+	         } catch (SQLException e) {
+	            e.printStackTrace();
+	         } finally {
+	            try {
+	               rset.close();
+	               pstmt.close();
+	               conn.close();
+	            } catch (SQLException e) {
+	               e.printStackTrace();
+	            }
+	         }
+	         return list;
+	      }
 
 	/**
+	 * 41
 	 * 작성자 : 김은찬
-	 * 41. 이메일을 통해 아이디 찾아보리기
+	 * 이메일을 통해 아이디 찾아보리기
 	 */
 	public String searchIdForEmail(String userEmail) {
 		String userId = null;
@@ -1837,38 +1840,28 @@ public class DAO {
 		return userId;
 	}
 	/**
-	 * @광준
-	 * 42. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+	 * 42
+	 * 작성자 : 김은찬
+	 * 내용 : 아이디를 통해 이메일 검색하고 리턴
 	 */
-	public List<ReviewBoardDTO> selectReviewBestList()
-	{
+	public String searchEmailForId(String userId) {
+		String userEmail = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		List<ReviewBoardDTO> rbList = new ArrayList<>();
-		String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
+		String query = "select userEmail from usertable where userId = ?";
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
 			rset = pstmt.executeQuery();
-
-			while(rset.next())
-			{
-				ReviewBoardDTO rb = new ReviewBoardDTO();
-				
-				rb.setRbTitle(rset.getString("rb_title"));
-				rb.setRbWriter(rset.getString("rb_writer"));
-				rb.setRbBookTitle(rset.getString("rb_booktitle"));
-				rb.setRbDate(rset.getString("rb_date"));
-				rb.setRbStarscore(rset.getInt("rb_starscore"));
-				rb.setRbNo(rset.getInt("rb_no"));
-				rb.setRbReadCnt(rset.getInt("rb_readCnt"));
-				rb.setRbRecommend(rset.getInt("rb_recommend"));
-				rbList.add(rb);
+			
+			while(rset.next()) {
+				userEmail = rset.getString("userEmail");
 			}
 		} catch (SQLException e) {
-			System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -1876,16 +1869,97 @@ public class DAO {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
-
-				System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}		
-		return rbList;
+		}
+		return userEmail;
 	}
+	/**
+	 * @광준
+	 * 43. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+	 */
+		public List<ReviewBoardDTO> selectReviewBestList()
+		{
+		   Connection conn = null;
+		   PreparedStatement pstmt = null;
+		   ResultSet rset = null;
+		   List<ReviewBoardDTO> rbList = new ArrayList<>();
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 AND rownum <6";
+		   
+		   try {
+		      conn = dataSource.getConnection();
+		      pstmt = conn.prepareStatement(query);
+		      rset = pstmt.executeQuery();
 
+		      while(rset.next())
+		      {
+		         ReviewBoardDTO rb = new ReviewBoardDTO();
+		         
+		         rb.setRbTitle(rset.getString("rb_title"));
+		         rb.setRbWriter(rset.getString("rb_writer"));
+		         rb.setRbBookTitle(rset.getString("rb_booktitle"));
+		         rb.setRbDate(rset.getString("rb_date"));
+		         rb.setRbStarscore(rset.getInt("rb_starscore"));
+		         rb.setRbNo(rset.getInt("rb_no"));
+		         rb.setRbReadCnt(rset.getInt("rb_readCnt"));
+		         rb.setRbRecommend(rset.getInt("rb_recommend"));
+		         rbList.add(rb);
+		      }
+		   } catch (SQLException e) {
+		      System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
+		      e.printStackTrace();
+		   } finally {
+		      try {
+		         rset.close();
+		         pstmt.close();
+		         conn.close();
+		      } catch (SQLException e) {
+
+		         System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
+		         e.printStackTrace();
+		      }
+		   }      
+		   return rbList;
+		}
+		/**
+		 * 44
+		 * 작성자 : 김은찬
+		 * 내용 : 비밀번호 찾기를 통한 비밀번호 변경 
+		 */
+		public int passwordUpdate(String userId, String userPassword) {
+			int result = 0;
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			System.out.println("passwordUpdate$userId = "+userId);
+			System.out.println("passwordUpdate$userPassword = "+userPassword);
+			String query = "update usertable set userPassword = ? where userId = ?";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userPassword);
+				pstmt.setString(2, userId);
+				
+				result = pstmt.executeUpdate(); 
+				conn.commit();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return result;
+		}
 	/*
-	 * 43. 작성자 : 김민우
+	 * 45. 작성자 : 김민우
 	 * 내용 : 한 줄 리뷰 등록
 	 */
 
@@ -1928,7 +2002,7 @@ public class DAO {
 	}
 	
 	/*
-	 * 44. 작성자 : 김민우
+	 * 46. 작성자 : 김민우
 	 * 내용 : 현재 보고 있는 책에 모든 한 줄 리뷰 조회
 	 */
 
@@ -1972,48 +2046,88 @@ public class DAO {
 		return list;
 		}
 
-	/* 45. 작성자 : 장선웅
-	 *     내용 : 닉네임 중복 검사*/
-	public int nickNameCheck(String userNickName) {
-		int result = 0;
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-
-		String query = "select count(*) as cnt from usertable where userNickName = ?";
-		
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userNickName);
+	/* 47. 작성자 : 장선웅
+	    *     내용 : 닉네임 중복 검사*/
+	   public int nickNameCheck(String userNickName) {
+	      int result = 0;
+	      
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      ResultSet rset = null;
+	      String query = "select count(*) as cnt from usertable where userNickName = ?";
+	      
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userNickName);
+	         
+	         rset = pstmt.executeQuery();
+	         
+	         while(rset.next()) {
+	            result = rset.getInt("cnt");
+	         }
+	         System.out.println("dao - cnt = "+result);
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            rset.close();
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }
+	      }
+	      return result;
+	   }
+	   /**
+		 * 48
+		 * 작성자 : 김은찬
+		 * 내용 : 카카오톡 유저 회원가입
+		 */
+		public int kakaoCreateUser(UserDTO userDTO) throws SQLException {
+			int result = 0;
+			Connection conn = null;
+			PreparedStatement pstmt = null;
 			
-			rset = pstmt.executeQuery();
+			String query = "insert into usertable(userId, userPassword, userName , userEmail,userNickName) values (?,?,?,?,?)";
 			
-			while(rset.next()) {
-				result = rset.getInt("cnt");
-			}
-			System.out.println("dao - cnt = "+result);
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
 			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
+				conn = dataSource.getConnection();
+				conn.setAutoCommit(false);
+				
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userDTO.getUserId());
+				pstmt.setString(2, userDTO.getUserPassword());
+				pstmt.setString(3, userDTO.getUserName());
+				pstmt.setString(4, userDTO.getUserEmail());
+				pstmt.setString(5, userDTO.getUserId());
+				
+				result = pstmt.executeUpdate();
+				conn.commit();
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				conn.rollback();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			return result;
 		}
-		return result;
-	}
 	
 	/*
-	 * 46. 작성자 : 정명훈
-	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.) 
+	 * 49. 작성자 : 정명훈
+	 * 내용 : 공지사항 게시판에 보여줄 리스트 가져오기 (삭제되지 않았고 ntc_allowview은 상관없음.)
 	 */
 	public List<NoticeDTO> noticeList(int cPage, int numPerPage) {
 		List<NoticeDTO> list = null;
@@ -2081,7 +2195,7 @@ public class DAO {
 		return list;
 	}
 	/*
-	 * 47. 작성자 : 정명훈
+	 * 50. 작성자 : 정명훈
 	 * 내용 : 공지사항 조회수 1 올리기 
 	 */
 	public int noticeReadcntUp(int ntcNo) {
@@ -2119,7 +2233,7 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 48. 작성자 : 정명훈
+	 * 51. 작성자 : 정명훈
 	 * 내용 : 공지사항 번호로 공지사항 하나 가져오기
 	 */
 	public NoticeDTO selectNoticeOne(int ntcNo) {
@@ -2161,44 +2275,44 @@ public class DAO {
 		return n;
 	}
 	
-	/* 
-	 * 49. 한 줄 리뷰 삭제: 김민우
-	 * */
-	public int deleteOneLineReview(String userId, int oneLineNo) {
-		int result = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		String query = "delete from onelinereview where userId = ? and no = ?";
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			pstmt.setInt(2, oneLineNo);
-			
-			result = pstmt.executeUpdate();
-			
-			if(result > 1) {
-				conn.commit();
-			}else {
-				conn.rollback();
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
+	  /** 
+	    * 52. 한 줄 리뷰 삭제: 김민우
+	    * */
+	   public int deleteOneLineReview(String userId, int oneLineNo) {
+	      int result = 0;
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      String query = "delete from onelinereview where userId = ? and no = ?";
 
-	}
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userId);
+	         pstmt.setInt(2, oneLineNo);
+	         
+	         result = pstmt.executeUpdate();
+	         
+	         if(result > 1) {
+	            conn.commit();
+	         }else {
+	            conn.rollback();
+	         }
+	         
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            e.printStackTrace();
+	         }
+	      }
+	      
+	      return result;
+	   }
 	/*
-	 * 50. 작성자 : 정명훈
+	 * 53. 작성자 : 정명훈
 	 * 내용 : 공지사항 총 개수 구하기
 	 */
 	public int countNoticeAll() {
@@ -2233,7 +2347,7 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 51. 작성자 : 정명훈
+	 * 54. 작성자 : 정명훈
 	 * 내용 : 각 게시판에 보여줄 공지사항 가져오기 (allowview = Y 인 것만 가져오기) 
 	 */
 	public List<NoticeDTO> noticeListAllow() {
@@ -2295,7 +2409,7 @@ public class DAO {
 		}
 		return list;
 	}
-	/*52. 작성자 : 박세준
+	/*55. 작성자 : 박세준
 	 * 내용 : 즐겨찾기한 개수 찾기*/
 	public int countBasketAll(String userId) {
 		int result = 0;
@@ -2329,7 +2443,7 @@ public class DAO {
 	}
 	
 	/*
-	 * 53. 작성자 : 정명훈
+	 * 56. 작성자 : 정명훈
 	 * 내용 : 공지글 db 컬럼 ntc_allowview 수정 (공지게시판 제외한 게시판에서 보여줄 공지 목록)
 	 */
 	public int noticeUpdateAllowView(String ntcAllowView, int ntcNo) {
@@ -2368,7 +2482,7 @@ public class DAO {
 	}
 	/**
 	 * @지수
-	 * 54.로그인한 유저의 날짜계산
+	 * 57.로그인한 유저의 날짜계산
 	 */
 	public int checkDate(String userId) {
 	
@@ -2404,7 +2518,7 @@ public class DAO {
 		return result;
 }
 	/**
-	 * 55
+	 * 58
 	 * 작성자 : 정지수...?라쓰고 김은찬이라 쓴다
 	 * 내용 : 비밀번호 변경 90일 지난 사람들 비밀번호 변경 후에 변경날짜 오늘 날짜로 갱신하기
 	 */
@@ -2441,11 +2555,11 @@ public class DAO {
 	}
 
 
-	/*장선웅 : 56.신고테이블에 인서트*/
+	/*장선웅 : 59.신고테이블에 인서트*/
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?)";
+		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,sysdate, default)";
 		int result = 0;
 		
 		try {
@@ -2478,7 +2592,7 @@ public class DAO {
 		return result;
 	}
 
-	/*장선웅 : 57. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
+	/*장선웅 : 60. 신고내용이 insert 되면 리뷰보드 테이블에 rb_report를 +1 업데이트 해주기*/
 	public int updateReviewBoardReport(int rbReportNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2505,76 +2619,85 @@ public class DAO {
 		
 		return result;
 	}
-
-
-
-	/*
-	 * 58.	장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
-	 */
-	public UserDTO checkedUserPassword(String userId, String userPassword) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet res = null;
-		String query ="select * from usertable where userid = ? and userpassword=?";
-		UserDTO user = null;
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			pstmt.setString(2, userPassword);
-			res= pstmt.executeQuery();
-			user = new UserDTO();
-			while(res.next()) {
-				user.setUserId(res.getString("userId"));
-				user.setUserName(res.getString("userName"));
-				user.setUserEmail(res.getString("userEmail"));
-				user.setUserNickName(res.getString("userNickName"));
-				user.setUserGrade(res.getInt("usergrade"));
-				user.setUserPoint(res.getInt("userpoint"));
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return user;
-	}
+	
+	   /*
+	    * 61.   장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
+	    */
+	   public UserDTO checkedUserPassword(String userId, String userPassword) {
+	      Connection conn = null;
+	      PreparedStatement pstmt = null;
+	      ResultSet res = null;
+	      String query ="select * from usertable where userid = ? and userpassword=?";
+	      UserDTO user = null;
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userId);
+	         pstmt.setString(2, userPassword);
+	         res= pstmt.executeQuery();
+	         user = new UserDTO();
+	         while(res.next()) {
+	            user.setUserId(res.getString("userId"));
+	            user.setUserName(res.getString("userName"));
+	            user.setUserEmail(res.getString("userEmail"));
+	            user.setUserNickName(res.getString("userNickName"));
+	            user.setUserGrade(res.getInt("usergrade"));
+	            user.setUserPoint(res.getInt("userpoint"));
+	         }
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            res.close();
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }
+	      }
+	      
+	      return user;
+	   }
 
 	
-	//59 . 박광준 : 유저테이블 수정 쿼리 
-	public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
-		Connection conn = null;
-		PreparedStatement pstmt =null;
-		int result = 0;
-		String query ="UPDATE  usertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
-		System.out.println("userId" + userId);
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userPassword);
-			pstmt.setString(2, userEmail);
-			pstmt.setString(3, userNickName);
-			pstmt.setString(4, userId);
-			
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		return result;
-	}
+	 //62 . 박광준 : 유저테이블 수정 쿼리 
+	   public int updateUser(String userId, String userPassword, String userEmail, String userNickName) {
+	      Connection conn = null;
+	      PreparedStatement pstmt =null;
+	      int result = 0;
+	      String query ="UPDATE  usertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
+	      System.out.println("userId" + userId);
+	      try {
+	         conn = dataSource.getConnection();
+	         pstmt = conn.prepareStatement(query);
+	         pstmt.setString(1, userPassword);
+	         pstmt.setString(2, userEmail);
+	         pstmt.setString(3, userNickName);
+	         pstmt.setString(4, userId);
+	         
+	         result = pstmt.executeUpdate();
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            pstmt.close();
+	            conn.close();
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }
+	         
+	      }
+	      
+	      return result;
+	   }
 	/*
-	 * 60. 작성자 : 정명훈
+	 * 63. 작성자 : 정명훈
 	 * 내용 : 공지사항게시판 검색 리스트 가져오기
 	 */
 	public List<NoticeDTO> noticeListSearch(String searchKeyword, int cPage, int numPerPage) {
@@ -2644,7 +2767,7 @@ public class DAO {
 		return list;
 	}
 	/*
-	 * 61. 작성자 : 정명훈
+	 * 64. 작성자 : 정명훈
 	 * 내용 : 공지사항게시판 검색 리스트 총 개수 구하기
 	 */
 	public int countNoticeSearch(String searchKeyword) {
@@ -2680,7 +2803,7 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 62. 작성자 : 정명훈
+	 * 65. 작성자 : 정명훈
 	 * 내용 : 공지사항 글 등록
 	 */
 	public int noticewWrite(NoticeDTO ntc) {
@@ -2718,7 +2841,7 @@ public class DAO {
 		return result;
 	}
 	/*
-	 * 63. 작성자 : 정명훈
+	 * 66. 작성자 : 정명훈
 	 * 내용 : 등록된 공지사항 글 번호 가져오기 (즉 디비에서 마지막 공지사항 글 번호 가져오기)
 	 */
 	public int getLastNoticeNo() {
@@ -2751,7 +2874,7 @@ public class DAO {
 		return lastNoticeNo;
 	}
 	/*
-	 * 64. 작성자 : 정명훈
+	 * 67. 작성자 : 정명훈
 	 * 내용 : 오늘을 중심으로 일주일 날짜 가져오기 (String임)
 	 */
 	public List<String> getDayList() {
@@ -2783,7 +2906,7 @@ public class DAO {
 		return list;
 	}
 	/*
-	 * 65. 작성자 : 정명훈
+	 * 68. 작성자 : 정명훈
 	 * 내용 : 오늘 기준 출석체크 내용 가져오기
 	 */
 	public List<AttendanceDTO> atList() {
@@ -2792,7 +2915,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join usertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')";
+		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join usertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD') order by at_no desc";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -2831,7 +2954,7 @@ public class DAO {
 		return list;
 	}
 	
-	//66. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
+	//69. @박광준 : 닉네임에 대한 등급,닉네임정보 조회
 	public UserDTO reviewGradeSelect(String writer)
 	{
 		Connection conn = null;
@@ -2874,39 +2997,313 @@ public class DAO {
 		}
 		return userInfo_grade;
 	}
-	//67. @박세준 : 즐겨찾기 검색시 결과List
-	public List<BookBasketDTO> basketSearch(String userId, String searchKeyword, int cPage, int numPerPage) {
-		List<BookBasketDTO> list = new ArrayList<>();
+
+	/**
+	 * 70. 작성자 : 장선웅
+	 * 리뷰보드 삭제
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoard(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? and booktitle like '%'||?||'%' order by pickdate desc)v)v where rnum between ? and ?";
-		int startRnum = (cPage - 1) * numPerPage + 1;
-		int endRnum = cPage * numPerPage;
+		int result =0;
+		String query ="update reviewboard set del_flag='Y' where rb_no =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 71. 작성자 : 장선웅
+	 * 대댓글 삭제
+	 * @param rbCommentNo
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoardRecomment(int rbCommentNo, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query= "delete  from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
+		int result= 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbCommentNo);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 72. 작성자 : 장선웅
+	 * 맴버 전부 가져오는 쿼리 페이징처리
+	 * @param numPerPage 
+	 * @param cPage 
+	 * @return
+	 */
+	public List<UserDTO> selectMemberAll(int cPage, int numPerPage) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select r.* from (select rownum rnum, r.* from (select * from usertable where user_del_flag='N') r) r where rnum between ? and ?";
+		List<UserDTO> list = null;
+		
+		
+		try {
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
+			list = new ArrayList<>();
+			res = pstmt.executeQuery();
+			
+			while(res.next()) {
+				UserDTO user = new UserDTO();
+				user.setUserId(res.getString("userid"));
+				user.setUserPassword(res.getString("userpassword"));
+				user.setUserName(res.getString("username"));
+				user.setUserEmail(res.getString("useremail"));
+				user.setUserPoint(res.getInt("userpoint"));
+				user.setUserGrade(res.getInt("usergrade"));
+				user.setUserEnrollDate(res.getString("joindate"));
+				user.setUserNickName(res.getString("usernickname"));
+				
+				list.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return list;
+	}
+	/**
+	 * 73 . 맴버 페이지 카운팅용 변수
+	 * @return
+	 */
+	public int countMemberAll() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from usertable where user_del_flag ='N'";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+	}
+
+	/**
+	 * 74 .선웅 : 해당 맴버가 신고를 얼마나 받앗나 가져오기
+	 * @param userId
+	 * @return
+	 */
+	public int reportCountMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from reviewboard_report where rb_report_suspect =?";
+		int result = 0;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			res = pstmt.executeQuery();
+			
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/**
+	 * 75.선웅 :  맴버 삭제 처리
+	 * @param userId
+	 * @return
+	 */
+	public int deleteMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update usertable set user_del_flag ='Y', useremail='' where userid =?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	/*
+	 * 76. 작성자 : 정명훈
+	 * 내용 : 도서 리뷰 업데이트(글 수정)
+	 */
+	public int reviewUpdate(ReviewBoardDTO rb) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			
+			pstmt.setString(1, rb.getRbTitle());
+			pstmt.setString(2, rb.getRbBookTitle());
+			pstmt.setString(3, rb.getRbIsbn());
+			pstmt.setString(4, rb.getRbContent());
+			pstmt.setDouble(5, rb.getRbStarscore());
+			pstmt.setInt(6, rb.getRbNo());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+				System.out.println("1");
+			}
+			else {
+				conn.rollback();
+				System.out.println("2");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}	
+	//77. @박광준 : 내가 작성한 모든 글 조회
+		public JsonArray postListLookup(String userId) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			JsonObject jbvd = null;
+			JsonArray postWriteList = new JsonArray();
+			String query = "SELECT * FROM reviewboard WHERE rb_writer=? ORDER BY rb_date DESC";
+			
 			try {
 				conn = dataSource.getConnection();
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, userId);
-				pstmt.setString(2, searchKeyword);
-				pstmt.setInt(3, startRnum);
-				pstmt.setInt(4, endRnum);
+				
 				rset = pstmt.executeQuery();
 				
-				while(rset.next()) {
-					BookBasketDTO bb = new BookBasketDTO(); 
-					bb.setBasketNo(rset.getInt("basketNo"));
-					bb.setUserId(rset.getString("userid"));
-					bb.setUserName(rset.getString("username"));
-					bb.setISBN(rset.getString("isbn"));
-					bb.setBookTitle(rset.getString("booktitle"));
-					bb.setPrice(rset.getInt("price"));
-					bb.setQuantity(rset.getInt("quantity"));
-					bb.setTotalPrice(rset.getInt("totalprice"));
-					bb.setPickDate(rset.getString("pickdate"));
-				
-					list.add(bb);
+				while(rset.next())
+				{
+					jbvd = new JsonObject(); 
+					jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+					jbvd.addProperty("rb_title", rset.getString("rb_title"));
+					jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+					jbvd.addProperty("rb_writer", rset.getString("rb_writer"));
+					jbvd.addProperty("rb_date", rset.getString("rb_date".toString()));
+					jbvd.addProperty("rb_readcnt", rset.getInt("rb_readcnt"));
+					jbvd.addProperty("rb_recommend", rset.getInt("rb_recommend"));
+					jbvd.addProperty("del_flag", rset.getString("del_flag"));
+					postWriteList.add(jbvd);
 				}
 			} catch (SQLException e) {
+				System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
 				e.printStackTrace();
 			} finally {
 				try {
@@ -2917,42 +3314,130 @@ public class DAO {
 					e.printStackTrace();
 				}
 			}
-		return list;	
-	}
-	//67. @박세준 : 즐겨찾기 검색시 결과개수세기
-
-	public int countSearchBasket(String userId, String searchKeyword) {
-		int result = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String query = "select count(*) from basket where userId = ? and booktitle like '%'||?||'%'";
-		try {
-			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			pstmt.setString(2, searchKeyword);
-			rset = pstmt.executeQuery();
-			
-			if(rset.next()) {
-				result = rset.getInt(1);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			return postWriteList;
 		}
-		return result;
-	}
-	
-	
+		
+		//78. @박광준 : 내가 작성한 모든 댓글 조회
+		public JsonArray commentListLookup(String userId) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			JsonObject jbvd = null;
+			JsonArray commentWriteList = new JsonArray();
+			String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? ORDER BY rb_comment_date DESC";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				rset = pstmt.executeQuery();
+				
+				/*결과 데이터 담기*/
+				while(rset.next())
+				{	
+					jbvd = new JsonObject();
+					jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+					jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+					jbvd.addProperty("rb_title", rset.getString("rb_title"));
+					jbvd.addProperty("rb_comment_content", rset.getString("rb_comment_content"));
+					jbvd.addProperty("rb_comment_date", (rset.getString("rb_comment_date")).toString());
+					jbvd.addProperty("rb_comment_delflag", rset.getString("rb_comment_delflag"));
+					jbvd.addProperty("rb_readcnt", rset.getString("rb_readcnt"));
+					jbvd.addProperty("rb_recommend", rset.getString("rb_recommend"));
+					commentWriteList.add(jbvd);
+				}
 
+			} catch (SQLException e) {
+				System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return commentWriteList;
+		}
+		//79. @박세준 : 즐겨찾기 검색시 결과List
+		public List<BookBasketDTO> basketSearch(String userId, String searchKeyword, int cPage, int numPerPage) {
+			List<BookBasketDTO> list = new ArrayList<>();
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? and booktitle like '%'||?||'%' order by pickdate desc)v)v where rnum between ? and ?";
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+				try {
+					conn = dataSource.getConnection();
+					pstmt = conn.prepareStatement(query);
+					pstmt.setString(1, userId);
+					pstmt.setString(2, searchKeyword);
+					pstmt.setInt(3, startRnum);
+					pstmt.setInt(4, endRnum);
+					rset = pstmt.executeQuery();
+					
+					while(rset.next()) {
+						BookBasketDTO bb = new BookBasketDTO(); 
+						bb.setBasketNo(rset.getInt("basketNo"));
+						bb.setUserId(rset.getString("userid"));
+						bb.setUserName(rset.getString("username"));
+						bb.setISBN(rset.getString("isbn"));
+						bb.setBookTitle(rset.getString("booktitle"));
+						bb.setPrice(rset.getInt("price"));
+						bb.setQuantity(rset.getInt("quantity"));
+						bb.setTotalPrice(rset.getInt("totalprice"));
+						bb.setPickDate(rset.getString("pickdate"));
+					
+						list.add(bb);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						rset.close();
+						pstmt.close();
+						conn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			return list;	
+		}
+		//80. @박세준 : 즐겨찾기 검색시 결과개수세기
+
+		public int countSearchBasket(String userId, String searchKeyword) {
+			int result = 0;
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select count(*) from basket where userId = ? and booktitle like '%'||?||'%'";
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				
+				rset = pstmt.executeQuery();
+				
+				if(rset.next()) {
+					result = rset.getInt(1);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return result;
+		}
 }
 

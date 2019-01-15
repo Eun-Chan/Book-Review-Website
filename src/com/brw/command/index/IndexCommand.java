@@ -84,10 +84,12 @@ public class IndexCommand implements Command {
 		 */
 		List<String> starScoreList = dao.selectStarScoreList(bookIsbn_Array);
 		JsonArray result2 = new JsonArray();
-		JsonObject jobj2 = new JsonObject();
-		if(starScoreList != null && starScoreList.get(0) != "") {
+		JsonObject jobj2 = null;
+		
+		if(starScoreList != null && starScoreList.size() != 0) {
 			for(int i=0; i<starScoreList.size(); i++)
 			{
+				jobj2 = new JsonObject();
 				starScore = starScoreList.get(i);
 			    jobj2.addProperty("isbn", starScore);
 			    result2.add(jobj2);
@@ -127,7 +129,7 @@ public class IndexCommand implements Command {
 		
 		/**
 		 * @광준
-		 * 최종 두개의 데이터를 jsp로 전송한다. (최근리뷰 5개, 별점)
+		 * 최종 3개의 데이터를 jsp로 전송한다. (최근리뷰 5개, 별점, 인기리뷰 5개)
 		 */
 		JsonArray total_result = new JsonArray();
 		total_result.add(result);
