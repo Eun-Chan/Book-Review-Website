@@ -23,6 +23,7 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardCommand;
 import com.brw.command.review.DeleteReviewBoardCommentCommand;
 import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -39,6 +40,7 @@ import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
+import com.brw.command.user.DeleteMemberCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.FindPwdEmailAuthCommand;
@@ -49,6 +51,7 @@ import com.brw.command.user.LogoutCommand;
 import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.OldPwdChangeOrLaterCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
+import com.brw.command.user.SelectAllMemberCommand;
 import com.brw.command.user.SelectOneUserInfo;
 import com.brw.command.user.UpdateUserCommand;
 import com.brw.command.user.NickNameCheckCommand;
@@ -459,13 +462,30 @@ public class FrontController extends HttpServlet {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
-		/*52 명훈 : 리뷰글 수정 */
+		/*53. 선웅 게시글 삭제*/
+		else if(command.equals("/review/reviewDelete.do")) {
+			com = new DeleteReviewBoardCommand();
+			com.execute(req, res);
+		}
+		/*54 . 선웅 : 회원관리*/
+		else if(command.equals("/sign/adminMemberManage.do")) {
+			com = new SelectAllMemberCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		}
+		/*55. 선웅: 신고횟수가 10을 넘기면 회원삭제 가능*/
+		else if(command.equals("/sign/memberDelete.do")) {
+			com = new DeleteMemberCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		}
+		/*56 명훈 : 리뷰글 수정 페이지로 이동 */
 		else if(command.equals("/review/reviewRevise.do")) {
 			com = new ReviewReviseCommand();
 			com.execute(req, res);
 			viewPage = "/WEB-INF/views/review/reviewRevise.jsp";
 		}
-		/*53 명훈 : 리뷰글 수정 */
+		/*57 명훈 : 리뷰글 수정 디비 변경 */
 		else if(command.equals("/review/reviewReviseEnd.do")) {
 			com = new ReviewReviseEndCommand();
 			com.execute(req, res);
