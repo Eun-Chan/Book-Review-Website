@@ -104,7 +104,8 @@
 		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
 		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
-		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userInfoView.do">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보수정</a></li>
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
