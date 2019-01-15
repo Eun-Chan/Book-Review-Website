@@ -36,7 +36,11 @@ div#seller{
 i.fas.fa-star-half-alt, i.fas.fa-star{
 	color: yellow;
 }
-
+div#start-Container1 span.starR1, div#start-Container1 span.starR2,
+div#start-Container3 span.starR1, div#start-Container3 span.starR2
+{
+	cursor: unset!important;
+}
 </style>
 	<br />
 	<br />
@@ -359,6 +363,13 @@ function insert_oneLineRV(){
 			var tempReviewSS = $("#starScoreAvg3").text().split(" ");
 			showBookSumStarScore(parseFloat(tempReviewSS[0]));
 			showOneLine();
+			
+			//리뷰 작성 완료시 작성 부분 초기화
+			$("#oneLineRV").val("");
+			for(var j=1; j<10; j++){
+		   		$("div#start-Container2 span#star"+j).removeClass('on');
+				}	
+			
 		}
 	})
 };
