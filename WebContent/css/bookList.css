@@ -1,12 +1,4 @@
 @charset "UTF-8";
-table tr, td{
-	border: 1px solid gray;
-	border-collapse: collapse;
-}
-table th{
-	border: 1.5px solid gray;
-	text-align: center;
-}
 div#pageBar a{
 	cursor: pointer;
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="com.brw.dto.*" %>
+<%@ page import="com.brw.listener.*" %>
 <%
 	// 웹사이트 일반 유저 일때
 	UserDTO	user = (UserDTO)session.getAttribute("user");
@@ -21,6 +22,23 @@
 			}
 		}
 	}
+	
+	/* 중복 로그인을 막기위한 세션 바인딩 리스너 */
+	SessionListener sessionListener = SessionListener.getInstance();
+	System.out.println(sessionListener.getUserCount());
+	
+ 	 /* if(user != null && user.getUserId() != null){ 
+		// 기존의 접속을 끊음
+ 		SessionListener.getInstance().removeSession(userId); 
+		// 새로운 세션 등록
+ 		SessionListener.getInstance().setSession(session, userId);
+		
+		
+	}  */
+ 	if(user != null && SessionListener.getInstance().isUsing(user.getUserId())) {
+		System.out.println("이미 접속중인 아이디입니다.");
+		
+	} 
 %>    
     
 <!DOCTYPE html>
@@ -38,7 +56,7 @@
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 </head>
-<body>
+<body onunload="<%=request.getContextPath()%>/logout.do">
 
 <script>
 	
@@ -93,7 +111,7 @@
 		     	<li id="loginBtn-Li"><button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#loginModal">로그인</button></li>	
 		    	<% } 
 		    	else {%>  
-		    	<li><a onclick="chatting();">채팅</a></li>
+		    	<li><a onclick="chatting();" id="chat_cnt">채팅</a></li>
 		    	<li class="dropdown">
  	
 		    	
@@ -104,7 +122,8 @@
 		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
 		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
-		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userInfoView.do">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보수정</a></li>
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
@@ -218,6 +237,10 @@
 					$("#login-help").text("아이디 혹은 비밀번호가 알맞지 않습니다.");
 					$("#login-help").addClass("text-danger");
 				}
+				else if(data == "already"){
+					$("#login-help").text("이미 아이디가 접속중입니다!");
+					$("#login-help").addClass("text-danger");
+				}
 			}
 		});
 	}
@@ -267,10 +290,17 @@
     function kakaoUserSignUp(userId, userEmail, userName){
     	$.ajax({
     		url : "<%=request.getContextPath()%>/sign/kakaoCreateUserCommand.do",
+    		type : "POST",
     		data : {userId : userId , userEmail : userEmail , userNickName : userName},
     		success : function(data){
    				// 카카오톡 로그인후 새로고침	
-    			location.reload();
+   				if(data == 'true')
+    				location.reload();
+   				else if(data == 'false'){
+   					$("#login-help").text("이미 아이디가 접속중입니다!");
+					$("#login-help").addClass("text-danger");
+   				}
+   					
     		}
     	});
     }
@@ -281,7 +311,9 @@
     }
 /*     var textarea = document.getElementById("messageWindow"); */
 	var textarea = $("#messageWindow");
-    var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting');
+	<%if(user != null) {%>
+    	var webSocket = new WebSocket('ws://52.78.61.219:8080/brw/broadcasting/login.do');
+    <%}%>
     var inputMessage = $("#inputMessage");
     
     webSocket.onerror = function(event) {
@@ -294,13 +326,17 @@
       onMessage(event)
     };
     function onMessage(event) {
+		if(event.data.indexOf('접속자 : ') == 0){
+			$("#chat_cnt").text("채팅 ("+event.data+")");
+			return;
+		}
         textarea.val(textarea.val() + event.data + "\n");
         const top = textarea.prop('scrollHeight');
         textarea.scrollTop(top);
     }
     function onOpen(event) {
         textarea.val("채팅방에 입장 하셨습니다❤\n");
-        console.log(event.data);
+        console.log(event);
     }
     function onError(event) {
       alert(event.data);

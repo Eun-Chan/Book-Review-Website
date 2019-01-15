@@ -10,7 +10,6 @@ public class AttendanceDTO implements Serializable {
 	private String atContent;
 	private String atUserId;
 	private int atTotal;
-	private int atSerial;
 	private String atDate;
 	
 	// user테이블과 쪼인해서 담을 데이터
@@ -47,12 +46,6 @@ public class AttendanceDTO implements Serializable {
 	}
 	public void setAtTotal(int atTotal) {
 		this.atTotal = atTotal;
-	}
-	public int getAtSerial() {
-		return atSerial;
-	}
-	public void setAtSerial(int atSerial) {
-		this.atSerial = atSerial;
 	}
 	public String getAtDate() {
 		return atDate;
