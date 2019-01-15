@@ -44,12 +44,13 @@ import com.brw.command.user.IdCheckCommand;
 import com.brw.command.user.KakaoCreateUserCommand;
 import com.brw.command.user.LoginCommand;
 import com.brw.command.user.LogoutCommand;
-import com.brw.command.user.PasswordUpdateCommand;
+import com.brw.command.user.NickNameCheckCommand;
 import com.brw.command.user.OldPwdChangeOrLaterCommand;
+import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
 import com.brw.command.user.SelectOneUserInfo;
 import com.brw.command.user.UpdateUserCommand;
-import com.brw.command.user.NickNameCheckCommand;
+import com.brw.command.user.UserInfoViewCommand;
 
 /**
  * Servlet implementation class FrontController
@@ -457,6 +458,16 @@ public class FrontController extends HttpServlet {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
+		/*53 광준 : 내 정보보기 페이지로 이동*/
+		else if(command.equals("/sign/userInfoView.do")) {
+			viewPage = "/WEB-INF/views/sign/userInfoView.jsp";
+		}
+		/*54.광준 : 내 정보보기 페이지 데이터 로드(내가 쓴 글/댓글)*/
+		else if(command.equals("/sign/userInfoViewJoin.do")) {
+			com = new UserInfoViewCommand();
+			com.execute(req, res);
+		}
+		
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
