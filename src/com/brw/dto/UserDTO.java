@@ -15,6 +15,7 @@ public class UserDTO implements Serializable {
 	private String userNickName;
 	private int userGrade;
 	private int userPoint;
+	private String userEnrollDate;
 	
 	public UserDTO() {}
 	
@@ -82,6 +83,14 @@ public class UserDTO implements Serializable {
 
 	public void setUserPoint(int userPoint) {
 		this.userPoint = userPoint;
+	}
+
+	public String getUserEnrollDate() {
+		return userEnrollDate;
+	}
+
+	public void setUserEnrollDate(String userEnrollDate) {
+		this.userEnrollDate = userEnrollDate;
 	}
 
 	@Override
