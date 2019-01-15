@@ -184,7 +184,7 @@ input#rbBookTitle{
 <body>
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
-		<form action="<%=request.getContextPath() %>/review/reviewWriteEnd.do" name="write_form" id="write-form">
+		<form action="<%=request.getContextPath() %>/review/reviewWriteEnd.do" name="write_form" id="write-form" method="post">
 			<div class="form-group" id="write-container">
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />
