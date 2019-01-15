@@ -23,6 +23,8 @@ import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 import com.brw.dto.UserDTO;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class DAO {
 	
@@ -55,7 +57,7 @@ public class DAO {
 	public void createUser(UserDTO user) throws SQLException {
 		
 		int result = 0;
-		String query = "insert into tempUserTable(userid,userpassword,username,useremail,userNickName,userPoint,userGrade) values(?,?,?,?,?,default,default)";
+		String query = "insert into usertable(userid,userpassword,username,useremail,userNickName,userPoint,userGrade) values(?,?,?,?,?,default,default)";
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -120,7 +122,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) as cnt from tempusertable where userId = ?";
+		String query = "select count(*) as cnt from usertable where userId = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -161,7 +163,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join usertable b on a.rb_writer = b.userid where del_flag = 'N' order by rb_no desc) r) r where rnum between ? and ?";
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
 		
@@ -280,7 +282,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(sysdate, 'YYYY-MM-DD') sysday, to_char(r.rb_date, 'YYYY-MM-DD') rbday, to_char(r.rb_date, 'HH24:MI') as todaytime, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join usertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc) r) r where rnum between ? and ?";
 		query = query.replace("searchType", searchType);
 		int startRnum = (cPage - 1) * numPerPage + 1;
 		int endRnum = cPage * numPerPage;
@@ -360,7 +362,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select count(*) from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
+		String query = "select count(*) from reviewboard a join usertable b on a.rb_writer = b.userid where del_flag = 'N' and searchType like '%'||?||'%' order by rb_no desc";
 		query = query.replace("searchType", searchType);
 		
 		try {
@@ -400,7 +402,7 @@ public class DAO {
 		ReviewBoardViewDTO review = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		String query = "select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N'  and rb_no = ?";
+		String query = "select * from reviewboard a join usertable b on a.rb_writer = b.userid where del_flag = 'N'  and rb_no = ?";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -485,7 +487,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardCommentList(int reviewNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select a.*, b.* ,to_char(a.rb_comment_date,'YYYY-MM-DD HH24:MI')as rdate from reviewboard_comment a join tempusertable b on a.rb_comment_writer = b.userid where rb_ref = ? and rb_comment_level=1 order by rb_comment_no";
+		String query = "select a.*, b.* ,to_char(a.rb_comment_date,'YYYY-MM-DD HH24:MI')as rdate from reviewboard_comment a join usertable b on a.rb_comment_writer = b.userid where rb_ref = ? and rb_comment_level=1 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewComment = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
@@ -588,7 +590,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String query = "select count(*) as cnt from tempusertable where useremail = ?";
+		String query = "select count(*) as cnt from usertable where useremail = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -745,7 +747,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String query = "select case (select count(*) from tempusertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from tempusertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -786,7 +788,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		//String query = "select * from reviewboard where rb_isbn = ? order by rb_no desc";
-		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join tempusertable b on a.rb_writer = b.userid where del_flag = 'N' and Rb_isbn = ? order by rb_no desc) r) r";
+		String query = "select r.*, to_char(r.rb_date, 'YYYY-MM-DD HH24:MI') as strdate, to_char(r.rb_date, 'HH24:MI') as datenew, (sysdate - r.rb_date) as passingtime from (select rownum rnum, r.* from (select * from reviewboard a join usertable b on a.rb_writer = b.userid where del_flag = 'N' and Rb_isbn = ? order by rb_no desc) r) r";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -847,7 +849,7 @@ public class DAO {
 	public List<ReviewBoardComment> getReviewBoardReCommentList(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "select * from reviewboard_comment a join tempusertable b on a.rb_comment_writer = b.userid where a.rb_ref = ? and a.rb_comment_level =2 order by rb_comment_no";
+		String query = "select * from reviewboard_comment a join usertable b on a.rb_comment_writer = b.userid where a.rb_ref = ? and a.rb_comment_level =2 order by rb_comment_no";
 		ResultSet res = null;
 		List<ReviewBoardComment> reviewReComment = null;
 		
@@ -951,7 +953,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String query = "select * from tempusertable where userid = ?";
+		String query = "select * from usertable where userid = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1811,7 +1813,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select userId from tempusertable where userEmail = ?";
+		String query = "select userId from usertable where userEmail = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1848,7 +1850,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select userEmail from tempusertable where userId = ?";
+		String query = "select userEmail from usertable where userId = ?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1884,7 +1886,7 @@ public class DAO {
 		   PreparedStatement pstmt = null;
 		   ResultSet rset = null;
 		   List<ReviewBoardDTO> rbList = new ArrayList<>();
-		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 AND rownum < 6";
 		   
 		   try {
 		      conn = dataSource.getConnection();
@@ -1932,7 +1934,7 @@ public class DAO {
 			PreparedStatement pstmt = null;
 			System.out.println("passwordUpdate$userId = "+userId);
 			System.out.println("passwordUpdate$userPassword = "+userPassword);
-			String query = "update tempusertable set userPassword = ? where userId = ?";
+			String query = "update usertable set userPassword = ? where userId = ?";
 			
 			try {
 				conn = dataSource.getConnection();
@@ -2053,7 +2055,7 @@ public class DAO {
 	      Connection conn = null;
 	      PreparedStatement pstmt = null;
 	      ResultSet rset = null;
-	      String query = "select count(*) as cnt from tempusertable where userNickName = ?";
+	      String query = "select count(*) as cnt from usertable where userNickName = ?";
 	      
 	      try {
 	         conn = dataSource.getConnection();
@@ -2092,7 +2094,7 @@ public class DAO {
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 			
-			String query = "insert into tempusertable(userId, userPassword, userName , userEmail,userNickName) values (?,?,?,?,?)";
+			String query = "insert into usertable(userId, userPassword, userName , userEmail,userNickName) values (?,?,?,?,?)";
 			
 			try {
 				conn = dataSource.getConnection();
@@ -2489,7 +2491,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		int result = 0;
-		String query = "select substr((sysdate - changedate),1,3) as datelater from tempusertable where userid = ? ";
+		String query = "select substr((sysdate - changedate),1,3) as datelater from usertable where userid = ? ";
 	
 		try {
 			conn = dataSource.getConnection();
@@ -2527,7 +2529,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		System.out.println("passwordUpdate$userId = "+userId);
 		System.out.println("passwordUpdate$userPassword = "+userPassword);
-		String query = "update tempusertable set userPassword = ? , changeDate = sysdate where userId = ?";
+		String query = "update usertable set userPassword = ? , changeDate = sysdate where userId = ?";
 					
 		try {
 			conn = dataSource.getConnection();
@@ -2628,7 +2630,7 @@ public class DAO {
 	      Connection conn = null;
 	      PreparedStatement pstmt = null;
 	      ResultSet res = null;
-	      String query ="select * from tempusertable where userid = ? and userpassword=?";
+	      String query ="select * from usertable where userid = ? and userpassword=?";
 	      UserDTO user = null;
 	      try {
 	         conn = dataSource.getConnection();
@@ -2669,7 +2671,7 @@ public class DAO {
 	      Connection conn = null;
 	      PreparedStatement pstmt =null;
 	      int result = 0;
-	      String query ="UPDATE  tempusertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
+	      String query ="UPDATE  usertable SET userpassword = ?, useremail = ?, changedate = SYSDATE, usernickname = ? WHERE userid = ?";
 	      System.out.println("userId" + userId);
 	      try {
 	         conn = dataSource.getConnection();
@@ -2916,7 +2918,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join tempusertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD') order by at_no desc";
+		String query = "select a.*, b.*, to_char(at_date, 'HH24:MI') strdate from attendance a join usertable b on at_userid = userid where to_char(at_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD') order by at_no desc";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -2962,7 +2964,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		UserDTO userInfo_grade = null;
-		String query = "SELECT usergrade, usernickname FROM tempusertable WHERE userid=?";
+		String query = "SELECT usergrade, usernickname FROM usertable WHERE userid=?";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -2997,6 +2999,96 @@ public class DAO {
 			}
 		}
 		return userInfo_grade;
+	}
+
+	//70. @박광준 : 내가 작성한 모든 글 조회
+	public JsonArray postListLookup(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		JsonObject jbvd = null;
+		JsonArray postWriteList = new JsonArray();
+		String query = "SELECT * FROM reviewboard WHERE rb_writer=? ORDER BY rb_date DESC";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next())
+			{
+				jbvd = new JsonObject(); 
+				jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+				jbvd.addProperty("rb_title", rset.getString("rb_title"));
+				jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+				jbvd.addProperty("rb_writer", rset.getString("rb_writer"));
+				jbvd.addProperty("rb_date", rset.getString("rb_date".toString()));
+				jbvd.addProperty("rb_readcnt", rset.getInt("rb_readcnt"));
+				jbvd.addProperty("rb_recommend", rset.getInt("rb_recommend"));
+				jbvd.addProperty("del_flag", rset.getString("del_flag"));
+				postWriteList.add(jbvd);
+			}
+		} catch (SQLException e) {
+			System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return postWriteList;
+	}
+	
+	//71. @박광준 : 내가 작성한 모든 댓글 조회
+	public JsonArray commentListLookup(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		JsonObject jbvd = null;
+		JsonArray commentWriteList = new JsonArray();
+		String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? ORDER BY rb_comment_date DESC";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			rset = pstmt.executeQuery();
+			
+			/*결과 데이터 담기*/
+			while(rset.next())
+			{	
+				jbvd = new JsonObject();
+				jbvd.addProperty("rb_no", rset.getInt("rb_no"));
+				jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
+				jbvd.addProperty("rb_title", rset.getString("rb_title"));
+				jbvd.addProperty("rb_comment_content", rset.getString("rb_comment_content"));
+				jbvd.addProperty("rb_comment_date", (rset.getString("rb_comment_date")).toString());
+				jbvd.addProperty("rb_comment_delflag", rset.getString("rb_comment_delflag"));
+				jbvd.addProperty("rb_readcnt", rset.getString("rb_readcnt"));
+				jbvd.addProperty("rb_recommend", rset.getString("rb_recommend"));
+				commentWriteList.add(jbvd);
+			}
+
+		} catch (SQLException e) {
+			System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+			e.printStackTrace();
+		} finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return commentWriteList;
 	}
 }
 
