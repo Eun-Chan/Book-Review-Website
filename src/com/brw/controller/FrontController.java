@@ -15,6 +15,7 @@ import com.brw.command.admin.NoticeListCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.admin.NoticeWriteEndCommand;
+import com.brw.command.admin.adminReviewBoardDelete;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
@@ -37,6 +38,7 @@ import com.brw.command.review.ReviewReviseEndCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
+import com.brw.command.review.selectAllReviewBoardReportCommand;
 import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
@@ -468,16 +470,13 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*54 . 선웅 : 회원관리*/
-		else if(command.equals("/sign/adminMemberManage.do")) {
-			com = new SelectAllMemberCommand();
-			com.execute(req, res);
-			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		else if(command.equals("/sign/adminManager.do")) {
+			viewPage="/WEB-INF/views/sign/adminManager.jsp";
 		}
 		/*55. 선웅: 신고횟수가 10을 넘기면 회원삭제 가능*/
 		else if(command.equals("/sign/memberDelete.do")) {
 			com = new DeleteMemberCommand();
 			com.execute(req, res);
-			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
 		}
 		/*56 명훈 : 리뷰글 수정 페이지로 이동 */
 		else if(command.equals("/review/reviewRevise.do")) {
@@ -491,6 +490,28 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			int rbNo = (int)req.getAttribute("rbNo");
 			viewPage = "/review/reviewDetail.do?rbNo=" + rbNo;
+		}
+		
+		/*58 선웅 : 게시판 관리 피이지  이동*/
+		else if(command.equals("/review/adminReviewBoardManage.do")) {
+			viewPage = "/WEB-INF/views/review/adminReviewBoardManage.jsp";
+		}
+		/*59 선웅: 회원관리 페이지*/
+		else if(command.equals("/sign/memberManager.do")) {
+			com = new SelectAllMemberCommand();
+			com.execute(req, res);
+			viewPage ="/WEB-INF/views/sign/memberManager.jsp";
+		}
+		/*60 선웅 : 게시판 관리 페이지*/
+		else if(command.equals("/review/reviewBoardManager.do")){
+			com = new selectAllReviewBoardReportCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/review/adminReviewBoardManage.jsp";
+		}
+		/*61 선웅 : 관리자 게시판 삭제*/
+		else if(command.equals("/review/adminReviewDelete.do")) {
+			com = new adminReviewBoardDelete();
+			com.execute(req, res);
 		}
 		
 		if(viewPage!=null){			

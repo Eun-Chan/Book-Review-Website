@@ -1884,7 +1884,7 @@ public class DAO {
 		   PreparedStatement pstmt = null;
 		   ResultSet rset = null;
 		   List<ReviewBoardDTO> rbList = new ArrayList<>();
-		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 and rownum<6";
 		   
 		   try {
 		      conn = dataSource.getConnection();
@@ -2558,7 +2558,7 @@ public class DAO {
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,default)";
+		String query ="insert into reviewboard_report values(seq_rb_reportno.nextval,?,?,?,?,?,?,sysdate,default)";
 		int result = 0;
 		
 		try {
@@ -3221,6 +3221,14 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -3230,7 +3238,6 @@ public class DAO {
 	 */
 	public int reviewUpdate(ReviewBoardDTO rb) {
 		int result = 0;
-		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
@@ -3248,7 +3255,7 @@ public class DAO {
 			pstmt.setInt(6, rb.getRbNo());
 			
 			result = pstmt.executeUpdate();
-			
+			System.out.println(result);
 			if(result > 0) {
 				conn.commit();
 				System.out.println("1");
@@ -3264,6 +3271,133 @@ public class DAO {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 77 장선웅 : 게시판 관리 페이징 처리
+	 * @param cPage
+	 * @param numPerPage
+	 * @return
+	 */
+	public List<ReviewBoardReportDTO> selectAllReviewBoardReport(int cPage, int numPerPage) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "select r.* from (select rownum rnum, r.* from (select * from reviewboard_report where RB_REPORT_DEL_FLAG='N' order by rb_reportNo) r) r where rnum between ? and ?";
+		ResultSet res = null;
+		List<ReviewBoardReportDTO> list = null;
+		
+		try {
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
+			list = new ArrayList<>();
+			res = pstmt.executeQuery();
+			
+			while(res.next()) {
+				ReviewBoardReportDTO rbr = new ReviewBoardReportDTO();
+				rbr.setRbReportRbNo(res.getInt("rb_report_rbno"));
+				rbr.setRbReportTitle(res.getString("rb_report_title"));
+				rbr.setRbReportSuspect(res.getString("rb_report_suspect"));
+				rbr.setRbReportWriter(res.getString("rb_report_writer"));
+				rbr.setRbReportContent(res.getString("rb_report_content"));
+				rbr.setRbReportClasses(res.getString("rb_report_classes"));
+				rbr.setRbReportDate(res.getString("rb_report_date"));
+				
+				list.add(rbr);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return list;
+	}
+
+	
+	/**
+	 * 78 장선웅 : 리폿게시판 카운트 숫자 구하기
+	 * 
+	 * @return
+	 */
+	public int countReportAll() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query ="select count(*) cnt from reviewboard_report where RB_REPORT_DEL_FLAG='N'";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 79 장선웅 : 관리자가 게시판글을 삭제햇을때 게시판 신고테이블에서도 그글을 삭제
+	 * @param rbNo
+	 * @return
+	 */
+	public int updateReviewReport(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		int result = 0;
+		String query = "update reviewboard_report set rb_report_del_flag ='Y' where rb_report_rbNo = ?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
