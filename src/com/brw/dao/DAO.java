@@ -2028,7 +2028,7 @@ public class DAO {
 				o.setUserId(rset.getString("userId"));
 				o.setNow(rset.getDate("now"));
 				o.setDelFlag(rset.getString("delFlag"));
-				o.settransfomeNow(rset.getString("trNow"));
+				o.setTransfomeNow(rset.getString("trNow"));
 				
 				list.add(o);
 			}

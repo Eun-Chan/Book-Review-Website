@@ -102,12 +102,12 @@ public class OneLineReviewDTO {
 		this.delFlag = delFlag;
 	}
 
-	public String gettransfomeNow() {
+	public String getTransfomeNow() {
 		return transfomeNow;
 	}
 
 
-	public void settransfomeNow(String transfomeNow) {
+	public void setTransfomeNow(String transfomeNow) {
 		this.transfomeNow = transfomeNow;
 	}
 
