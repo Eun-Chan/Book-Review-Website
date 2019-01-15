@@ -746,9 +746,8 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		
 		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ? and user_del_flag = 'N') when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
-		
+	
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
@@ -2620,9 +2619,7 @@ public class DAO {
 		
 		return result;
 	}
-
-
-
+	
 	   /*
 	    * 61.   장선웅 : 입력한 비밀번호와 알맞는 유저 찾기.
 	    */
@@ -3001,6 +2998,7 @@ public class DAO {
 		}
 		return userInfo_grade;
 	}
+
 	/**
 	 * 70. 작성자 : 장선웅
 	 * 리뷰보드 삭제
@@ -3214,16 +3212,20 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String query = "update usertable set user_del_flag ='Y', useremail='' where userid =?";
-		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, userId);
-			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -3270,10 +3272,8 @@ public class DAO {
 				e.printStackTrace();
 			}
 		}
-		
 		return result;
-	}
-	
+	}	
 	//77. @박광준 : 내가 작성한 모든 글 조회
 		public JsonArray postListLookup(String userId) {
 			Connection conn = null;
@@ -3315,7 +3315,6 @@ public class DAO {
 					e.printStackTrace();
 				}
 			}
-
 			return postWriteList;
 		}
 		
@@ -3363,7 +3362,87 @@ public class DAO {
 			}
 			return commentWriteList;
 		}
-		// 79. @정명훈 : 출석체크 테이블에 atUserId, atContent로 출첵하기
+		//79. @박세준 : 즐겨찾기 검색시 결과List
+		public List<BookBasketDTO> basketSearch(String userId, String searchKeyword, int cPage, int numPerPage) {
+			List<BookBasketDTO> list = new ArrayList<>();
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select basketno,userid,username,isbn,booktitle,price,quantity,totalprice,to_char(pickdate,'YYYY-MM-DD HH24:MI') as pickdate from(select rownum as rnum,v.* from (select * from basket where userid = ? and booktitle like '%'||?||'%' order by pickdate desc)v)v where rnum between ? and ?";
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+				try {
+					conn = dataSource.getConnection();
+					pstmt = conn.prepareStatement(query);
+					pstmt.setString(1, userId);
+					pstmt.setString(2, searchKeyword);
+					pstmt.setInt(3, startRnum);
+					pstmt.setInt(4, endRnum);
+					rset = pstmt.executeQuery();
+					
+					while(rset.next()) {
+						BookBasketDTO bb = new BookBasketDTO(); 
+						bb.setBasketNo(rset.getInt("basketNo"));
+						bb.setUserId(rset.getString("userid"));
+						bb.setUserName(rset.getString("username"));
+						bb.setISBN(rset.getString("isbn"));
+						bb.setBookTitle(rset.getString("booktitle"));
+						bb.setPrice(rset.getInt("price"));
+						bb.setQuantity(rset.getInt("quantity"));
+						bb.setTotalPrice(rset.getInt("totalprice"));
+						bb.setPickDate(rset.getString("pickdate"));
+					
+						list.add(bb);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						rset.close();
+						pstmt.close();
+						conn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			return list;	
+		}
+		//80. @박세준 : 즐겨찾기 검색시 결과개수세기
+
+		public int countSearchBasket(String userId, String searchKeyword) {
+			int result = 0;
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select count(*) from basket where userId = ? and booktitle like '%'||?||'%'";
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, userId);
+				pstmt.setString(2, searchKeyword);
+				rset = pstmt.executeQuery();
+				
+				if(rset.next()) {
+					result = rset.getInt(1);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					rset.close();
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+					
+			
+			return result;
+		}
+		// 81. @정명훈 : 출석체크 테이블에 atUserId, atContent로 출첵하기
 		public int doAttendance(String atUserId, String atContent) {
 			int result = 0;
 			
@@ -3392,7 +3471,7 @@ public class DAO {
 			
 			return result;
 		}
-		// 80. @정명훈 : 오늘 출첵했는지 확인
+		// 82. @정명훈 : 오늘 출첵했는지 확인
 		public boolean checkTodayAttendance(String atUserId) {
 			boolean bool = false;
 			
@@ -3427,9 +3506,7 @@ public class DAO {
 					e.printStackTrace();
 				}
 			}
-			
 			return bool;
 		}
-			
 }
 
