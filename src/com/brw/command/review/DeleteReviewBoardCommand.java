@@ -11,10 +11,11 @@ import com.brw.dao.DAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class DeleteReviewBoardRecommentCommand implements Command{
+public class DeleteReviewBoardCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		//1. 인코딩처리
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -22,16 +23,14 @@ public class DeleteReviewBoardRecommentCommand implements Command{
 			e.printStackTrace();
 		}
 		
+		//2. 파라미터 처리
+		int rbNo =  Integer.parseInt(request.getParameter("rbNo"));
 		
-		//1. 파라미터 처리
-		int rbCommentNo =  Integer.parseInt(request.getParameter("rbCommentNo"));
-		int rbNo = Integer.parseInt(request.getParameter("rbNo"));
-		
-		//2. dao 작업 요청
 		DAO dao = DAO.getInstance();
-		int result = dao.deleteReviewBoardRecomment(rbCommentNo,rbNo);
-		Gson gson = new Gson();
 		
+		int result = dao.deleteReviewBoard(rbNo);
+		
+		Gson gson = new Gson();
 		try {
 			gson.toJson(result,response.getWriter());
 		} catch (JsonIOException e) {
@@ -41,7 +40,6 @@ public class DeleteReviewBoardRecommentCommand implements Command{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 }

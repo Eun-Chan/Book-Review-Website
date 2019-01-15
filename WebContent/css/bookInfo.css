@@ -13,6 +13,10 @@
 
 }
 
+#bookInfo-container, #command-info, #oneLineReview-container {
+      padding-left: 60px;
+   }
+
 #oneLineReview-container{
 	width:1000px;
 	margin:30px auto;

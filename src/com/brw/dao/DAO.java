@@ -2558,7 +2558,7 @@ public class DAO {
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?)";
+		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,default)";
 		int result = 0;
 		
 		try {
@@ -2998,5 +2998,278 @@ public class DAO {
 		}
 		return userInfo_grade;
 	}
+	/**
+	 * 70. 작성자 : 장선웅
+	 * 리뷰보드 삭제
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoard(int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result =0;
+		String query ="update reviewboard set del_flag='Y' where rb_no =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 71. 작성자 : 장선웅
+	 * 대댓글 삭제
+	 * @param rbCommentNo
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoardRecomment(int rbCommentNo, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query= "delete  from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
+		int result= 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbCommentNo);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 72. 작성자 : 장선웅
+	 * 맴버 전부 가져오는 쿼리 페이징처리
+	 * @param numPerPage 
+	 * @param cPage 
+	 * @return
+	 */
+	public List<UserDTO> selectMemberAll(int cPage, int numPerPage) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select r.* from (select rownum rnum, r.* from (select * from usertable where user_del_flag='N') r) r where rnum between ? and ?";
+		List<UserDTO> list = null;
+		
+		
+		try {
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
+			list = new ArrayList<>();
+			res = pstmt.executeQuery();
+			
+			while(res.next()) {
+				UserDTO user = new UserDTO();
+				user.setUserId(res.getString("userid"));
+				user.setUserPassword(res.getString("userpassword"));
+				user.setUserName(res.getString("username"));
+				user.setUserEmail(res.getString("useremail"));
+				user.setUserPoint(res.getInt("userpoint"));
+				user.setUserGrade(res.getInt("usergrade"));
+				user.setUserEnrollDate(res.getString("joindate"));
+				user.setUserNickName(res.getString("usernickname"));
+				
+				list.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return list;
+	}
+	/**
+	 * 73 . 맴버 페이지 카운팅용 변수
+	 * @return
+	 */
+	public int countMemberAll() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from usertable where user_del_flag ='N'";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+	}
+
+	/**
+	 * 74 .선웅 : 해당 맴버가 신고를 얼마나 받앗나 가져오기
+	 * @param userId
+	 * @return
+	 */
+	public int reportCountMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from reviewboard_report where rb_report_suspect =?";
+		int result = 0;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			res = pstmt.executeQuery();
+			
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/**
+	 * 75.선웅 :  맴버 삭제 처리
+	 * @param userId
+	 * @return
+	 */
+	public int deleteMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update usertable set user_del_flag ='Y', useremail='' where userid =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	/*
+	 * 76. 작성자 : 정명훈
+	 * 내용 : 도서 리뷰 업데이트(글 수정)
+	 */
+	public int reviewUpdate(ReviewBoardDTO rb) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			
+			pstmt.setString(1, rb.getRbTitle());
+			pstmt.setString(2, rb.getRbBookTitle());
+			pstmt.setString(3, rb.getRbIsbn());
+			pstmt.setString(4, rb.getRbContent());
+			pstmt.setDouble(5, rb.getRbStarscore());
+			pstmt.setInt(6, rb.getRbNo());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+				System.out.println("1");
+			}
+			else {
+				conn.rollback();
+				System.out.println("2");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+			
 }
 
