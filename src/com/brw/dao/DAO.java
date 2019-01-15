@@ -745,7 +745,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ? and user_del_flag = 'N') when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
 		
 		try {
 			conn = dataSource.getConnection();
