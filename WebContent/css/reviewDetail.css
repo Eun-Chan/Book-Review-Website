@@ -465,7 +465,7 @@ padding: 10px 0px 0px 10px;
 input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
 	color:transparent; 
 } 
-#delete-img{
+.delete-img{
 	display: inline-block;
 }
 

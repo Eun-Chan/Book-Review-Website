@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.UserDTO;
+import com.brw.listener.SessionListener;
 
 /**
  * 작성자 : 김은찬 
@@ -29,7 +30,7 @@ public class LoginCommand implements Command {
 		
 		DAO dao = DAO.getInstance();
 		int result = dao.loginCheck(userId , userPassword);
-		
+				
 		try {
 			PrintWriter out = response.getWriter();
 			
@@ -54,14 +55,27 @@ public class LoginCommand implements Command {
 					response.addCookie(c);
 				}
 				
+				HttpSession session = request.getSession(true);
+				
+				// 이미 접속한 아이디인지 체크
+				// 현재 접속자들 보여주기
+				SessionListener.getInstance().printloginUsers();
+				if(SessionListener.getInstance().isUsing(userId)) {
+					System.out.println("이미 아이디가 접속중 입니다.");
+					out.append("already");
+					return;
+				}
+				
+				// 접속 하고자 하는 아이디의 세션을 담는다
 				UserDTO userDTO = new UserDTO();
 				userDTO = dao.selectOneUser(userId);
 				
-				HttpSession session = request.getSession(true);
-				
 				session.setMaxInactiveInterval(60*10);
 				session.setAttribute("user", userDTO);
+								
+				SessionListener.getInstance().setSession(session, userId);
 				out.append("true");
+				
 			}
 				
 			// 로그인 실패 !

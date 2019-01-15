@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.brw.command.Command;
 import com.brw.dao.DAO;
 import com.brw.dto.UserDTO;
+import com.brw.listener.SessionListener;
 
 /**
  * 작성자 : 김은찬
@@ -55,10 +56,34 @@ public class KakaoCreateUserCommand implements Command {
 			System.out.println("아이디가 이미 존재합니다");
 			UserDTO userDTO = DAO.getInstance().selectOneUser(userId);
 			
-			HttpSession session = request.getSession(true);
-			session.setMaxInactiveInterval(60*10);
-			session.setAttribute("user", userDTO);
+			if(!SessionListener.getInstance().isUsing(userId)) {
+				System.out.println("세션리스너에 아이디 존재 X");
+				HttpSession session = request.getSession(true);
+				session.setMaxInactiveInterval(60*10);
+				session.setAttribute("user", userDTO);
+				SessionListener.getInstance().setSession(session, userId);
+				try {
+					PrintWriter out = response.getWriter();
+					out.append("true");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else {
+				try {
+					System.out.println("세션리스너에 아이디 존재 O");
+					PrintWriter out = response.getWriter();
+					out.append("false");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+				
 			return;
+			
 		}
 		else {
 			System.out.println("카카오톡 회원가입으로 넘어갑니다.");

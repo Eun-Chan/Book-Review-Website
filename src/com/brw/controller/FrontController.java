@@ -23,6 +23,7 @@ import com.brw.command.book.CheckedBasketCommand;
 import com.brw.command.book.OneLineDeleteCommand;
 import com.brw.command.book.OneLineInsertCommand;
 import com.brw.command.index.IndexCommand;
+import com.brw.command.review.DeleteReviewBoardCommand;
 import com.brw.command.review.DeleteReviewBoardCommentCommand;
 import com.brw.command.review.DeleteReviewBoardRecommentCommand;
 import com.brw.command.review.GetReviewSelectOneCommand;
@@ -31,12 +32,15 @@ import com.brw.command.review.InsertReCommentCommand;
 import com.brw.command.review.InsertReviewBoardReport;
 import com.brw.command.review.ReviewBoardLikeCommend;
 import com.brw.command.review.ReviewPaginationCommand;
+import com.brw.command.review.ReviewReviseCommand;
+import com.brw.command.review.ReviewReviseEndCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
 import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
+import com.brw.command.user.DeleteMemberCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.FindPwdEmailAuthCommand;
@@ -48,6 +52,7 @@ import com.brw.command.user.NickNameCheckCommand;
 import com.brw.command.user.OldPwdChangeOrLaterCommand;
 import com.brw.command.user.PasswordUpdateCommand;
 import com.brw.command.user.SearchIdForEmailCommand;
+import com.brw.command.user.SelectAllMemberCommand;
 import com.brw.command.user.SelectOneUserInfo;
 import com.brw.command.user.UpdateUserCommand;
 import com.brw.command.user.UserInfoViewCommand;
@@ -458,16 +463,45 @@ public class FrontController extends HttpServlet {
 			com = new DeleteReviewBoardRecommentCommand();
 			com.execute(req, res);
 		}
-		/*53 광준 : 내 정보보기 페이지로 이동*/
+		/*53. 선웅 게시글 삭제*/
+		else if(command.equals("/review/reviewDelete.do")) {
+			com = new DeleteReviewBoardCommand();
+			com.execute(req, res);
+		}
+		/*54 . 선웅 : 회원관리*/
+		else if(command.equals("/sign/adminMemberManage.do")) {
+			com = new SelectAllMemberCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		}
+		/*55. 선웅: 신고횟수가 10을 넘기면 회원삭제 가능*/
+		else if(command.equals("/sign/memberDelete.do")) {
+			com = new DeleteMemberCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		}
+		/*56 명훈 : 리뷰글 수정 페이지로 이동 */
+		else if(command.equals("/review/reviewRevise.do")) {
+			com = new ReviewReviseCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/review/reviewRevise.jsp";
+		}
+		/*57 명훈 : 리뷰글 수정 디비 변경 */
+		else if(command.equals("/review/reviewReviseEnd.do")) {
+			com = new ReviewReviseEndCommand();
+			com.execute(req, res);
+			int rbNo = (int)req.getAttribute("rbNo");
+			viewPage = "/review/reviewDetail.do?rbNo=" + rbNo;
+		}
+		/*58 광준 : 내 정보보기 페이지로 이동*/
 		else if(command.equals("/sign/userInfoView.do")) {
 			viewPage = "/WEB-INF/views/sign/userInfoView.jsp";
 		}
-		/*54.광준 : 내 정보보기 페이지 데이터 로드(내가 쓴 글/댓글)*/
+		/*59.광준 : 내 정보보기 페이지 데이터 로드(내가 쓴 글/댓글)*/
 		else if(command.equals("/sign/userInfoViewJoin.do")) {
 			com = new UserInfoViewCommand();
 			com.execute(req, res);
 		}
-		
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

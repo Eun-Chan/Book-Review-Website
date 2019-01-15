@@ -23,8 +23,6 @@ import com.brw.dto.ReviewBoardLikeDTO;
 import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.ReviewBoardViewDTO;
 import com.brw.dto.UserDTO;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 public class DAO {
 	
@@ -747,7 +745,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ?) when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
+		String query = "select case (select count(*) from usertable where userid = ? and userpassword = ? and user_del_flag = 'N') when 1 then 1 else (case(select count(*) from usertable where userid = ?) when 1 then 0 else -1 end) end as login_check from dual";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1886,7 +1884,7 @@ public class DAO {
 		   PreparedStatement pstmt = null;
 		   ResultSet rset = null;
 		   List<ReviewBoardDTO> rbList = new ArrayList<>();
-		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 AND rownum < 6";
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7";
 		   
 		   try {
 		      conn = dataSource.getConnection();
@@ -2560,7 +2558,7 @@ public class DAO {
 	public int insertReviewBoardReport(ReviewBoardReportDTO report) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?)";
+		String query ="insert into reviewboard_report  values(seq_rb_reportno.nextval,?,?,?,?,?,?,default)";
 		int result = 0;
 		
 		try {
@@ -3000,95 +2998,278 @@ public class DAO {
 		}
 		return userInfo_grade;
 	}
-
-	//70. @박광준 : 내가 작성한 모든 글 조회
-	public JsonArray postListLookup(String userId) {
+	/**
+	 * 70. 작성자 : 장선웅
+	 * 리뷰보드 삭제
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoard(int rbNo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		JsonObject jbvd = null;
-		JsonArray postWriteList = new JsonArray();
-		String query = "SELECT * FROM reviewboard WHERE rb_writer=? ORDER BY rb_date DESC";
+		int result =0;
+		String query ="update reviewboard set del_flag='Y' where rb_no =?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbNo);
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 71. 작성자 : 장선웅
+	 * 대댓글 삭제
+	 * @param rbCommentNo
+	 * @param rbNo
+	 * @return
+	 */
+	public int deleteReviewBoardRecomment(int rbCommentNo, int rbNo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query= "delete  from reviewboard_comment where rb_comment_no = ? and rb_ref = ?";
+		int result= 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, rbCommentNo);
+			pstmt.setInt(2, rbNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 72. 작성자 : 장선웅
+	 * 맴버 전부 가져오는 쿼리 페이징처리
+	 * @param numPerPage 
+	 * @param cPage 
+	 * @return
+	 */
+	public List<UserDTO> selectMemberAll(int cPage, int numPerPage) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select r.* from (select rownum rnum, r.* from (select * from usertable where user_del_flag='N') r) r where rnum between ? and ?";
+		List<UserDTO> list = null;
+		
+		
+		try {
+			int startRnum = (cPage - 1) * numPerPage + 1;
+			int endRnum = cPage * numPerPage;
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setInt(1, startRnum);
+			pstmt.setInt(2, endRnum);
+			
+			list = new ArrayList<>();
+			res = pstmt.executeQuery();
+			
+			while(res.next()) {
+				UserDTO user = new UserDTO();
+				user.setUserId(res.getString("userid"));
+				user.setUserPassword(res.getString("userpassword"));
+				user.setUserName(res.getString("username"));
+				user.setUserEmail(res.getString("useremail"));
+				user.setUserPoint(res.getInt("userpoint"));
+				user.setUserGrade(res.getInt("usergrade"));
+				user.setUserEnrollDate(res.getString("joindate"));
+				user.setUserNickName(res.getString("usernickname"));
+				
+				list.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return list;
+	}
+	/**
+	 * 73 . 맴버 페이지 카운팅용 변수
+	 * @return
+	 */
+	public int countMemberAll() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from usertable where user_del_flag ='N'";
+		int result = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			res = pstmt.executeQuery();
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+	}
+
+	/**
+	 * 74 .선웅 : 해당 맴버가 신고를 얼마나 받앗나 가져오기
+	 * @param userId
+	 * @return
+	 */
+	public int reportCountMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt =null;
+		ResultSet res = null;
+		String query = "select count(*) cnt from reviewboard_report where rb_report_suspect =?";
+		int result = 0;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			
+			res = pstmt.executeQuery();
+			
+			if(res.next()) {
+				result = res.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	/**
+	 * 75.선웅 :  맴버 삭제 처리
+	 * @param userId
+	 * @return
+	 */
+	public int deleteMember(String userId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update usertable set user_del_flag ='Y', useremail='' where userid =?";
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, userId);
 			
-			rset = pstmt.executeQuery();
-			
-			while(rset.next())
-			{
-				jbvd = new JsonObject(); 
-				jbvd.addProperty("rb_no", rset.getInt("rb_no"));
-				jbvd.addProperty("rb_title", rset.getString("rb_title"));
-				jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
-				jbvd.addProperty("rb_writer", rset.getString("rb_writer"));
-				jbvd.addProperty("rb_date", rset.getString("rb_date".toString()));
-				jbvd.addProperty("rb_readcnt", rset.getInt("rb_readcnt"));
-				jbvd.addProperty("rb_recommend", rset.getInt("rb_recommend"));
-				jbvd.addProperty("del_flag", rset.getString("del_flag"));
-				postWriteList.add(jbvd);
-			}
+			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
-
-		return postWriteList;
+		return result;
 	}
-	
-	//71. @박광준 : 내가 작성한 모든 댓글 조회
-	public JsonArray commentListLookup(String userId) {
+	/*
+	 * 76. 작성자 : 정명훈
+	 * 내용 : 도서 리뷰 업데이트(글 수정)
+	 */
+	public int reviewUpdate(ReviewBoardDTO rb) {
+		int result = 0;
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		JsonObject jbvd = null;
-		JsonArray commentWriteList = new JsonArray();
-		String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? ORDER BY rb_comment_date DESC";
+		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, userId);
-			rset = pstmt.executeQuery();
 			
-			/*결과 데이터 담기*/
-			while(rset.next())
-			{	
-				jbvd = new JsonObject();
-				jbvd.addProperty("rb_no", rset.getInt("rb_no"));
-				jbvd.addProperty("rb_booktitle", rset.getString("rb_booktitle"));
-				jbvd.addProperty("rb_title", rset.getString("rb_title"));
-				jbvd.addProperty("rb_comment_content", rset.getString("rb_comment_content"));
-				jbvd.addProperty("rb_comment_date", (rset.getString("rb_comment_date")).toString());
-				jbvd.addProperty("rb_comment_delflag", rset.getString("rb_comment_delflag"));
-				jbvd.addProperty("rb_readcnt", rset.getString("rb_readcnt"));
-				jbvd.addProperty("rb_recommend", rset.getString("rb_recommend"));
-				commentWriteList.add(jbvd);
+			
+			pstmt.setString(1, rb.getRbTitle());
+			pstmt.setString(2, rb.getRbBookTitle());
+			pstmt.setString(3, rb.getRbIsbn());
+			pstmt.setString(4, rb.getRbContent());
+			pstmt.setDouble(5, rb.getRbStarscore());
+			pstmt.setInt(6, rb.getRbNo());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+				System.out.println("1");
 			}
-
+			else {
+				conn.rollback();
+				System.out.println("2");
+			}
 		} catch (SQLException e) {
-			System.out.println("쿼리실행에 실패했습니다.@광준-postListLookup");
 			e.printStackTrace();
 		} finally {
 			try {
-				rset.close();
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		return commentWriteList;
+		
+		return result;
 	}
+			
 }
 
