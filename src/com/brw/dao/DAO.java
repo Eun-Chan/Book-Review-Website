@@ -2011,7 +2011,7 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from onelinereview where isbn = ? and delflag = 'N' order by now desc";
+		String query = "select r.*, TO_CHAR(now, 'yyyy-mm-dd') as trNow from(select * from onelinereview where isbn = ? and delflag = 'N' order by now desc)r";
 
 		try {
 			conn = dataSource.getConnection();
@@ -2028,6 +2028,7 @@ public class DAO {
 				o.setUserId(rset.getString("userId"));
 				o.setNow(rset.getDate("now"));
 				o.setDelFlag(rset.getString("delFlag"));
+				o.settransfomeNow(rset.getString("trNow"));
 				
 				list.add(o);
 			}

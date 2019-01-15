@@ -10,13 +10,17 @@ public class OneLineReviewDTO {
 	private String userId;
 	private Date now;
 	private String delFlag;
+	private String transfomeNow;
 	
 	
+	
+
+
 	public OneLineReviewDTO() {}
 
 
 	public OneLineReviewDTO(int no, String isbn, String content, double starScore, String userId, Date now,
-			String delFlag) {
+			String delFlag,String transfomeNow) {
 		super();
 		this.no = no;
 		this.isbn = isbn;
@@ -25,6 +29,7 @@ public class OneLineReviewDTO {
 		this.userId = userId;
 		this.now = now;
 		this.delFlag = delFlag;
+		this.transfomeNow = transfomeNow;
 	}
 
 
@@ -97,12 +102,23 @@ public class OneLineReviewDTO {
 		this.delFlag = delFlag;
 	}
 
+	public String gettransfomeNow() {
+		return transfomeNow;
+	}
+
+
+	public void settransfomeNow(String transfomeNow) {
+		this.transfomeNow = transfomeNow;
+	}
+
 
 	@Override
 	public String toString() {
 		return "OneLineReviewDTO [no=" + no + ", isbn=" + isbn + ", content=" + content + ", starScore=" + starScore
-				+ ", userId=" + userId + ", now=" + now + ", delFlag=" + delFlag + "]";
+				+ ", userId=" + userId + ", now=" + now + ", delFlag=" + delFlag + ", transfomeNow=" + transfomeNow
+				+ "]";
 	}
+
 	
 	
 	
