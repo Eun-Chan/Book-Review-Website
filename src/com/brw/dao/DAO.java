@@ -2884,22 +2884,19 @@ public class DAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select to_char(sysdate-3, 'YYYY-MM-DD') todaym3, to_char(sysdate-2, 'YYYY-MM-DD') todaym2, to_char(sysdate-1, 'YYYY-MM-DD') todaym1, to_char(sysdate, 'YYYY-MM-DD') today, to_char(sysdate+1, 'YYYY-MM-DD') todayp1, to_char(sysdate+2, 'YYYY-MM-DD') todayp2,  to_char(sysdate+3, 'YYYY-MM-DD') todayp3 from dual";
+		String query = "select to_char(sysdate, 'YYYY-MM-DD') from dual";
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
 			rset = pstmt.executeQuery();
-			ResultSetMetaData rsmd = rset.getMetaData(); // 익스큐트쿼리 후 ResultSet의 컬럼개수 구하기위한 클래스
 			
 			list = new ArrayList<>();
 			if(rset.next()) {
-				for(int i=0; i<rsmd.getColumnCount(); i++) {
-					list.add(rset.getString(i+1));
-				}
+				list.add(rset.getString(1));
+				System.out.println("DAO.getDayList() list="+list);
 			}
 			
-			System.out.println(list + ",," + list.size());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -2920,18 +2917,22 @@ public class DAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			pstmt = conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE); // 커서를 옮기는 기능을 실행하기 위한 설정
 			rset = pstmt.executeQuery();
+			
+			// rset의 행을 세기 위한 준비
+			rset.last(); //커서의 위치를 제일 뒤로 이동
+			int rowCount = rset.getRow(); //현재 커서의 Row Index 값을 저장	
+			rset.beforeFirst(); // 커서를 첫번째 전으로 되돌림
 			
 			list = new ArrayList<>();
 			while(rset.next()) {
 				AttendanceDTO at = new AttendanceDTO();
 				
-				at.setAtNo(rset.getInt("at_no"));
+				at.setAtNo(rowCount--);
 				at.setAtContent(rset.getString("at_content"));
 				at.setAtUserId(rset.getString("at_userid"));
 				at.setAtTotal(rset.getInt("at_total"));
-				at.setAtSerial(rset.getInt("at_serial"));
 				at.setAtDate(rset.getString("strdate"));
 				at.setUserNickName(rset.getString("usernickname"));
 				at.setUserGrade(rset.getInt("usergrade"));
@@ -3438,8 +3439,75 @@ public class DAO {
 					e.printStackTrace();
 				}
 			}
+					
 			
 			return result;
+		}
+		// 81. @정명훈 : 출석체크 테이블에 atUserId, atContent로 출첵하기
+		public int doAttendance(String atUserId, String atContent) {
+			int result = 0;
+			
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			String query = "insert into attendance (at_no,at_userid,at_content,at_total) values (seq_attendance_no.nextval,?,?,(select count(*)+1 from attendance where at_userid=?))";
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, atUserId);
+				pstmt.setString(2, atContent);
+				pstmt.setString(3, atUserId);
+				
+				result = pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return result;
+		}
+		// 82. @정명훈 : 오늘 출첵했는지 확인
+		public boolean checkTodayAttendance(String atUserId) {
+			boolean bool = false;
+			
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select count(*) cnt from attendance where at_userid = ?";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, atUserId);
+				
+				rset = pstmt.executeQuery();
+				
+				if(rset.next()) {
+					int result = rset.getInt("cnt");
+					
+					if(result > 0) {
+						bool = true;
+					}
+				}
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return bool;
 		}
 }
 

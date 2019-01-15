@@ -245,7 +245,7 @@ input#rbBookTitle{
 <body>
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
-		<form action="<%=request.getContextPath() %>/review/reviewReviseEnd.do" name="write_form" id="write-form">
+		<form action="<%=request.getContextPath() %>/review/reviewReviseEnd.do" name="write_form" id="write-form" method="post">
 			<div class="form-group" id="write-container">
 				<!-- 글번호 히든태그 -->
 				<input type="hidden" name="rbNo" value="<%=rbv.getRbNo() %>"/>
