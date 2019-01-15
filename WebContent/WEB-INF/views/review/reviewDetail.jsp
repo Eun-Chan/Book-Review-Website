@@ -134,7 +134,7 @@ img{
 						});
 						// 명훈 : 리뷰 수정 버튼 리스너
 						$("#btn-revise-review").on("click",function(){
-							location.href = "<%=request.getContextPath()%>/review/reviewRevise.do";
+							location.href = "<%=request.getContextPath()%>/review/reviewRevise.do?rbNo=" + <%=review.getRbNo()%>;
 						});
 					});
 				</script>

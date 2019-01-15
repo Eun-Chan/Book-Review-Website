@@ -3201,7 +3201,6 @@ public class DAO {
 		
 		return result;
 	}
-
 	/**
 	 * 75.선웅 :  맴버 삭제 처리
 	 * @param userId
@@ -3225,7 +3224,52 @@ public class DAO {
 		}
 		return result;
 	}
-
-	
+	/*
+	 * 76. 작성자 : 정명훈
+	 * 내용 : 도서 리뷰 업데이트(글 수정)
+	 */
+	public int reviewUpdate(ReviewBoardDTO rb) {
+		int result = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			
+			pstmt.setString(1, rb.getRbTitle());
+			pstmt.setString(2, rb.getRbBookTitle());
+			pstmt.setString(3, rb.getRbIsbn());
+			pstmt.setString(4, rb.getRbContent());
+			pstmt.setDouble(5, rb.getRbStarscore());
+			pstmt.setInt(6, rb.getRbNo());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+				System.out.println("1");
+			}
+			else {
+				conn.rollback();
+				System.out.println("2");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+			
 }
 
