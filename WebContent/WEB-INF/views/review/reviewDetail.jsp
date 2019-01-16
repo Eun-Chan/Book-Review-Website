@@ -78,7 +78,7 @@ img{
 			<ul id="right-menu">
 				<li><button class="btn-gradient red" style ="float: right;">신고하기</button></li>
 			<%if(user!=null && (user.getUserId().equals(review.getRbWriter()) || user.getUserId().equals("admin"))){ %>
-				<li><button class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
+				<li><button id="review-delete"class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
 				<li><button id="btn-revise-review" class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
 			<%} %>
 			</ul>

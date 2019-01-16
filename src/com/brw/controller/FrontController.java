@@ -10,12 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.admin.NoticeDeleteCommand;
 import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.admin.NoticeListCommand;
+import com.brw.command.admin.NoticeReviseCommand;
+import com.brw.command.admin.NoticeReviseEndCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.admin.NoticeWriteEndCommand;
+import com.brw.command.admin.adminReviewBoardDelete;
 import com.brw.command.book.BasketInsertCommand;
+import com.brw.command.book.BasketSearchCommand;
 import com.brw.command.book.BookBasketCommand;
 import com.brw.command.book.BookInfomationCommand;
 import com.brw.command.book.BookReviewCommand;
@@ -37,10 +42,12 @@ import com.brw.command.review.ReviewReviseEndCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
+import com.brw.command.review.selectAllReviewBoardReportCommand;
 import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
 import com.brw.command.user.DeleteMemberCommand;
+import com.brw.command.user.DoAttendanceCommand;
 import com.brw.command.user.EmailAuthCommand;
 import com.brw.command.user.FindEmailCheckCommand;
 import com.brw.command.user.FindPwdEmailAuthCommand;
@@ -469,16 +476,13 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 		}
 		/*54 . 선웅 : 회원관리*/
-		else if(command.equals("/sign/adminMemberManage.do")) {
-			com = new SelectAllMemberCommand();
-			com.execute(req, res);
-			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
+		else if(command.equals("/sign/adminManager.do")) {
+			viewPage="/WEB-INF/views/sign/adminManager.jsp";
 		}
 		/*55. 선웅: 신고횟수가 10을 넘기면 회원삭제 가능*/
 		else if(command.equals("/sign/memberDelete.do")) {
 			com = new DeleteMemberCommand();
 			com.execute(req, res);
-			viewPage="/WEB-INF/views/sign/adminMemberManage.jsp";
 		}
 		/*56 명훈 : 리뷰글 수정 페이지로 이동 */
 		else if(command.equals("/review/reviewRevise.do")) {
@@ -492,7 +496,7 @@ public class FrontController extends HttpServlet {
 			com.execute(req, res);
 			int rbNo = (int)req.getAttribute("rbNo");
 			viewPage = "/review/reviewDetail.do?rbNo=" + rbNo;
-		}
+		}	
 		/*58 광준 : 내 정보보기 페이지로 이동*/
 		else if(command.equals("/sign/userInfoView.do")) {
 			viewPage = "/WEB-INF/views/sign/userInfoView.jsp";
@@ -502,14 +506,66 @@ public class FrontController extends HttpServlet {
 			com = new UserInfoViewCommand();
 			com.execute(req, res);
 		}
-		/*60.광준 : 내 정보보기 페이징 처리*/
+
+		/*60 세준 : 즐겨찾기 검색시 결과창*/
+		else if(command.equals("/book/basketSearch.do")) {
+			com = new BasketSearchCommand();
+			com.execute(req, res);
+		}
+		/*61.명훈 : 출석체크 하기 */
+		else if(command.equals("/doAttendance.do")) {
+			com = new DoAttendanceCommand();
+			com.execute(req, res);
+			viewPage = "/checkAttendance.do";
+		}
+		/*62 선웅 : 게시판 관리 피이지  이동*/
+		else if(command.equals("/review/adminReviewBoardManage.do")) {
+			viewPage = "/WEB-INF/views/review/adminReviewBoardManage.jsp";
+		}
+		/*63 선웅: 회원관리 페이지*/
+		else if(command.equals("/sign/memberManager.do")) {
+			com = new SelectAllMemberCommand();
+			com.execute(req, res);
+			viewPage ="/WEB-INF/views/sign/memberManager.jsp";
+		}
+		/*64 선웅 : 게시판 관리 페이지*/
+		else if(command.equals("/review/reviewBoardManager.do")){
+			com = new selectAllReviewBoardReportCommand();
+			com.execute(req, res);
+			viewPage="/WEB-INF/views/review/adminReviewBoardManage.jsp";
+		}
+		/*65 선웅 : 관리자 게시판 삭제*/
+		else if(command.equals("/review/adminReviewDelete.do")) {
+			com = new adminReviewBoardDelete();
+			com.execute(req, res);
+		}
+		/*66 명훈 : 공지사항 수정 페이지로 이동*/
+		else if(command.equals("/admin/noticeRevise.do")) {
+			com = new NoticeReviseCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeRevise.jsp";
+		}
+		/*67 명훈 : 공지사항 수정 업데이트*/
+		else if(command.equals("/admin/noticeReviseEnd.do")) {
+			com = new NoticeReviseEndCommand();
+			com.execute(req, res);
+			int ntcNo = Integer.parseInt(req.getParameter("ntcNo"));
+			viewPage = "/admin/noticeDetail.do?ntcNo="+ntcNo;
+		}
+		/*68 명훈 : 공지사항 삭제*/
+		else if(command.equals("/admin/noticeDelete.do")) {
+			com = new NoticeDeleteCommand();
+			com.execute(req, res);
+			viewPage = "/admin/noticeList.do";
+		}
+		/*69.광준 : 내 정보보기 페이징 처리*/
 		else if(command.equals("/sign/userInfoViewSelect.do")) {
 			com = new UserInfoViewCommand();
 			int cPage = Integer.parseInt(req.getParameter("cPage"));
 			com.execute(req, res);
 			viewPage = "/sign/userInfoViewJoin.do?=cPage"+cPage;
 		}
-		
+
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

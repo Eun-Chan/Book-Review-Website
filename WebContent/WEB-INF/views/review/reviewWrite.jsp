@@ -52,6 +52,13 @@ $(function(){
 	
 	$("#btnSave").on("click",function(){
 		
+		// 제목입력칸에 ', " 입력 못하게 하기
+		var regTitle = /[^'"]/;
+		if(!regTitle.test($("input[name=rbTitle]").val())){
+			alert("\', \"는 입력 불가합니다.");
+			return;
+		}
+		
 		// 유효성 검사는 이곳에서
      	// 리뷰 제목
     	if($("input[name=rbTitle]").val().trim().length == 0){
@@ -184,7 +191,7 @@ input#rbBookTitle{
 <body>
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
-		<form action="<%=request.getContextPath() %>/review/reviewWriteEnd.do" name="write_form" id="write-form">
+		<form action="<%=request.getContextPath() %>/review/reviewWriteEnd.do" name="write_form" id="write-form" method="post">
 			<div class="form-group" id="write-container">
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />

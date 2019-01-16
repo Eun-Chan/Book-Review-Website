@@ -21,7 +21,18 @@ footer p{
 	bottom: 70px;
 }
 </style>
-
+<script>
+$(function(){
+	// 공지사항 수정 버튼 리스너
+	$("#btn-revise-notice").on("click",function(){
+		location.href = "<%=request.getContextPath()%>/admin/noticeRevise.do?ntcNo=" + <%=n.getNtcNo()%>;
+	});
+	// 공지사항 삭제 버튼 리스너
+	$("#btn-delete-notice").on("click",function(){
+		location.href = "<%=request.getContextPath()%>/admin/noticeDelete.do?ntcNo=" + <%=n.getNtcNo()%>;
+	});
+});
+</script>
 
 	<div id ="reviewDetail">
 		<div id ="reviewDetail-Header">
@@ -57,7 +68,15 @@ footer p{
 			<ul id="left-menu">
 				<li><a href="<%=request.getContextPath() %>/admin/noticeList.do" class="btn-gradient green">목록 </a></li>
 			</ul>
+			<ul id="right-menu">
+				<li><button class="btn-gradient red" style ="float: right;">신고하기</button></li>
+			<%if(user!=null && (user.getUserId().equals("admin"))){ %>
+				<li><button id="btn-delete-notice" class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
+				<li><button id="btn-revise-notice" class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
+			<%} %>
+			</ul>
 		</div>
+		
 	</div>	
 
 	<script>

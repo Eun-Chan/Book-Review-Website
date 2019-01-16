@@ -7,7 +7,8 @@ public class ReviewBoardReportDTO {
 	private String rbReportWriter; //신고 하는 사람
 	private String rbReportContent; //신고내용
 	private String rbReportClasses; //신고 분류
-	private String reReportDate;//신고당한 날짜
+	private String rbReportDate;//신고당한 날짜
+	private String rbReportDelFlag; //신고 게시판 삭제여부
 	
 	
 	public ReviewBoardReportDTO() {
@@ -61,12 +62,22 @@ public class ReviewBoardReportDTO {
 	public void setRbReportClasses(String rbReportClasses) {
 		this.rbReportClasses = rbReportClasses;
 	}
-	public String getReReportDate() {
-		return reReportDate;
+	public String getRbReportDate() {
+		return rbReportDate;
 	}
-	public void setReReportDate(String reReportDate) {
-		this.reReportDate = reReportDate;
+
+	public void setRbReportDate(String rbReportDate) {
+		this.rbReportDate = rbReportDate;
 	}
+
+	public String getRbReportDelFlag() {
+		return rbReportDelFlag;
+	}
+
+	public void setRbReportDelFlag(String rbReportDelFlag) {
+		this.rbReportDelFlag = rbReportDelFlag;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewBoardReportDTO [rbReportRbNo=" + rbReportRbNo + ", rbReportTitle=" + rbReportTitle
