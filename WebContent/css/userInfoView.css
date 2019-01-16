@@ -1,5 +1,39 @@
+/********* 메뉴 *********/
+/* 내가 쓴 글 메뉴(리뷰/댓글) */
+#select-Review, #select-ReviewComment
+{
+	border: 1px solid lightgray;
+}
+/* 메뉴선택 컨테이너 */
+#MyContent
+{
+	width: 30%;
+	margin-top: 3%;
+}
+
+
+/********* 내용 *********/
 /*한 행 마우스 호버 시 손모양*/
 tr.myReviewContent:hover, tr.myReivewComment:hover
 {
 	cursor: pointer;
+}
+ 
+
+/********* 페이징 바 *********/
+#pageing-Container
+{
+	text-align: center;
+}
+li.paing-index>a
+{
+	position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #428bca;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }

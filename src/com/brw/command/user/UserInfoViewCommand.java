@@ -33,15 +33,39 @@ public class UserInfoViewCommand implements Command{
 		
 		//2.파라미터 핸들링
 		String userId = request.getParameter("nowUser");
+		int pageNum = Integer.parseInt((request.getParameter("cPage"))==null?"1":(request.getParameter("cPage")));
+		System.out.println("ㅎㅎ" + pageNum);
 		JsonArray postWriteList = new JsonArray();
 		postWriteList = dao.postListLookup(userId);
 		JsonArray commentWriteList = new JsonArray();
 		commentWriteList = dao.commentListLookup(userId);
 		
+		/*페이징 처리*/
+		int listViewCnt = 10;
+		int postListTotalSize = postWriteList.size();
+		int postTotalPage = postListTotalSize/listViewCnt;
+		if(postListTotalSize%listViewCnt > 0) postTotalPage++;
+		
+		int commentListTotalSize = commentWriteList.size();
+		int commentTotalPage = commentListTotalSize/listViewCnt;
+		if(commentListTotalSize%listViewCnt > 0) commentTotalPage++;
+		
+		String postHtml = "";
+		String endHtml = "<li class='paging-index'><a href=''>다음</a></li>";
+		for(int i=1; i<=postTotalPage; i++)
+		{
+			postHtml += "<li class='paging-index'><a id='cPage"+i+"'>"+ i +"</a></li>";
+		}
+		JsonArray html_result = new JsonArray();
+		JsonObject postHtml_result = new JsonObject();
+		postHtml_result.addProperty("postHtml", postHtml+endHtml);
+		html_result.add(postHtml_result);
+		
+		
 		JsonArray result = new JsonArray();
 		result.add(postWriteList);
 		result.add(commentWriteList);
-
+		result.add(html_result);
 		try {
 			response.getWriter().print(result);
 		} catch (IOException e) {

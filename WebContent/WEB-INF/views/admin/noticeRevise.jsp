@@ -5,7 +5,9 @@
 <!-- 서머노트용 js, css 적용 -->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet"> 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
-
+<%-- <%
+	NoticeDTO ntc = (NoticeDTO)request.getAttribute("ntc");
+%> --%>
 
 <script type="text/javascript">
 
@@ -78,6 +80,20 @@ $(function(){
 
 	});
 	
+	<%
+	// 관리자이면 리뷰 내용 적용 (수정하기 위해서)
+	if(user != null && "admin".equals(user.getUserId())){
+	%>
+		var title = $("input[name=ntcTitle]");
+		var content = $("#summernote");
+		
+		title.val('${ ntc.getNtcTitle() }');
+		content.summernote('code','${ ntc.getNtcContent() }');
+		
+	<%
+	}
+	%>	
+	
 	
 	/* summernote 내용 초기화 버튼 */
 	$("button:reset").on("click",function(){
@@ -112,11 +128,12 @@ div#write-container textarea{
 <body>
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
-		<form action="<%=request.getContextPath() %>/admin/noticeWriteEnd.do" name="write_form" id="write-form" method="post">
+		<form action="<%=request.getContextPath() %>/admin/noticeReviseEnd.do" name="write_form" id="write-form" method="post">
 			<div class="form-group" id="write-container">
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="ntcTitle" class="form-control" placeholder="제목" />
-				
+				<!-- 글번호 히든태그 -->
+				<input type="hidden" name="ntcNo" value="${ ntc.getNtcNo() }"/>
 				<!-- summernote용 텍스트에어리어 -->
 				<textarea name="ntcContent" id="summernote"></textarea>
 			</div>
