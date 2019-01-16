@@ -52,6 +52,13 @@ $(function(){
 	
 	$("#btnSave").on("click",function(){
 		
+		// 제목입력칸에 ', " 입력 못하게 하기
+		var regTitle = /[^'"]/;
+		if(!regTitle.test($("input[name=rbTitle]").val())){
+			alert("\', \"는 입력 불가합니다.");
+			return;
+		}
+		
 		// 유효성 검사는 이곳에서
      	// 리뷰 제목
     	if($("input[name=rbTitle]").val().trim().length == 0){

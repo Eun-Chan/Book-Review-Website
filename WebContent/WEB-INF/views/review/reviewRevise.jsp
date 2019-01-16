@@ -77,8 +77,8 @@ $(function(){
 		var isbn = $("input[name=rbIsbn]");
 		var starScore = $("input[name=rbStarscore]");
 		
-		title.val("<%=rbv.getRbTitle()%>");
-		content.summernote('code',"<%=rbv.getRbContent()%>");
+		<%-- title.val("<%=rbv.getRbTitle()%>"); --%>
+		<%-- content.summernote('code','<%=rbv.getRbContent()%>'); --%>
 		bookTitle.val("<%=rbv.getRbBookTitle()%>");
 		isbn.val("<%=rbv.getRbIsbn()%>");
 		starScore.val(<%=rbv.getRbStarscore()%>);
@@ -114,6 +114,13 @@ $(function(){
 	$("#btnSave").on("click",function(){
 		
 		// 유효성 검사는 이곳에서
+		
+		// 제목입력칸에 ', " 입력 못하게 하기
+		var regTitle = /[^'"]/;
+		if(!regTitle.test($("input[name=rbTitle]").val())){
+			alert("\', \"는 입력 불가합니다.");
+			return;
+		}
      	// 리뷰 제목
     	if($("input[name=rbTitle]").val().trim().length == 0){
     		alert("리뷰 제목을 입력하세요.");
@@ -250,7 +257,7 @@ input#rbBookTitle{
 				<!-- 글번호 히든태그 -->
 				<input type="hidden" name="rbNo" value="<%=rbv.getRbNo() %>"/>
 				<!-- 글제목 인풋태그 -->
-				<input type="text" name="rbTitle" class="form-control" placeholder="제목" />
+				<input type="text" name="rbTitle" class="form-control" placeholder="제목" value='<%=rbv.getRbTitle()%>'/>
 				<!-- 작성자 히든태그 -->
 				<input type="hidden" name="rbWriter" value="<%=user!=null?user.getUserId():""%>"/>
 				<!-- 도서명 인풋태그 -->
@@ -283,7 +290,7 @@ input#rbBookTitle{
 				<span id="starscore">별점을 입력해주세요.</span>
 				
 				<!-- summernote용 텍스트에어리어 -->
-				<textarea name="rbContent" id="summernote"></textarea>
+				<textarea name="rbContent" id="summernote"><%=rbv.getRbContent() %></textarea>
 			</div>
 			<div id="btn-group" class="text-center">
 			<button type="button" class="btn btn-success" id="btnSave">등록</button>

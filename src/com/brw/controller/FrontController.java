@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
+import com.brw.command.admin.NoticeDeleteCommand;
 import com.brw.command.admin.NoticeDetailViewCommand;
 import com.brw.command.admin.NoticeListCommand;
+import com.brw.command.admin.NoticeReviseCommand;
+import com.brw.command.admin.NoticeReviseEndCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.admin.NoticeWriteEndCommand;
@@ -534,6 +537,25 @@ public class FrontController extends HttpServlet {
 		else if(command.equals("/review/adminReviewDelete.do")) {
 			com = new adminReviewBoardDelete();
 			com.execute(req, res);
+		}
+		/*66 명훈 : 공지사항 수정 페이지로 이동*/
+		else if(command.equals("/admin/noticeRevise.do")) {
+			com = new NoticeReviseCommand();
+			com.execute(req, res);
+			viewPage = "/WEB-INF/views/admin/noticeRevise.jsp";
+		}
+		/*67 명훈 : 공지사항 수정 업데이트*/
+		else if(command.equals("/admin/noticeReviseEnd.do")) {
+			com = new NoticeReviseEndCommand();
+			com.execute(req, res);
+			int ntcNo = Integer.parseInt(req.getParameter("ntcNo"));
+			viewPage = "/admin/noticeDetail.do?ntcNo="+ntcNo;
+		}
+		/*68 명훈 : 공지사항 삭제*/
+		else if(command.equals("/admin/noticeDelete.do")) {
+			com = new NoticeDeleteCommand();
+			com.execute(req, res);
+			viewPage = "/admin/noticeList.do";
 		}
 
 		if(viewPage!=null){			
