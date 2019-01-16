@@ -26,26 +26,36 @@
 	location.href = "<%=request.getContextPath()%>";
 	<% } %>
 
-	$(".btn-gradient.cyan").click(function(){
-		var userPassword= $("#passwordCheckedText").val().trim();
-		if($("#passwordCheckedText").val().trim().length ==0){
-			alert("비밀번호를 입력해 주세요.");
-			return;
-		}
-		else{
-			$.ajax({
-				url:"<%=request.getContextPath()%>/sign/checkedPassword.do?userPassword="+userPassword+"&userId=<%=user.getUserId()%>",
-				success:function(data){
-					if(data.userId==undefined){
-						alert("비밀번호를 정확히 입력해 주세요.");
-						return;
-					}
-					else{
-						location.href="<%=request.getContextPath()%>/sign/userPrivacy.do";
-					}
-				}
-			});
-		}
+	/*키보드 엔터 추가*/
+	$("#passwordCheckedText").keydown(function(){
+		if(event.keyCode == 13) updatePageMove();
 	});
+	$(".btn-gradient.cyan").click(function(){
+		updatePageMove();
+	});
+	
+function updatePageMove()
+{
+	console.log("처리중");
+	var userPassword= $("#passwordCheckedText").val().trim();
+	if($("#passwordCheckedText").val().trim().length ==0){
+		alert("비밀번호를 입력해 주세요.");
+		return;
+	}
+	else{
+		$.ajax({
+			url:"<%=request.getContextPath()%>/sign/checkedPassword.do?userPassword="+userPassword+"&userId=<%=user.getUserId()%>",
+			success:function(data){
+				if(data.userId==undefined){
+					alert("비밀번호를 정확히 입력해 주세요.");
+					return;
+				}
+				else{
+					location.href="<%=request.getContextPath()%>/sign/userPrivacy.do";
+				}
+			}
+		});
+	}
+}
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>
