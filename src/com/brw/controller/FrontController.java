@@ -15,7 +15,8 @@ import com.brw.command.admin.NoticeListCommand;
 import com.brw.command.admin.NoticeSearchCommand;
 import com.brw.command.admin.NoticeUpdateAllowViewCommand;
 import com.brw.command.admin.NoticeWriteEndCommand;
-import com.brw.command.admin.adminReviewBoardDelete;
+import com.brw.command.admin.AdminMemberGradeUpdateCommand;
+import com.brw.command.admin.AdminReviewBoardDeleteCommand;
 import com.brw.command.book.BasketInsertCommand;
 import com.brw.command.book.BasketSearchCommand;
 import com.brw.command.book.BookBasketCommand;
@@ -39,7 +40,7 @@ import com.brw.command.review.ReviewReviseEndCommand;
 import com.brw.command.review.ReviewSearchCommand;
 import com.brw.command.review.ReviewWriteEndCommand;
 import com.brw.command.review.ReviewWriteImageCommand;
-import com.brw.command.review.selectAllReviewBoardReportCommand;
+import com.brw.command.review.SelectAllReviewBoardReportCommand;
 import com.brw.command.user.CheckAttendanceCommand;
 import com.brw.command.user.CheckedPasswordCommand;
 import com.brw.command.user.CreateUserCommand;
@@ -526,16 +527,23 @@ public class FrontController extends HttpServlet {
 		}
 		/*64 선웅 : 게시판 관리 페이지*/
 		else if(command.equals("/review/reviewBoardManager.do")){
-			com = new selectAllReviewBoardReportCommand();
+			com = new SelectAllReviewBoardReportCommand();
 			com.execute(req, res);
 			viewPage="/WEB-INF/views/review/adminReviewBoardManage.jsp";
 		}
 		/*65 선웅 : 관리자 게시판 삭제*/
 		else if(command.equals("/review/adminReviewDelete.do")) {
-			com = new adminReviewBoardDelete();
+			com = new AdminReviewBoardDeleteCommand();
 			com.execute(req, res);
 		}
-
+		
+		/*66 선웅 : 관리자 회원 등급 업*/
+		else if(command.equals("/sign/updateGrade.do")) {
+			com = new AdminMemberGradeUpdateCommand();
+			com.execute(req, res);
+		}
+		
+		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 			dispatcher.forward(req, res);	

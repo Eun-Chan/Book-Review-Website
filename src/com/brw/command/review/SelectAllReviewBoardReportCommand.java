@@ -11,7 +11,7 @@ import com.brw.dao.DAO;
 import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.UserDTO;
 
-public class selectAllReviewBoardReportCommand implements Command{
+public class SelectAllReviewBoardReportCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

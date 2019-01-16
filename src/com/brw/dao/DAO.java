@@ -3632,6 +3632,61 @@ public class DAO {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}			
+			return result;
+		}
+
+		/**
+		 * 86 장선웅 : 관리자 맴버 등급 조정
+		 * @param userId
+		 * @param userPoint
+		 * @return
+		 */
+		public int updateGrade(String userId, int userPoint) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			int result = 0;
+			String query = "update usertable set usergrade = ? where userid=?";
+			
+			try {
+				int grade = 0;
+				if(userPoint>=0 && userPoint<200) {
+					grade = 0;
+				}
+				else if(userPoint>=200 && userPoint<350) {
+					grade = 1;
+				}
+				else if(userPoint>=350 && userPoint<500) {
+					grade = 2;
+				}
+				else if(userPoint>=500 && userPoint<1000) {
+					grade = 3;
+				}
+				else {
+					grade=4;
+				}
+				if(userId.equals("admin")) {
+					grade=10;
+				}
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, grade);
+				pstmt.setString(2, userId);
+				
+				
+				result = pstmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 			return result;

@@ -5,8 +5,8 @@
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/adminMemberManager.css" />
 <div class="videoWrapper">
-<iframe src="<%=request.getContextPath() %>/sign/memberManager.do" frameborder="0" width="1000px" height="410px">
+<iframe src="<%=request.getContextPath() %>/sign/memberManager.do" frameborder="0" width="900px" height="417px" marginWidth=0>
 </iframe>
-<iframe src="<%=request.getContextPath() %>/review/reviewBoardManager.do" frameborder="0" width="1200px" height="500px" style="left: 20%";></iframe>
+<iframe src="<%=request.getContextPath() %>/review/reviewBoardManager.do" frameborder="0" width="1000px" height="500px" marginWidth=0></iframe>
 </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

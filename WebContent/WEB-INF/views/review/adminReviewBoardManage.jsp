@@ -35,9 +35,7 @@ th{
 .del-member{
 	border: none;
 }
-#report_rbNo{
- cursor: pointer;
-}
+
 </style>
 <!-- 신고게시판 리스트를 보여줄 테이블 영역 -->
 <div id="table-container">
@@ -60,16 +58,33 @@ th{
          <%if(reportList != null || !reportList.isEmpty()) {%>
          	<%for(ReviewBoardReportDTO rbr : reportList){ %>
             <tr class="notice">
-               <td class="text-center col-md-1" style="font-size: 0.9em;" id="report_rbNo"><%=rbr.getRbReportRbNo() %></td>
+               <td class="text-center col-md-1" style="font-size: 0.9em; cursor: pointer;" id="report_rbNo<%=rbr.getRbReportRbNo()%>"><%=rbr.getRbReportRbNo() %></td>
                <td class="text-center col-md-1" style="font-size: 0.9em;"><%=rbr.getRbReportTitle() %></td>
-               <td class="text-center col-md-1" style="font-size: 0.9em;"><%=rbr.getRbReportSuspect() %></td>
                <td class="text-center col-md-1" style="font-size: 0.9em;"><%=rbr.getRbReportWriter() %></td>
+               <td class="text-center col-md-1" style="font-size: 0.9em;"><%=rbr.getRbReportSuspect() %></td>
                <td class="text-center col-md-4" style="font-size: 0.9em;"><%=rbr.getRbReportContent() %></td>
                <td class="text-center col-md-1" style="font-size: 0.9em;"><%=rbr.getRbReportClasses() %></td>
                <td class="text-center col-md-2" style="font-size: 0.9em;"><%=rbr.getRbReportDate() %></td>
                 <td class="del-member col-md-1" style="border: none; text-align: center;"><button class="btn-gradient red" value="<%=rbr.getRbReportRbNo()%>">삭제</button></td>
+                <script>
+	          	  	$("#report_rbNo<%=rbr.getRbReportRbNo()%>").click(function(){
+	          	  		parent.location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo=<%=rbr.getRbReportRbNo()%>";
+	          	  	});
+	          		$(".btn-gradient.red").click(function(){
+	          	  		if(confirm("해당글을 삭제하시겠습니까?")){
+	          	  			$.ajax({
+	          	  				url:"<%=request.getContextPath()%>/review/adminReviewDelete.do?rbNo=<%=rbr.getRbReportRbNo()%>",
+	          	  				success:function(data){
+	          	  					if(data>0){
+	          	  						alert("게시글 수정에 성공하엿습니다.");
+	          	  						location.href ="<%=request.getContextPath()%>/review/reviewBoardManager.do";
+	          	  					}
+	          	  				}
+	          	  			});	
+	          	  		}
+	          	  	});
+                </script>
             </tr>
-             <input type="hidden" id="rbNo" value="<%=rbr.getRbReportRbNo() %>" />
             <%} %>
          <%} %>
          </tbody>
@@ -77,27 +92,5 @@ th{
       <div id="pagebar-container" class="text-center">
   	  	<%=pageBar %>
   	  </div>
-  	  <script>
-  	 	$(".btn-gradient.red").click(function(){
-  	  		var rbNo = $("#rbNo").val();
-  	  		if(confirm("해당글을 삭제하시겠습니까?")){
-  	  			$.ajax({
-  	  				url:"<%=request.getContextPath()%>/review/adminReviewDelete.do?rbNo="+rbNo,
-  	  				success:function(data){
-  	  					if(data>0){
-  	  						alert("게시글 수정에 성공하엿습니다.");
-  	  						location.href ="<%=request.getContextPath()%>/review/reviewBoardManager.do";
-  	  					}
-  	  				}
-  	  			});
-  	  			
-  	  		}
-  	  			
-  	  	});
-  	  	$("#report_rbNo").click(function(){
-  	  		var rbNo = $("#rbNo").val();
-  	  		parent.location.href="<%=request.getContextPath()%>/review/reviewDetail.do?rbNo="+rbNo;
-  	  	});
-  	  </script>
 </div>
 </div>

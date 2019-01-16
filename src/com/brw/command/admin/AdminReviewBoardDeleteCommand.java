@@ -10,7 +10,7 @@ import com.brw.dao.DAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-public class adminReviewBoardDelete implements Command{
+public class AdminReviewBoardDeleteCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {

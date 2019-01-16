@@ -1,4 +1,4 @@
 iframe{
-	position: relative;
-	left: 25%;	
+	margin: 0 auto;
+	display: block;
 }

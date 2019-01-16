@@ -37,10 +37,24 @@ th{
 .del-member{
 	border: none;
 }
+.btn-gradient.green {
+    background: rgba(130,200,160,1);
+    background: -moz-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(130,200,160,1)), color-stop(100%, rgba(130,199,158,1)));
+    background: -webkit-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -o-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: -ms-linear-gradient(top, rgba(130,200,160,1) 0%, rgba(130,199,158,1) 100%);
+    background: linear-gradient(to bottom, rgba(130,200,160,1) 0%, rgba(124, 185, 149, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#82c8a0', endColorstr='#82c79e', GradientType=0 );
+}
+#grade-update{
+	float: right;
+}
 </style>
 <div id="table-container">
 <div id="review-list-container" class="container-fluid">
    <h2 class="text-primary">회원 정보</h2>
+   <button class="btn-gradient green" id="grade-update">회원 등급업</button>
       <table class="table table-hover table-info table-responsive"
          id="review-list-table">
          <thead>
@@ -92,10 +106,18 @@ th{
 						location.href="<%=request.getContextPath()%>/sign/memberManager.do";
 					}
 				}
-			})
-			
-			
-
+			});
 		}
-	})
+	});
+	$("#grade-update").click(function(){
+		if(confirm("회원 등급을 수정하시겟습니까?")){
+			$.ajax({
+				url:"<%=request.getContextPath()%>/sign/updateGrade.do",
+				success:function(data){
+					alert("회원 등급조정에 성공하였습니다.");
+					location.href="<%=request.getContextPath()%>/sign/memberManager.do";
+				}
+			});
+		}
+	});
 </script>
