@@ -502,6 +502,13 @@ public class FrontController extends HttpServlet {
 			com = new UserInfoViewCommand();
 			com.execute(req, res);
 		}
+		/*60.광준 : 내 정보보기 페이징 처리*/
+		else if(command.equals("/sign/userInfoViewSelect.do")) {
+			com = new UserInfoViewCommand();
+			int cPage = Integer.parseInt(req.getParameter("cPage"));
+			com.execute(req, res);
+			viewPage = "/sign/userInfoViewJoin.do?=cPage"+cPage;
+		}
 		
 		if(viewPage!=null){			
 			RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
