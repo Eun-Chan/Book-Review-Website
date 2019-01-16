@@ -93,71 +93,77 @@ td.goods_pubDate{
 	}
 	//ajax로 불러온 리스트 값을 출력하는 함수
 	function bookListDisplay(success, data) {
-		$("div#pageBar span, div#pageBar a").remove();
-		
-		console.log(data);
-		
-		
-		
-		//var table = $("<table class='table table-hover''><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col' style='width:80px'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
-		var table = $("<table class='table table''><tr class='bg-primary'><th scope='col'></th><th scope='col'>내용</th><th scope='col'>발간일</th><th scope='col'>정가</th></tr></table>");
-		var numPerPage = 10;
-		var totalResults = data.totalResults;//검색 결과 총 수
-		//전체 페이지 수	
-		var totalPage = parseInt(Math.ceil(totalResults/numPerPage));
-		var pageBarSize = 5;
-		var startPage = Math.floor(((cPage - 1)/pageBarSize)) * pageBarSize +1;
-		var endPage = startPage + pageBarSize -1;
-		var pageNo = startPage;//출력될 페이지 번호
-		
-		//도서정보 리스트 출력부
-		for(var i in data.item) {
-			var book  = data.item[i];
-				
-			var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'>"+"<img src ='"+book.cover+"'></a></td>";
-			html += "<td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'><h3 class='goods_title'>"+book.title+"</h3></a>";
-			html += "<p class='badge goods_author'>"+book.author+"</p>";
-  			html += "<p class='goods_description'><책소개>"+book.description+"</p>";
-			html += "<td class='goods_pubDate' style='vertical-align: middle;'>"+book.pubDate+"</td>";
-			html += "<td style='width:110px; vertical-align: middle;'><span style='font-weight: bold; color:#e45374; font-size:16px;'>"+book.priceStandard+"원</span></td></tr>";	
+		if(searchVal == ""){
+			alert("검색어를 입력하세요!");
+			return
+		}else{
 			
-			table.append(html);
+			$("div#pageBar span, div#pageBar a").remove();
+			
+			console.log(data);
+			
+			
+			
+			//var table = $("<table class='table table-hover''><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col' style='width:80px'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
+			var table = $("<table class='table table''><tr class='bg-primary'><th scope='col'></th><th scope='col'>내용</th><th scope='col'>발간일</th><th scope='col'>정가</th></tr></table>");
+			var numPerPage = 10;
+			var totalResults = data.totalResults;//검색 결과 총 수
+			//전체 페이지 수	
+			var totalPage = parseInt(Math.ceil(totalResults/numPerPage));
+			var pageBarSize = 5;
+			var startPage = Math.floor(((cPage - 1)/pageBarSize)) * pageBarSize +1;
+			var endPage = startPage + pageBarSize -1;
+			var pageNo = startPage;//출력될 페이지 번호
+			
+			//도서정보 리스트 출력부
+			for(var i in data.item) {
+				var book  = data.item[i];
+					
+				var html = "<tr><td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'>"+"<img src ='"+book.cover+"'></a></td>";
+				html += "<td><a href='<%=request.getContextPath()%>/book/bookInfo.do?isbn13="+book.isbn13+"'><h3 class='goods_title'>"+book.title+"</h3></a>";
+				html += "<p class='badge goods_author'>"+book.author+"</p>";
+	  			html += "<p class='goods_description'><책소개>"+book.description+"</p>";
+				html += "<td class='goods_pubDate' style='vertical-align: middle;'>"+book.pubDate+"</td>";
+				html += "<td style='width:110px; vertical-align: middle;'><span style='font-weight: bold; color:#e45374; font-size:16px;'>"+book.priceStandard+"원</span></td></tr>";	
+				
+				table.append(html);
+			}
+			$("#search_keyword").html("<h4>'<span style='color:#f33494;'>"+searchVal+"</span>'의 검색결과</h4>");
+			$("#totalContent").html("<p>총 "+totalResults+"건의 검색결과 중 "+cPage+" 페이지</p><br>");
+			$("#bookListContainer").html(table);
+			
+			//pageBar
+			var pageBar = "<ul class='pagination'>";
+			
+			//이전 section
+		    if(pageNo == 1 ){
+		    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
+		    }
+		    else {
+		        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='bookSearch("+(pageNo-1)+")'>이전</a></li>";
+		    }
+		        
+			//[페이지] section
+		    while(pageNo <= endPage && pageNo <= totalPage){
+		        
+		        if(cPage == pageNo ){
+		            pageBar += "<li class='page-item active'><a class='page-link' href='#'><span class='cPage'>"+pageNo+"</span></a></li> ";
+		        }
+		        else {
+		            pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>"+pageNo+"</a></li> ";
+		        }
+		        pageNo++;
+		    }
+		    
+		    //다음 section
+		    if(pageNo > totalPage){
+		    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
+		    } else {
+		        pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>다음</a></li>";
+		    }
+		    
+		    $("div#pageBar").append(pageBar);			
 		}
-		$("#search_keyword").html("<h4>'<span style='color:#f33494;'>"+searchVal+"</span>'의 검색결과</h4>");
-		$("#totalContent").html("<p>총 "+totalResults+"건의 검색결과 중 "+cPage+" 페이지</p><br>");
-		$("#bookListContainer").html(table);
-		
-		//pageBar
-		var pageBar = "<ul class='pagination'>";
-		
-		//이전 section
-	    if(pageNo == 1 ){
-	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>이전</a></li>";
-	    }
-	    else {
-	        pageBar += "<li class='page-item disabled'><a class='page-link' onclick='bookSearch("+(pageNo-1)+")'>이전</a></li>";
-	    }
-	        
-		//[페이지] section
-	    while(pageNo <= endPage && pageNo <= totalPage){
-	        
-	        if(cPage == pageNo ){
-	            pageBar += "<li class='page-item active'><a class='page-link' href='#'><span class='cPage'>"+pageNo+"</span></a></li> ";
-	        }
-	        else {
-	            pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>"+pageNo+"</a></li> ";
-	        }
-	        pageNo++;
-	    }
-	    
-	    //다음 section
-	    if(pageNo > totalPage){
-	    	pageBar += "<li class='page-item disabled'><a class='page-link' href='#'>다음</a></li>";
-	    } else {
-	        pageBar += "<li class='page-item'><a class='page-link' onclick='bookSearch("+pageNo+")'>다음</a></li>";
-	    }
-	    
-	    $("div#pageBar").append(pageBar);
 	}
 	
 	//카테고리 클릭시 관련 카테고리의 신작을 보여주는 첫 함수
@@ -214,7 +220,7 @@ td.goods_pubDate{
 			html += "<td style='width:110px; vertical-align: middle;'><span style='font-weight: bold; color:#e45374; font-size:16px;'>"+book.priceStandard+"원</span></td></tr>";
 			table.append(html);
 		}
-		$("#search_keyword").html("<h4>'<span style='color:#f33494;'>"+searchVal+"</span>'의 검색결과</h4>");
+		$("#search_keyword").html("<h4>'<span style='color:#f33494;'>"+data.searchCategoryName+"</span>'카테고리 신간!</h4>");
 		$("#totalContent").html("<p>총 "+totalResults+"건의 검색결과 중 "+cPage+" 페이지</p><br>");
 		$("#bookListContainer").html(table);
 		
