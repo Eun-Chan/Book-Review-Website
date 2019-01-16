@@ -35,8 +35,10 @@ public class UpdateUserCommand implements Command{
 		
 		DAO dao = DAO.getInstance();
 		int result = dao.updateUser(userId,userPassword,userEmail,userNickName);
+		
+		
+		
 		Gson gson = new Gson();
-		System.out.println("쿼리 실행 완료");
 		try {
 			gson.toJson(result,response.getWriter());
 		} catch (JsonIOException e) {

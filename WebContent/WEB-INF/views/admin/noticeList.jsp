@@ -18,7 +18,7 @@ div#notice-manager-container {
 /* 테이블 영역 */
 table#notice-list-table th, table#notice-list-table td {
 	/* padding: 10px 5px 10px 0; */
-	font-size: 13px;
+	font-size: 0.8em;
 	vertical-align: middle;
 }
 

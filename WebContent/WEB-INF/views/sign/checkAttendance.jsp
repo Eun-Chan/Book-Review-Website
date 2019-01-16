@@ -3,23 +3,23 @@
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%@ page import="java.util.List" %>
 <% 
-	List<String> dayList = (List<String>)request.getAttribute("dayList");
+	List<String> today = (List<String>)request.getAttribute("today");
 	List<AttendanceDTO> atList = (List<AttendanceDTO>)request.getAttribute("atList");
+	boolean checkValidation = false;
+	if(request.getAttribute("checkValidation") != null){
+		checkValidation = (boolean)request.getAttribute("checkValidation");
+	}
 %>
 <style>
 div#attendance-container{
 	width: 900px;
-	min-height: 400px;
+	min-height: 600px;
 	text-align: center;
 	margin: 30px auto;
 }
 /* 출석체크 인풋:텍스트, 버튼 가운데 정렬 */
 #attd-content-container{
 	margin: 0 auto;
-}
-/* 출석체크 인풋:텍스트 너비 */
-#attd-text{
-	width: 400px;
 }
 /* 출석체크 리스트 헤드처럼 보이기 */
 #tr-head{
@@ -34,7 +34,27 @@ div#attendance-container{
 #attendance-table tbody td {
 	vertical-align: middle;
 }
+#day-table th{
+	font-size: 2em;
+	background: tomato;
+}
 </style>
+<script>
+function validate(){
+	<% if(user == null){ %>
+	alert("로그인을 해주세요.");
+	return false;
+	<% } %>
+	
+	<% if(checkValidation) { %>
+	alert("출첵은 하루에 한 번만! 욕심쟁이~");
+	<% } %>
+	
+	return true;
+}
+
+</script>
+
 <div id="attendance-container">
 	<h2>출석체크</h2>
 	
@@ -42,26 +62,22 @@ div#attendance-container{
 	<table id="day-table" class="table table-hover table-info table-responsive">
 		<thead>
 			<tr>
-				<% for(int i=0; i<dayList.size(); i++) { %>
-				<th class="text-center" <%=i == dayList.size()/2?"style='background: tomato;'":"" %>><%=dayList.get(i) %></th>
-				<% } %>
+				<th class="text-center"><%=today.get(0) %></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td></td>
-				<td colspan="5">
-					<form action="">
+				<td>
+					<form action="<%=request.getContextPath()%>/doAttendance.do" onsubmit="return validate();" method="post">
 					<div id="attd-content-container" class="input-group">
-						<input type="hidden" name="atUserId" <%=user == null?"":user.getUserId() %> />
-						<input id="attd-text" type="text" class="form-control" placeholder="출석쳌~! (100자 이내)" aria-describedby="basic-addon1">
+						<input type="hidden" name="atUserId" value="<%=user == null?"":user.getUserId() %>" />
+						<input id="attd-text" type="text" name="atContent" class="form-control" placeholder="출석쳌~! (100자 이내)" aria-describedby="basic-addon1">
 						<span class="input-group-btn">
-					    	<button class="btn btn-primary" type="button">Double D와 함께하는 특별한 밤!</button>
+					    	<button id="do-attendance" class="btn btn-primary" type="submit">Double D와 함께하는 특별한 밤!</button>
 					    </span>
 					</div>
 					</form>
 				</td>
-				<td></td>
 			</tr>
 		</tbody>
 	</table>
@@ -74,7 +90,6 @@ div#attendance-container{
 				<th class="col-md-6 text-center">메시지</th>
 				<th class="col-md-2 text-center">닉네임</th>
 				<th class="col-md-1 text-center">총<br>출석일수</th>
-				<th class="col-md-1 text-center">개근일수</th>
 				<th class="col-md-2 text-center">출석시간</th>
 			</tr>
 		</thead>
@@ -88,7 +103,6 @@ div#attendance-container{
 					<%=at.getUserNickName() %>
 				</td>
 				<td><%=at.getAtTotal() %></td>
-				<td><%=at.getAtSerial() %></td>
 				<td><%=at.getAtDate() %></td>
 			</tr>
 			<% } %>

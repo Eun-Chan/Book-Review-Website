@@ -36,7 +36,11 @@ div#seller{
 i.fas.fa-star-half-alt, i.fas.fa-star{
 	color: yellow;
 }
-
+div#start-Container1 span.starR1, div#start-Container1 span.starR2,
+div#start-Container3 span.starR1, div#start-Container3 span.starR2
+{
+	cursor: unset!important;
+}
 </style>
 	<br />
 	<br />
@@ -109,7 +113,7 @@ i.fas.fa-star-half-alt, i.fas.fa-star{
 		</div>
 		
 		<div id="oneLineView">
-			<ul id="ul_oneLineView">
+			<ul id="ul_oneLineView" >
 				
 				<%if(oneLineList != null){ 
 					for(int i = 0; i < oneLineList.size(); i++){
@@ -344,7 +348,7 @@ function insert_oneLineRV(){
 				
 				html += "<span class='oneLineContent "+i+"'>"+oneLine.content+"</span>";
 				html += "<span id='right'><span class='oneLineUserId "+i+"'>"+oneLine.userId+"</span>";
-				html += "<span class='oneLineNow "+i+"'>"+oneLine.now+"</span>";
+				html += "<span class='oneLineNow "+i+"'>"+oneLine.transfomeNow+"</span>";
 				html += "<a onclick='oneLineDel("+oneLine.no+",\""+oneLine.userId+"\", event)'>[삭제]</a></span><br>";
 				html += "</li>";
 
@@ -359,6 +363,13 @@ function insert_oneLineRV(){
 			var tempReviewSS = $("#starScoreAvg3").text().split(" ");
 			showBookSumStarScore(parseFloat(tempReviewSS[0]));
 			showOneLine();
+			
+			//리뷰 작성 완료시 작성 부분 초기화
+			$("#oneLineRV").val("");
+			for(var j=1; j<10; j++){
+		   		$("div#start-Container2 span#star"+j).removeClass('on');
+				}	
+			
 		}
 	})
 };
@@ -545,39 +556,43 @@ function oneLineDel(oneLineNo, userId, event){
 	<%if(user != null){%>
 	
 	if(userId == "<%=user.getUserId()%>" || "admin" == "<%=user.getUserId()%>"){
-		confirm("정말로 삭제 하시겠습니까?");
-		$.ajax({
-			url: "<%=request.getContextPath()%>/book/oneLineDel.do",
-			data: {userId:userId, oneLineNo:oneLineNo, isbn13:<%=isbn13%>},
-			success:function(data){
-				$(ect).remove();
-				console.log(data);
-				var sumStarScore = 0.0;
-				for(var i in data){
-					var starScore = data[i].starScore;
-					sumStarScore += starScore;
+		var confirm_ans = confirm("정말로 삭제 하시겠습니까?");
+		if(confirm_ans == false){
+			return;
+		}else{
+			$.ajax({
+				url: "<%=request.getContextPath()%>/book/oneLineDel.do",
+				data: {userId:userId, oneLineNo:oneLineNo, isbn13:<%=isbn13%>},
+				success:function(data){
+					$(ect).remove();
+					console.log(data);
+					var sumStarScore = 0.0;
+					for(var i in data){
+						var starScore = data[i].starScore;
+						sumStarScore += starScore;
+					}
+					//한 줄 리뷰 별점 수정을 위한 함수
+					showOneLineSS(sumStarScore/data.length);
+					//별점 합계가 표시되는 별점 변경 함수 실행
+					if(data.length == 0){
+						showBookSumStarScore($("#starScoreAvg3").text().split(" ")[0]);
+					}else{
+						var tempReviewSS = $("#starScoreAvg3").text().split(" ");
+						showBookSumStarScore(parseFloat(tempReviewSS[0]));				
+					}
+	
+					if($("li.oneLineReview").length == 0){
+						$("button#load").hide();
+					}//아무런 한 줄 리뷰가 없으면 버튼 안보이기
+					
+					if($("#oneLineSSShowScore").text() == "NaN /5"){
+						$("#oneLineSSShowScore").text("0 /5");
+					}//아무런 한 줄 리뷰가 없을 경우 0점 표기
+					
+				
 				}
-				//한 줄 리뷰 별점 수정을 위한 함수
-				showOneLineSS(sumStarScore/data.length);
-				//별점 합계가 표시되는 별점 변경 함수 실행
-				if(data.length == 0){
-					showBookSumStarScore($("#starScoreAvg3").text().split(" ")[0]);
-				}else{
-					var tempReviewSS = $("#starScoreAvg3").text().split(" ");
-					showBookSumStarScore(parseFloat(tempReviewSS[0]));				
-				}
-
-				if($("li.oneLineReview").length == 0){
-					$("button#load").hide();
-				}//아무런 한 줄 리뷰가 없으면 버튼 안보이기
-				
-				if($("#oneLineSSShowScore").text() == "NaN /5"){
-					$("#oneLineSSShowScore").text("0 /5");
-				}//아무런 한 줄 리뷰가 없을 경우 0점 표기
-				
-				
-			}
-		});
+			});		
+		}
 	}else{
 		alert("본인의 게시글만 삭제 가능합니다!");
 	}

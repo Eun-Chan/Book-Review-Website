@@ -33,7 +33,12 @@ public class ReviewReviseEndCommand implements Command {
 		
 		// book 테이블 저장용 파라미터
 		String bookAuthor = request.getParameter("bookAuthor");
-		int bookPriceStandard = Integer.parseInt(request.getParameter("bookPriceStandard"));
+		int bookPriceStandard = 0;
+		try {
+			bookPriceStandard = Integer.parseInt(request.getParameter("bookPriceStandard"));
+		} catch(NumberFormatException e) {
+			bookPriceStandard = -1; // 도서가격정보가 없을 경우 -1
+		}
 		String bookPublisher = request.getParameter("bookPublisher");
 		
 		DAO dao = DAO.getInstance();

@@ -4,20 +4,23 @@
 }
 #basketList {
 	text-align : center;
-	width : 1220px;
+	width : 900px;
 	margin : 0 auto;
 }
 table.table {
-	width : 1200px;
+	width : 900px;
 	margin : 0 auto;
+	nowrap : nowrap;
 }
 table.table th {
 	text-align : center;
 	background : #f1f1f1;
+	white-space : nowrap;	
 }
 table.table td:nth-child(1) {
 	text-align : left;
 	text-indent : 5px;
+	width : 600px;
 }
 #button {
 	margin : 0px auto;
@@ -25,4 +28,14 @@ table.table td:nth-child(1) {
 }
 #totalBasket {
 	text-align : center;
+}
+#basketBottom {
+	text-align : center;
+}
+#pagebar-container{
+	margin : 0 auto;
+}
+#search-container {
+	display : inline-block;
+	margin : 0 auto;
 }

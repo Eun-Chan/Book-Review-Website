@@ -4,10 +4,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!-- 반응형 웹을 위한 메타태그 -->
-<meta name="viewport" content="width=device-width", initial-scral="1">
-<title>내 정보 수정</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
-</head>
+
 <body>
 <div class="contentwrap">
 	<article class="container">
@@ -16,23 +13,23 @@
 		</div>
 		<div class="form-horizontal">
 			<div class="form-group">
-				<label for="userId" class="col-sm-2 control-label">아이디</label>
+				<label for="userId-userInfo" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="userId" name="userId" placeholder="<%=user.getUserId()%>" readonly/>
+					<input type="text" class="form-control" id="userId-userInfo" name="userId-userInfo" placeholder="<%=user.getUserId()%>" readonly/>
 					<span><p id="id-help"></p></span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="userPassword" class="col-sm-2 control-label">새 비밀번호</label>
 				<div class="col-sm-4">
-					<input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="새로운 비밀번호를 입력하세요"/>
+					<input type="password" class="form-control" id="userPassword-userInfo" name="userPassword-userInfo" placeholder="새로운 비밀번호를 입력하세요"/>
 					<span><p id="password-help"></p></span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="userPasswordOk" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-4">
-					<input type="password" class="form-control" id="userPasswordOk" name="userPasswordOk" placeholder="비밀번호를 다시입력하세요"/>
+					<input type="password" class="form-control" id="userPasswordOk-userInfo" name="userPasswordOk-userInfo" placeholder="비밀번호를 다시입력하세요"/>
 					<span><p id="passwordOk-help"></p></span>
 				</div>
 			</div>
@@ -57,7 +54,7 @@
 			<div class="form-group">
 				<label for="userEmail" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-4">
-					<input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="<%=user.getUserEmail()%>"/>
+					<input type="email" class="form-control" id="userEmail-userInfo" name="userEmail" placeholder="<%=user.getUserEmail()%>" value="<%=user.getUserEmail()%>"/>
 					<span><p id="email-help"></p></span>
 				</div>
 				<div class="col-sm-1">
@@ -85,19 +82,18 @@
 	</article>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <!-- 광준 -->
 <script>
 $("#updateUser-Btn").click(function(){
-	if(updateUserSubmit) updateUserInfo();
+	if(updateUserSubmit()) updateUserInfo();
 });
 
 function updateUserInfo()
 {
-	var userPassword = $("#userPassword").val().trim();
+	var userPassword = $("#userPassword-userInfo").val().trim();
 	var userNickName = $("#userNickName").val().trim();
-	var userEmail = $("#userEmail").val().trim();
+	var userEmail = $("#userEmail-userInfo").val().trim();
+	
 	var url = encodeURI("<%=request.getContextPath()%>/sign/updateUser.do?userId=<%=user.getUserId()%>"+"&userPassword="+userPassword+"&userEmail="+userEmail+"&userNickName="+userNickName);
 	var url_after = decodeURI(url);
 	console.log(url_after);
@@ -106,11 +102,12 @@ function updateUserInfo()
 		type: "get",
 		success: function(data){
 			console.log("넘어온데이터" + data);
-			alert("성공");
-			<%-- location.href = "<%=request.getContextPath()%>/index.jsp"; --%> 
+			alert("정상적으로 변경되었습니다.");
+
+			location.href = "<%=request.getContextPath()%>/index.jsp"; 
 		},
 		error: function(){
-			alert("실패");
+			alert("알 수 없는 오류입니다. 관리자에게 문의하세요.");
 		}
 	});
 }
@@ -118,23 +115,30 @@ function updateUserInfo()
 <script>
 
 	/* 아이디 중복확인 통과 확인 변수 */
-	var ID_OK = 0;
+	var ID_OK = 1;
 	/* 아이디 유효성 통과 확인 변수 */
 	var USERPASSWORD_OK = 0;
 	/* 이메일 유효성 통과 확인 변수 */
 	var USEREMAIL_OK = 0;
 	/* 이메일 인증번호 통과 확인 변수 */
-	var AUTH_OK = 1;
+	var AUTH_OK = 0;
 	/* 별명 유효성 통과 확인 변수*/
 	var NICKNAME_OK = 1;
 	/* 인증번호 저장 변수 */
 	var authNum;
 	
 	/* 회원가입 - 중복확인 버튼 완료 */
-	
+	var email_before_check = "<%=user.getUserEmail()%>";
+	var userEmail = $("#userEmail-userInfo").val().trim();
+	if(email_before_check==userEmail)
+	{
+		AUTH_OK = 1;
+		USEREMAIL_OK = 1;
+	}
+	else AUTH_OK = 0;
 	
 	/* 비밀번호 유효성 검사 시작 */
-	$("#userPassword").keyup(function(e){
+	$("#userPassword-userInfo").keyup(function(e){
 		console.log(e.key);
 		
 		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-]).*$/g;
@@ -157,11 +161,11 @@ function updateUserInfo()
 	/* 비밀번호 유효성 검사 완료 */
 	
 	/* 비밀번호 확인 검사 시작 */
-	$("#userPasswordOk").keyup(function(e){
+	$("#userPasswordOk-userInfo").keyup(function(e){
 		
 		/* 비밀번호 위에 꺼 */
-		var pwd1 = $("#userPassword").val().trim();
-		var pwd2 = $("#userPasswordOk").val().trim();
+		var pwd1 = $("#userPassword-userInfo").val().trim();
+		var pwd2 = $("#userPasswordOk-userInfo").val().trim();
 		
 		if(USERPASSWORD_OK == 0){
 			$("#passwordOk-help").text("유효하지 않은 비밀번호 입니다.");
@@ -182,9 +186,9 @@ function updateUserInfo()
 	/* 비밀번호 확인 검사 완료 */
 	
 	/* 이메일 인증 버튼 시작 */
-	$("#userEmail").keyup(function(e){
+	$("#userEmail-userInfo").keyup(function(e){
 		var regEmail = /^[0-9a-zA-Z]([\-.\w]*[0-9a-zA-Z\-_+])*@([0-9a-zA-Z][\-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9}$/i;
-		var userEmail = $("#userEmail").val().trim();
+		var userEmail = $("#userEmail-userInfo").val().trim();
 		/* 이메일 인증 버튼을 알맞은 이메일 형식을 작성했을 경우만 클릭되게 만들기 */
 		var emailAuth = $("#emailAuth");
 		
@@ -201,6 +205,13 @@ function updateUserInfo()
 			$("#email-help").removeClass("text-danger");
 			$("#email-help").addClass("text-success");
 			USEREMAIL_OK = 1;
+			var email_before = "<%=user.getUserEmail()%>";
+			console.log("이전 이메일 : " + email_before);
+			var email_now = userEmail;
+			console.log("현재 이메일 : " + email_now);
+			if(email_before==email_now) AUTH_OK = 1;
+			else AUTH_OK = 0;
+			console.log("인증통과(1): " + AUTH_OK);
 			/* 이메일 버튼 활성화 */
 			emailAuth.prop("disabled" , false);
 		}
@@ -208,7 +219,7 @@ function updateUserInfo()
 	
 	/* 이메일 인증 버튼 눌렀을 때 클릭 이벤트  */
 	$("#emailAuth").on("click" , function(){
-		var userEmail = $("#userEmail").val().trim();
+		var userEmail = $("#userEmail-userInfo").val().trim();
 		
 		$.ajax({
 			url : "<%=request.getContextPath()%>/emailAuth.do",

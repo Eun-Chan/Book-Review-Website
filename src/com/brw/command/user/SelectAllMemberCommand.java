@@ -25,7 +25,7 @@ public class SelectAllMemberCommand implements Command{
 		}
 		
 		// numPerPage는 변할 일이 없으니 그냥 고정
-		int numPerPage = 10;
+		int numPerPage = 5;
 		
 		List<UserDTO> Userlist = new ArrayList<>();
 		
@@ -61,7 +61,7 @@ public class SelectAllMemberCommand implements Command{
 				pageBar += "<li class='page-item disabled'><a class='page-link'>이전</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/adminMemberManage.do?cPage=" + (pageNo-1)
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" + (pageNo-1)
 							+ "'>이전</a></li>";
 			}
 			
@@ -71,7 +71,7 @@ public class SelectAllMemberCommand implements Command{
 					pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
 				}
 				else {
-					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/adminMemberManage.do?cPage=" + pageNo
+					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" + pageNo
 							+ "'>" + pageNo + "</a></li>";
 				}
 				pageNo++;
@@ -82,7 +82,7 @@ public class SelectAllMemberCommand implements Command{
 				pageBar += "<li class='page-item disabled'><a class='page-link'>다음</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/adminMemberManage.do?cPage=" 
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" 
 							+ pageNo + "'>다음</a>";
 			}
 	

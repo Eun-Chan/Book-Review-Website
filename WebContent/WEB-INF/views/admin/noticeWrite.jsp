@@ -53,6 +53,13 @@ $(function(){
 	$("#btnSave").on("click",function(){
 		
 		// 유효성 검사는 이곳에서
+		
+		// 제목입력칸에 ', " 입력 못하게 하기
+		var regTitle = /[^'"]/;
+		if(!regTitle.test($("input[name=rbTitle]").val())){
+			alert("\', \"는 입력 불가합니다.");
+			return;
+		}
      	// 리뷰 제목
     	if($("input[name=ntcTitle]").val().trim().length == 0){
     		alert("리뷰 제목을 입력하세요.");
@@ -105,7 +112,7 @@ div#write-container textarea{
 <body>
 	<div id="form-container" class="container-fluid">
 		<h2>리뷰 작성 페이지</h2>
-		<form action="<%=request.getContextPath() %>/admin/noticeWriteEnd.do" name="write_form" id="write-form">
+		<form action="<%=request.getContextPath() %>/admin/noticeWriteEnd.do" name="write_form" id="write-form" method="post">
 			<div class="form-group" id="write-container">
 				<!-- 글제목 인풋태그 -->
 				<input type="text" name="ntcTitle" class="form-control" placeholder="제목" />
