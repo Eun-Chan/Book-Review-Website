@@ -127,7 +127,7 @@
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
-		    			<li><a href="<%=request.getContextPath()%>/sign/adminMemberManage.do">회원 관리</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/adminManager.do">회원 관리</a></li>
 		    			<% } %>
 		    			<li class="divider"></li>
 		          		<li><a href="<%=request.getContextPath()%>/logout.do">로그아웃</a></li>

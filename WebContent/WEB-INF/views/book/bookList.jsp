@@ -92,7 +92,7 @@ table th{
 		
 		
 		
-		var table = $("<table class='table table-hover''><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
+		var table = $("<table class='table table-hover''><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col' style='width:80px'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
 		var numPerPage = 10;
 		var totalResults = data.totalResults;//검색 결과 총 수
 		//전체 페이지 수	
@@ -181,7 +181,7 @@ table th{
 		
 		console.log(data);
 		
-		var table = $("<table class='table table-hover'><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
+		var table = $("<table class='table table-hover'><tr class='bg-primary'><th scope='col'>표지</th><th scope='col'>책제목</th><th scope='col'>내용</th><th scope='col'style='width:80px'>작가</th><th scope='col' style='width:95px'>출판일</th><th scope='col'>정가</th></tr></table>");
 		var numPerPage = 10;
 		var totalResults = data.totalResults;//검색 결과 총 수
 		//전체 페이지 수	

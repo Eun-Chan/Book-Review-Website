@@ -1,4 +1,4 @@
-package com.brw.command.user;
+package com.brw.command.review;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.brw.command.Command;
 import com.brw.dao.DAO;
+import com.brw.dto.ReviewBoardReportDTO;
 import com.brw.dto.UserDTO;
 
-public class SelectAllMemberCommand implements Command{
+public class selectAllReviewBoardReportCommand implements Command{
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("커맨드는왓니?");
 		//맴버 리스트 가져오기
 		DAO dao = DAO.getInstance();
 		int cPage = 0;
@@ -27,23 +27,13 @@ public class SelectAllMemberCommand implements Command{
 		// numPerPage는 변할 일이 없으니 그냥 고정
 		int numPerPage = 5;
 		
-		List<UserDTO> Userlist = new ArrayList<>();
+		List<ReviewBoardReportDTO> reportList = new ArrayList<>();
 		
 		
-		Userlist = dao.selectMemberAll(cPage,numPerPage);
-		int reportCount = 0;
-		List<Integer> rePortCountList = new ArrayList<>();
-		if(!Userlist.isEmpty()) {
-			for(int i = 0; i<Userlist.size() ; i++) {				
-				reportCount = dao.reportCountMember(Userlist.get(i).getUserId());
-				rePortCountList.add(reportCount);
-				
-			}
-		}
-		
-		System.out.println("userlist="+Userlist);
+		reportList = dao.selectAllReviewBoardReport(cPage,numPerPage);
+	
 		// 페이지바 작업
-		int totalContents = dao.countMemberAll();
+		int totalContents = dao.countReportAll();
 		
 		int totalPages = (int)Math.ceil(((double)totalContents/numPerPage));
 		int pageBarSize = 5;
@@ -61,7 +51,7 @@ public class SelectAllMemberCommand implements Command{
 				pageBar += "<li class='page-item disabled'><a class='page-link'>이전</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" + (pageNo-1)
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewBoardManager.do?cPage=" + (pageNo-1)
 							+ "'>이전</a></li>";
 			}
 			
@@ -71,7 +61,7 @@ public class SelectAllMemberCommand implements Command{
 					pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
 				}
 				else {
-					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" + pageNo
+					pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewBoardManager.do?cPage=" + pageNo
 							+ "'>" + pageNo + "</a></li>";
 				}
 				pageNo++;
@@ -82,16 +72,16 @@ public class SelectAllMemberCommand implements Command{
 				pageBar += "<li class='page-item disabled'><a class='page-link'>다음</a></li>";
 			}
 			else {
-				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/sign/memberManager.do?cPage=" 
+				pageBar += "<li class='page-item'><a class='page-link' href='" + request.getContextPath() + "/review/reviewBoardManager.do?cPage=" 
 							+ pageNo + "'>다음</a>";
 			}
 	
 		
 		pageBar += "</ul>";
 		
-		request.setAttribute("rePortCountList", rePortCountList);
-		request.setAttribute("Userlist",Userlist);
+		request.setAttribute("reportList", reportList);
 		request.setAttribute("pageBar", pageBar);
+		
 	}
 
 }
