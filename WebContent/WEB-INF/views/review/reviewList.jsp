@@ -188,7 +188,7 @@ $(function(){
                </td>
                <td>
                   <img src="<%=request.getContextPath()%>/images/userGradeImage/<%=rbv.getUserGrade()%>.svg" width='30px' height='30px' alt='userGrade icon'>
-                  <%=rbv.getUserNickName() %>
+                  <%=rbv.getUserNickName()==null?"탈퇴한 회원":rbv.getUserNickName() %>
                </td>
                <td class="text-center"><%=rbv.getRbDate() %></td>
                <td class="text-center"><%=rbv.getRbReadCnt() %></td>

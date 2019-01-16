@@ -46,7 +46,7 @@ img{
 				   <span>(<%=review.getRbStarscore()%>점)</span>
 				</div>
 			</div>
-			<span id="reviewBoard-Writer" class="reviewBoard-Writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName() %></span>
+			<span id="reviewBoard-Writer" class="reviewBoard-Writer"><img src="<%=request.getContextPath() %>/images/userGradeImage/<%=review.getUserGrade() %>.svg" alt="" width="25px" height="25px"/><%=review.getUserNickName()==null?"탈퇴한 회원":review.getUserNickName()%></span>
 		</div>
 		<div id ="reviewDetail-Content">
 			<p>
