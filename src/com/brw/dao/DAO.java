@@ -540,7 +540,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		List<ReviewBoardDTO> rbList = new ArrayList<>();
-		String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_date DESC) WHERE rownum < 6";
+		String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard WHERE del_flag='N' ORDER BY rb_date DESC) WHERE rownum < 6";
 		
 		try {
 			conn = dataSource.getConnection();
@@ -1487,7 +1487,7 @@ public class DAO {
 		List<String> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "SELECT AVG(rb_starscore) AS rb_starscore FROM reviewboard WHERE rb_isbn = ?";
+		String query = "SELECT AVG(rb_starscore) AS rb_starscore FROM reviewboard WHERE rb_isbn = ?AND del_flag='N'";
 		ResultSet rset = null;
 		int result = 0;
 		
@@ -1886,7 +1886,7 @@ public class DAO {
 		   PreparedStatement pstmt = null;
 		   ResultSet rset = null;
 		   List<ReviewBoardDTO> rbList = new ArrayList<>();
-		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-7 AND rownum <6";
+		   String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no FROM (SELECT * FROM reviewboard WHERE del_flag='N' ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-3 AND rownum <6";
 		   
 		   try {
 		      conn = dataSource.getConnection();
@@ -2682,7 +2682,8 @@ public class DAO {
 	         pstmt.setString(4, userId);
 	         
 	         result = pstmt.executeUpdate();
-	         
+	         if(result>0) conn.commit();
+	         else conn.rollback();
 	      } catch (SQLException e) {
 	         // TODO Auto-generated catch block
 	         e.printStackTrace();
@@ -3280,7 +3281,7 @@ public class DAO {
 			ResultSet rset = null;
 			JsonObject jbvd = null;
 			JsonArray postWriteList = new JsonArray();
-			String query = "SELECT * FROM reviewboard WHERE rb_writer=? ORDER BY rb_date DESC";
+			String query = "SELECT * FROM reviewboard WHERE rb_writer=? AND del_flag='N' ORDER BY rb_date DESC";
 			
 			try {
 				conn = dataSource.getConnection();
@@ -3325,7 +3326,7 @@ public class DAO {
 			ResultSet rset = null;
 			JsonObject jbvd = null;
 			JsonArray commentWriteList = new JsonArray();
-			String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? ORDER BY rb_comment_date DESC";
+			String query = "SELECT rb_no, rb_booktitle, rb_title, rb_comment_content, rb_comment_date, rb_comment_delflag,rb_readcnt, rb_recommend FROM reviewboard JOIN reviewboard_comment ON reviewboard.rb_no=reviewboard_comment.rb_ref WHERE rb_comment_writer=? AND rb_comment_delflag='N' ORDER BY rb_comment_date DESC";
 			
 			try {
 				conn = dataSource.getConnection();
