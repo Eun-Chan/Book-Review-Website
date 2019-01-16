@@ -397,7 +397,6 @@ public class FrontController extends HttpServlet {
 	    else if(command.equals("/sign/OldPwdChangeOrLaterUpdate.do")) {
 	    	com = new OldPwdChangeOrLaterCommand();
 	    	com.execute(req, res);
-	    	viewPage = "/index.jsp";
 	    }
 		/*43 . 선웅 : 신고 페이지 고고띵*/
 		else if(command.equals("/review/reviewReport.do")) {

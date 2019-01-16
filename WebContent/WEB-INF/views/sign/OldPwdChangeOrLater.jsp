@@ -15,7 +15,7 @@
 		<div class="page-header">
 			<h1>비밀번호 변경</h1>
 		</div>
-		<form action="<%=request.getContextPath()%>/sign/OldPwdChangeOrLaterUpdate.do" class="form-horizontal" method="post" onsubmit="return passwordUpdateSubmit();">
+		<form class="form-horizontal">
 			<div class="form-group">
 				<label for="userId" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-4">
@@ -39,7 +39,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label"></label>
 				<div class="col-sm-6">
-					<button type="submit" class="btn btn-primary">변경하기</button>
+					<button type="button" class="btn btn-primary" onclick="passwordUpdateSubmit();">변경하기</button>
 					<button type="button" class="btn btn-primary" onclick="passwordLater();">다음에 변경하기</button>
 					
 				</div>
@@ -105,12 +105,34 @@
 	/* 비밀번호 확인 검사 완료 */
 	
 	function passwordUpdateSubmit(){
+		var userId = $("#userId").val().trim();
+		var userPassword = $("#userPassword").val().trim();
+		
 		if(USERPASSWORD == 1 && USERPASSWORD_OK == 1){
-			alert("비밀번호 변경 완료!");
-			return true;
+			$.ajax({
+				url : "<%=request.getContextPath()%>/sign/OldPwdChangeOrLaterUpdate.do",
+				type : "POST",
+				data : {userId : userId , userPassword : userPassword},
+				success : function(data){
+					if(data == "true"){
+						location.href = '<%=request.getHeader("referer")%>';
+					}
+					else if(data == "same"){
+						alert("현재 비밀번호와 다른 비밀번호를 입력해주세요!");
+						$("#password-help").text("현재와 다른 비밀번호를 입력하세요!");
+						$("#password-help").removeClass("text-success");
+						$("#password-help").addClass("text-danger");
+						$("#passwordOk-help").text("현재와 다른 비밀번호를 입력하세요!");
+						$("#passwordOk-help").removeClass("text-success");
+						$("#passwordOk-help").addClass("text-danger");
+					}
+					else{
+						alert("비밀번호 변경중 오류!");
+					}
+					
+				}
+			});
 		}
-		alert("변경하실 비밀번호를 정확히 입력하십시오.");
-		return false;
 	}
 	
 	function passwordLater(){

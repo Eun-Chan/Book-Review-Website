@@ -6,6 +6,7 @@
 	ReviewBoardViewDTO rbv = null;
 	if(request.getAttribute("rbv") != null){
 		rbv = (ReviewBoardViewDTO)request.getAttribute("rbv");
+		System.out.println("$reviewRevise.jsp 여긴 들어오니?");
 	}
 %>
 <!-- 서머노트용 js, css 적용 -->
@@ -71,6 +72,7 @@ $(function(){
 	//로그인이 되어있고 리뷰 수정인 경우이고 접속한 회원과 리뷰작성한 회원이 같아야 리뷰 내용 적용 (수정하기 위해서)
 	if(user != null && rbv != null && user.getUserId().equals(rbv.getRbWriter())){
 	%>
+		console.log("헤헤 여긴 드러오겠지?");
 		var title = $("input[name=rbTitle]");
 		var content = $("#summernote");
 		var bookTitle = $("input[name=rbBookTitle]");

@@ -31,9 +31,20 @@ public class ReviewBoardDTO implements Serializable{
 	
 	public ReviewBoardDTO() {}
 
-	// insert용 생성자
 	public ReviewBoardDTO(String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent,
+		double rbStarscore) {
+		this.rbTitle = rbTitle;
+		this.rbWriter = rbWriter;
+		this.rbBookTitle = rbBookTitle;
+		this.rbIsbn = rbIsbn;
+		this.rbContent = rbContent;
+		this.rbStarscore = rbStarscore;
+	}
+	
+	// insert용 생성자
+	public ReviewBoardDTO(int rbNo,String rbTitle, String rbWriter, String rbBookTitle, String rbIsbn, String rbContent,
 			double rbStarscore) {
+		this.rbNo = rbNo;
 		this.rbTitle = rbTitle;
 		this.rbWriter = rbWriter;
 		this.rbBookTitle = rbBookTitle;

@@ -15,6 +15,12 @@
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/reviewDetail.css" />
+<script>	
+function test(){
+	console.log("수정버튼 눌렀다능");
+	location.href = "<%=request.getContextPath()%>/review/reviewRevise.do?rbNo=" + <%=review.getRbNo()%>;
+}
+</script>
 <style>
 img{
 	max-width: 780px;
@@ -78,8 +84,8 @@ img{
 			<ul id="right-menu">
 				<li><button class="btn-gradient red" style ="float: right;">신고하기</button></li>
 			<%if(user!=null && (user.getUserId().equals(review.getRbWriter()) || user.getUserId().equals("admin"))){ %>
-				<li><button class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
-				<li><button id="btn-revise-review" class="btn-gradient green" style="margin-right: 5px;">수정</button></li>
+				<li><button id="review-delete" class="btn-gradient green" style="margin-right: 5px;">삭제</button></li>
+				<li><button type="button" id="btn-revise-review" class="btn-gradient green" style="margin-right: 5px;" onclick="test()">수정</button></li>
 			<%} %>
 			</ul>
 		</div>
@@ -133,10 +139,12 @@ img{
 						    }
 						});
 						// 명훈 : 리뷰 수정 버튼 리스너
-						$("#btn-revise-review").on("click",function(){
+						<%-- $("#btn-revise-review").on("click",function(){
+							console.log("수정버튼 눌렀다능");
 							location.href = "<%=request.getContextPath()%>/review/reviewRevise.do?rbNo=" + <%=review.getRbNo()%>;
-						});
+						}); --%>
 					});
+					
 				</script>
 		<%if(reviewReComment!=null) {%>
 			<%for(ReviewBoardComment rbrc : reviewReComment) {%>

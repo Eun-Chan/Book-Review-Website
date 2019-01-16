@@ -74,7 +74,13 @@ public class LoginCommand implements Command {
 				session.setAttribute("user", userDTO);
 								
 				SessionListener.getInstance().setSession(session, userId);
-				out.append("true");
+				
+				int changeDate = dao.checkDate(userId);
+				if(changeDate > 90)
+					out.append("oldPwdChangeOrLater");
+				else
+					out.append("true");
+				
 				
 			}
 				

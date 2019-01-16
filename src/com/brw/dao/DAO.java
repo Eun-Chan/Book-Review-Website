@@ -967,6 +967,7 @@ public class DAO {
 				userDTO.setUserNickName(rset.getString("userNickName"));
 				userDTO.setUserGrade(rset.getInt("usergrade"));
 				userDTO.setUserPoint(rset.getInt("userpoint"));
+				userDTO.setUserPassword(rset.getString("userPassword"));
 			}
 			
 		} catch (SQLException e) {
@@ -2489,7 +2490,7 @@ public class DAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		int result = 0;
-		String query = "select substr((sysdate - changedate),1,3) as datelater from usertable where userid = ? ";
+		String query = "select trunc(sysdate - changedate) as datelater from usertable where userid = ? ";
 	
 		try {
 			conn = dataSource.getConnection();
@@ -2514,6 +2515,7 @@ public class DAO {
 			}
 		}
 		System.out.println(rset);
+		
 		return result;
 }
 	/**
@@ -2931,7 +2933,6 @@ public class DAO {
 				at.setAtContent(rset.getString("at_content"));
 				at.setAtUserId(rset.getString("at_userid"));
 				at.setAtTotal(rset.getInt("at_total"));
-				at.setAtSerial(rset.getInt("at_serial"));
 				at.setAtDate(rset.getString("strdate"));
 				at.setUserNickName(rset.getString("usernickname"));
 				at.setUserGrade(rset.getInt("usergrade"));
@@ -3231,14 +3232,15 @@ public class DAO {
 	public int reviewUpdate(ReviewBoardDTO rb) {
 		int result = 0;
 		
+		System.out.println("DAO rb 검사 : "+rb.toString());
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String query = "update reviewboard set rb_title=?, rb_booktitle=?, rb_isbn=?, rb_content=?, rb_starscore=? where rb_no=?";
+		String query = "update reviewboard set rb_title= ?, rb_booktitle= ?, rb_isbn= ?, rb_content= ?, rb_starscore= ? where rb_no= ?";
 		
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(query);
-			
 			
 			pstmt.setString(1, rb.getRbTitle());
 			pstmt.setString(2, rb.getRbBookTitle());

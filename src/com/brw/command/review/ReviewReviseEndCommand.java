@@ -55,7 +55,7 @@ public class ReviewReviseEndCommand implements Command {
 		}
 		
 		// 객체에 담기
-		ReviewBoardDTO rb = new ReviewBoardDTO(rbTitle,rbWriter,rbBookTitle,rbIsbn,rbContent,rbStarscore);
+		ReviewBoardDTO rb = new ReviewBoardDTO(rbNo,rbTitle,rbWriter,rbBookTitle,rbIsbn,rbContent,rbStarscore);
 		
 		// dao 갔다오기
 		// dao 3번 사용

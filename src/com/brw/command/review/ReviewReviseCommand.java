@@ -25,7 +25,7 @@ public class ReviewReviseCommand implements Command {
 		DAO dao = DAO.getInstance();
 		
 		ReviewBoardViewDTO rbv = dao.getReviewSelectOne(rbNo);
-		System.out.println(rbv);
+		System.out.println("$ReviewReviseCommand rbv = "+rbv);
 		
 		request.setAttribute("rbv", rbv);
 	}

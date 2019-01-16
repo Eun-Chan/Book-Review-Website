@@ -23,6 +23,9 @@
 		}
 	}
 	
+	if(user != null)
+		System.out.println("나의 아이디는? = "+user.getUserId());
+	
 	/* 중복 로그인을 막기위한 세션 바인딩 리스너 */
 	SessionListener sessionListener = SessionListener.getInstance();
 	System.out.println(sessionListener.getUserCount());
@@ -240,6 +243,10 @@
 					$("#login-help").text("이미 아이디가 접속중입니다!");
 					$("#login-help").addClass("text-danger");
 				}
+				else if(data == "oldPwdChangeOrLater"){
+		               location.href ="<%=request.getContextPath()%>/sign/OldPwdChangeOrLater.do?userId="+userId;
+		               alert("비밀번호 변경한지 90일이 지났습니다. 변경페이지로 이동합니다.");
+		            }
 			}
 		});
 	}
@@ -311,7 +318,7 @@
 /*     var textarea = document.getElementById("messageWindow"); */
 	var textarea = $("#messageWindow");
 	<%if(user != null) {%>
-    	var webSocket = new WebSocket('ws://52.78.61.219:8080/brw/broadcasting/login.do');
+    	var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting/login.do');
     <%}%>
     var inputMessage = $("#inputMessage");
     
