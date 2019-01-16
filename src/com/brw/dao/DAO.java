@@ -3636,6 +3636,68 @@ public class DAO {
 			
 			return result;
 		}
+		// 86. @정명훈 : 공지사항 수정
+		public int noticeUpdate(int ntcNo, String ntcTitle, String ntcContent) {
+			int result = 0;
+			
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			String query = "update notice set ntc_title=?, ntc_content=? where ntc_no=?";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, ntcTitle);
+				pstmt.setString(2, ntcContent);
+				pstmt.setInt(3, ntcNo);
+				
+				result = pstmt.executeUpdate();
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+			return result;
+		}
+		// 87. @정명훈 : 공지사항 삭제
+		public int noticeDelete(int ntcNo) {
+			int result = 0;
+			
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			String query = "update notice set ntc_delflag='Y' where ntc_no=?";
+			
+			try {
+				conn = dataSource.getConnection();
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, ntcNo);
+				
+				result = pstmt.executeUpdate();
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					pstmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+			return result;
+		}
 				
 }
 
