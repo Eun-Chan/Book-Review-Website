@@ -16,15 +16,9 @@ public class DoAttendanceCommand implements Command {
 		
 		DAO dao = DAO.getInstance();
 		
-		// atUserId로 출석체크를 오늘 했는지 체크. true면 출첵한 것
-		boolean checkValidation = dao.checkTodayAttendance(atUserId);
+		int result = dao.doAttendance(atUserId,atContent);
 		
-		request.setAttribute("checkValidation", checkValidation);
-		
-		if(!checkValidation) {
-			// 출석 체크 등록
-			int result = dao.doAttendance(atUserId,atContent);
-		}
+		request.setAttribute("checkValidation", true);
 		
 	}
 

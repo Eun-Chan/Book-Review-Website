@@ -3478,42 +3478,42 @@ public class DAO {
 			return result;
 		}
 		// 82. @정명훈 : 오늘 출첵했는지 확인
-		public boolean checkTodayAttendance(String atUserId) {
-			boolean bool = false;
-			
-			Connection conn = null;
-			PreparedStatement pstmt = null;
-			ResultSet rset = null;
-			String query = "select count(*) cnt from attendance where at_userid = ?";
-			
-			try {
-				conn = dataSource.getConnection();
-				pstmt = conn.prepareStatement(query);
-				pstmt.setString(1, atUserId);
-				
-				rset = pstmt.executeQuery();
-				
-				if(rset.next()) {
-					int result = rset.getInt("cnt");
+				public boolean checkTodayAttendance(String atUserId) {
+					boolean bool = false;
 					
-					if(result > 0) {
-						bool = true;
+					Connection conn = null;
+					PreparedStatement pstmt = null;
+					ResultSet rset = null;
+					String query = "select count(*) cnt from attendance where at_userid = ? and to_char(at_date,'YYYY-MM-DD')=to_char(sysdate,'YYYY-MM-DD')";
+					
+					try {
+						conn = dataSource.getConnection();
+						pstmt = conn.prepareStatement(query);
+						pstmt.setString(1, atUserId);
+						
+						rset = pstmt.executeQuery();
+						
+						if(rset.next()) {
+							int result = rset.getInt("cnt");
+							System.out.println("DAO.checkTodayAttendance() cnt="+result);
+							if(result > 0) {
+								bool = true;
+							}
+						}
+						
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						try {
+							pstmt.close();
+							conn.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 					}
+					return bool;
 				}
-				
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					pstmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return bool;
-		}
 		
 		/**
 		 * 83 장선웅 : 게시판 관리 페이징 처리
@@ -3759,6 +3759,131 @@ public class DAO {
 			
 			return result;
 		}
-				
+		/**
+	       * 89
+	       * 작성자 : 김민우
+	       * 내용 : 최근리뷰 5개 가져오기
+	       */
+	      public List<ReviewBoardViewDTO> selectReviewRecentList2()
+	      {
+	         Connection conn = null;
+	         PreparedStatement pstmt = null;
+	         ResultSet rset = null;
+	         List<ReviewBoardViewDTO> list = new ArrayList<>();
+	         String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD HH24:MI:SS') AS rb_date,  rb_no, usergrade, usernickname FROM (SELECT * FROM reviewboard r join usertable u on r.rb_writer = u.userid WHERE del_flag='N' ORDER BY rb_date DESC) WHERE rownum < 6";
+	         
+	         try {
+	            conn = dataSource.getConnection();
+	            pstmt = conn.prepareStatement(query);
+	            rset = pstmt.executeQuery();
+	            
+	            while(rset.next()) {
+	               ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
+	               
+	               // 리뷰보드DTO에 있는 것들
+	               rbv.setRbNo(rset.getInt("rb_no"));
+	               rbv.setRbTitle(rset.getString("rb_title"));
+	               rbv.setRbWriter(rset.getString("rb_writer"));
+	               rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+	               rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+	               rbv.setRbRecommend(rset.getInt("rb_recommend"));
+	               rbv.setRbDate(rset.getString("rb_date"));
+	               
+
+	               // 리뷰보드뷰DTO에 있는 것들
+	               /*boolean dateNew = false;
+	               int passingTime = rset.getInt("passingtime");
+	               if(passingTime <= 1) {
+	                  dateNew = true;
+	                  rbv.setRbDate(rset.getString("datenew"));
+	               }
+	               else {
+	                  rbv.setRbDate(rset.getString("strdate"));
+	               }
+	               rbv.setDateNew(dateNew);*/
+	               rbv.setUserNickName(rset.getString("usernickname"));
+	               rbv.setUserGrade(rset.getInt("usergrade"));
+	               
+	               list.add(rbv);
+	            }
+	            
+	         } catch (SQLException e) {
+	            System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
+	            e.printStackTrace();
+	         } finally {
+	            try {
+	               rset.close();
+	               pstmt.close();
+	               conn.close();
+	            } catch (SQLException e) {
+	               System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
+	               e.printStackTrace();
+	            }
+	         }      
+	         return list;
+	      }
+	      
+	      /**
+	       * @민우
+	       * 90. 하루기준으로 조회수가 가장 높은 글  5개 가져오기
+	       */
+	         public List<ReviewBoardViewDTO> selectReviewBestList2()
+	         {
+	            Connection conn = null;
+	            PreparedStatement pstmt = null;
+	            ResultSet rset = null;
+	            List<ReviewBoardViewDTO> list = new ArrayList<>();
+	            String query = "SELECT rb_readcnt, rb_recommend, rb_title, rb_writer, rb_booktitle, rb_starscore, to_char(rb_date, 'YYYY-MM-DD') AS rb_date,  rb_no, usergrade, usernickname FROM (SELECT * FROM reviewboard r join usertable u on r.rb_writer = u.userid WHERE del_flag='N' ORDER BY rb_readcnt DESC) WHERE rb_date > SYSDATE-3 AND rownum <6";
+	            
+	            try {
+	               conn = dataSource.getConnection();
+	               pstmt = conn.prepareStatement(query);
+	               rset = pstmt.executeQuery();
+
+	               while(rset.next()) {
+	                  ReviewBoardViewDTO rbv = new ReviewBoardViewDTO();
+	                  
+	                  // 리뷰보드DTO에 있는 것들
+	                  rbv.setRbNo(rset.getInt("rb_no"));
+	                  rbv.setRbTitle(rset.getString("rb_title"));
+	                  rbv.setRbWriter(rset.getString("rb_writer"));
+	                  rbv.setRbBookTitle(rset.getString("rb_booktitle"));
+	                  rbv.setRbReadCnt(rset.getInt("rb_readcnt"));
+	                  rbv.setRbRecommend(rset.getInt("rb_recommend"));
+	                  rbv.setRbDate(rset.getString("rb_date"));
+	                  
+
+	                  // 리뷰보드뷰DTO에 있는 것들
+	                  /*boolean dateNew = false;
+	                  int passingTime = rset.getInt("passingtime");
+	                  if(passingTime <= 1) {
+	                     dateNew = true;
+	                     rbv.setRbDate(rset.getString("datenew"));
+	                  }
+	                  else {
+	                     rbv.setRbDate(rset.getString("strdate"));
+	                  }
+	                  rbv.setDateNew(dateNew);*/
+	                  rbv.setUserNickName(rset.getString("usernickname"));
+	                  rbv.setUserGrade(rset.getInt("usergrade"));
+	                  
+	                  list.add(rbv);
+	               }
+	            } catch (SQLException e) {
+	               System.out.println("DAO_selectReviewRecentList_광준@쿼리요청이 실패했습니다.");
+	               e.printStackTrace();
+	            } finally {
+	               try {
+	                  rset.close();
+	                  pstmt.close();
+	                  conn.close();
+	               } catch (SQLException e) {
+
+	                  System.out.println("DAO_selectReviewRecentList_광준@자원반납에 실패했습니다.");
+	                  e.printStackTrace();
+	               }
+	            }      
+	            return list;
+	         }		
 }
 

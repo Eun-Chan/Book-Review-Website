@@ -28,7 +28,7 @@
 			</div>
 			<div class="form-group">
 				<label for="userPassword" class="col-sm-2 control-label">비밀번호</label>
-				<div class="col-sm-4">
+				<div class="<col-sm-></col-sm->-4">
 					<input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="비밀번호를 입력하세요"/>
 					<span><p id="password-help"></p></span>
 				</div>
@@ -334,6 +334,7 @@
 	function createUserSubmit(){
 		console.log(ID_OK , USERPASSWORD_OK , USEREMAIL_OK , AUTH_OK);
 		if(ID_OK == 1 && USERPASSWORD_OK == 1 && USEREMAIL_OK == 1 && AUTH_OK == 1 && NICKNAME_OK == 1){
+			alert("책 읽는 사람들 ! 회원가입에 완료되었습니다.");
 			return true;
 		}
 		alert("모든 입력사항을 제대로 입력 하십시오.");

@@ -76,14 +76,12 @@ public class LoginCommand implements Command {
 				SessionListener.getInstance().setSession(session, userId);
 				
 				int changeDate = dao.checkDate(userId);
+				System.out.println("$loginCommand() changeDate = "+changeDate);
 				if(changeDate > 90)
 					out.append("oldPwdChangeOrLater");
 				else
-					out.append("true");
-				
-				
+					out.append("true");	
 			}
-				
 			// 로그인 실패 !
 			else
 				out.append("false");

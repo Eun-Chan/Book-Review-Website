@@ -28,10 +28,7 @@ public class LogoutCommand implements Command {
 		}
 		
 		try {
-			System.out.println(request.getRequestURI());
-			System.out.println(request.getRequestURL());
-			System.out.println(request.getHeader("referer"));
-			response.sendRedirect(request.getHeader("referer"));
+			response.sendRedirect("/brw/index.jsp");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,38 +1,38 @@
 #passwordCheckedContainer{
-	width:100%;
-	height:625px;
-	
+   width:100%;
+   height:625px;
+   
 }
 #passwordChecked{
-	position: absolute;
-	width: 600px;
-	height: 180px;
-	left: 50%;
-	top: 50%;
-	margin-left: -300px;
-	margin-top: -80px;
-	border: 1px solid #e9e9e9;
+   position: absolute;
+   width: 600px;
+   height: 180px;
+   left: 50%;
+   top: 50%;
+   margin-left: -300px;
+   margin-top: -80px;
+   border: 1px solid #e9e9e9;
     padding: 5px 9px 9px;
 }
 #passwordChecked h3{
-	text-align: center;
-	font-size: 1.3em;
+   text-align: center;
+   font-size: 1.3em;
 }
 #passwordChecked p{
-	text-align: center;
+   text-align: center;
 }
 
 #passwordCheckedInner{
-	padding-top: 20px;
+   padding-top: 20px;
     border: 1px solid #e9e9e9;
     background-color: #fafafa;
     padding-bottom: 18px;
 }
 #passwordCheckedFieldSet{
-	text-align: center;	
+   text-align: center;   
 }
 #passwordCheckedFieldSet label{
-	margin-right: 15px;
+   margin-right: 15px;
 }
 .btn-gradient.cyan {
     background: rgba(27,188,194,1);

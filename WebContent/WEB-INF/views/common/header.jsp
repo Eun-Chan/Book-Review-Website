@@ -97,7 +97,7 @@
           
           	<li><a href="<%=request.getContextPath()%>/index.jsp">홈으로</a></li>
 	
-            <li class="active"><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
+            <li><a href="<%=request.getContextPath()%>/admin/noticeList.do">공지사항</a></li>
 
             <li><a href="<%=request.getContextPath()%>/review/reviewList.do">리뷰게시판</a></li>
             
@@ -123,12 +123,12 @@
 		    			<!-- 즐겨찾기 메뉴. 작성자 : 세준 -->
 		    			<% if(user != null && !"admin".equals(user.getUserId())) { %>
 		    			<li><a href="<%=request.getContextPath()%>/book/goBasket.do">즐겨찾기</a></li>
-		    			<li><a href="<%=request.getContextPath()%>/sign/userInfoView.do">내 정보보기</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/userInfoView.do">내 리뷰글 보기</a></li>
 		    			<li><a href="<%=request.getContextPath()%>/sign/userPasswordCheck.do">내 정보수정</a></li>
 		    			<% } %>
 		    			<!-- 관리자 메뉴. 작성자 : 명훈 -->
 		    			<% if(user != null && "admin".equals(user.getUserId())) { %>
-		    			<li><a href="<%=request.getContextPath()%>/sign/adminManager.do">회원 관리</a></li>
+		    			<li><a href="<%=request.getContextPath()%>/sign/adminManager.do">관리</a></li>
 		    			<% } %>
 		    			<li class="divider"></li>
 		          		<li><a href="<%=request.getContextPath()%>/logout.do" id="logout-Btn">로그아웃</a></li>
@@ -205,7 +205,7 @@
 	/* Enter 로 바로 로그인 */
 
 	function enterkey(){
-		if(window.event.keyCode == 13)
+		if(window.event.keyCode == 13) 
 			loginCheck();
 	}
 	
@@ -305,7 +305,6 @@
    					$("#login-help").text("이미 아이디가 접속중입니다!");
 					$("#login-help").addClass("text-danger");
    				}
-   					
     		}
     	});
     }
@@ -317,7 +316,7 @@
 /*     var textarea = document.getElementById("messageWindow"); */
 	var textarea = $("#messageWindow");
 	<%if(user != null) {%>
-    	var webSocket = new WebSocket('ws://localhost:9090/brw/broadcasting/login.do');
+    	var webSocket = new WebSocket('ws://52.78.61.219:8080/brw/broadcasting/login.do');
     <%}%>
     var inputMessage = $("#inputMessage");
     

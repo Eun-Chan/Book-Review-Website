@@ -9,6 +9,9 @@
 	if(request.getAttribute("checkValidation") != null){
 		checkValidation = (boolean)request.getAttribute("checkValidation");
 	}
+	System.out.println("checkAttendance.jsp today="+today);
+	System.out.println("checkAttendance.jsp atList="+atList);
+	System.out.println("checkAttendance.jsp checkValidation="+checkValidation);
 %>
 <style>
 div#attendance-container{
@@ -48,6 +51,7 @@ function validate(){
 	
 	<% if(checkValidation) { %>
 	alert("출첵은 하루에 한 번만! 욕심쟁이~");
+	return false;
 	<% } %>
 	
 	return true;

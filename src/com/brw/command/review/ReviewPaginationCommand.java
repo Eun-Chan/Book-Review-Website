@@ -102,13 +102,8 @@ public class ReviewPaginationCommand implements Command {
 		
 		pageBar += "</ul>";
 		
-		
-		
-		
 		request.setAttribute("ntcList", ntcList);
 		request.setAttribute("list", list);
 		request.setAttribute("pageBar", pageBar);
-		
 	}
-
 }
